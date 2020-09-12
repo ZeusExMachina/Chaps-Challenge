@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import com.google.common.base.Preconditions;
+
 import java.util.Objects;
 
 /**
@@ -22,6 +24,9 @@ public final class Position {
 	 * @param y row/y-coordinate
 	 */
 	public Position(int x, int y) {
+		Preconditions.checkArgument(y >= 0, "y-coordinate is negative: %s", y);
+		Preconditions.checkArgument(x >= 0, "x-coordinate is negative: %s", x);
+
 		this.x = x;
 		this.y = y;
 	}
@@ -56,4 +61,8 @@ public final class Position {
 		return Objects.hash(x, y);
 	}
 
+	@Override
+	public String toString() {
+		return "(" + x + "," + y + ")";
+	}
 }

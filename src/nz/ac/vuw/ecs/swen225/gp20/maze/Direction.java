@@ -31,6 +31,6 @@ public enum Direction {
 		if (this == SOUTH) return new Position(p.getX(), p.getY()+1);
 		if (this == EAST) return new Position(p.getX()+1, p.getY());
 		if (this == WEST) return new Position(p.getX()-1, p.getY());
-		throw new AssertionError("nz.ac.vuw.ecs.swen225.gp20.maze.Direction not given 4.");
+		throw new AssertionError("Undefined direction, should not be reachable");
 	}
 }

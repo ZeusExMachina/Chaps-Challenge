@@ -1,4 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
+import com.google.common.base.Preconditions;
 
 /**
  * From handout: This is the domain model that forms the core of the application, it
@@ -27,7 +28,9 @@ public class Maze {
 	 * @return tile wanted
 	 */
 	public Tile getTile(Position p) {
-		// TODO: preconditions check bounds
+		Preconditions.checkArgument(p.getY() < board.length, "y-coordinate is out of bounds: %s", p);
+		Preconditions.checkArgument(p.getX() < board[0].length, "x-coordinate is out of bounds: %s", p);
+
 		return board[p.getY()][p.getX()];
 	}
 
@@ -38,7 +41,8 @@ public class Maze {
 	 * @return position of new tile
 	 */
 	public Tile getNeighbouringTile(Position p, Direction d) {
-		// Preconditions will handled in getTile()
+		// Preconditions will be handled in getTile() and Position constructor
+
 		Position newPos = d.movePosition(p);
 		return getTile(newPos);
 	}
