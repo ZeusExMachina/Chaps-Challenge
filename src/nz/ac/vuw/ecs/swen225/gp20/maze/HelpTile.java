@@ -10,17 +10,28 @@ import java.io.IOException;
  */
 public class HelpTile implements Tile {
 	/**
-	 * Help text to display
+	 * Stores tile's Position on Maze board
 	 */
-	private final String help;
+	private final Position position;
 
 	/**
-	 * Construct a HelpTile with text
-	 * @param h text to display
+	 * Make a HelpTile
+	 * @param row row or y-coordinate of position
+	 * @param col column or x-coordinate of position
 	 */
-	public HelpTile(String h) {
-		help = h;
+	public HelpTile(int row, int col) {
+		position = new Position(col, row);
 	}
+
+	@Override
+	public Position getPosition() {
+		return position;
+	}
+
+	/**
+	 * Help text to display
+	 */
+	private String help;
 
 	/**
 	 * Retrieve help text to display
@@ -30,13 +41,31 @@ public class HelpTile implements Tile {
 		return help;
 	}
 
+	/**
+	 * Chang help text to display
+	 * @param h new help text
+	 */
+	public void setHelp(String h) {
+		help = h;
+	}
+
 	@Override
 	public boolean canMoveTo() {
 		return true;
 	}
 
 	@Override
+	public boolean isObtainable() {
+		return false;
+	}
+
+	@Override
 	public BufferedImage getImage() throws IOException {
 		return ImageIO.read(new File("help.png"));
+	}
+
+	@Override
+	public String code() {
+		return "?";
 	}
 }

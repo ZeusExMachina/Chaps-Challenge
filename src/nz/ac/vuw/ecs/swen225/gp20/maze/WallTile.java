@@ -9,13 +9,42 @@ import java.io.IOException;
  * From handout: Part of a wall, actors cannot move onto those tiles.
  */
 public class WallTile implements Tile {
+	/**
+	 * Stores tile's Position on Maze board
+	 */
+	private final Position position;
+
+	/**
+	 * Make a ExitLockTile
+	 * @param row row or y-coordinate of position
+	 * @param col column or x-coordinate of position
+	 */
+	public WallTile(int row, int col) {
+		position = new Position(col, row);
+	}
+
+	@Override
+	public Position getPosition() {
+		return position;
+	}
+
 	@Override
 	public boolean canMoveTo() {
 		return false;
 	}
 
 	@Override
+	public boolean isObtainable() {
+		return false;
+	}
+
+	@Override
 	public BufferedImage getImage() throws IOException {
 		return ImageIO.read(new File("wall.png"));
+	}
+
+	@Override
+	public String code() {
+		return "/";
 	}
 }

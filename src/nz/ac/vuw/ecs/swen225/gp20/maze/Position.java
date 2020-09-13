@@ -56,6 +56,16 @@ public final class Position {
 				y == position.y;
 	}
 
+	/**
+	 * Determine if position is equal to given integer coordinates
+	 * @param x COLUMN or x-coord or j-index
+	 * @param y ROW or y-coord or i-index
+	 * @return if this position is equal to given ints
+	 */
+	public boolean equals(int x, int y) {
+		return x == this.x && y == this.y;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(x, y);

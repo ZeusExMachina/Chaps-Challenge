@@ -6,39 +6,45 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * From handout: Behaves like a wall time for Chap as long as there are still
- * uncollected treasures. Once the treasure chest is full (all treasures have
- * been collected), Chap can pass through the lock. Once Chap reaches this tile,
- * the game level is finished.
+ * From handout: Once Chap reaches this tile, the game level is finished.
  */
 public class ExitTile implements Tile {
 	/**
-	 * Stores whether or not we can exit
+	 * Stores tile's Position on Maze board
 	 */
-	private boolean isLocked;
+	private final Position position;
 
 	/**
-	 * Get state of exit tile.
-	 * @return true if locked
+	 * Make a ExitTile
+	 * @param row row or y-coordinate of position
+	 * @param col column or x-coordinate of position
 	 */
-	public boolean isLocked() { return isLocked; }
+	public ExitTile(int row, int col) {
+		position = new Position(col, row);
+	}
 
-	/**
-	 * Unlock exit tile (only if all treasures are picked up). Not reversible.
-	 */
-	public void unlock() {
-		// TODO: precondition, check amount of treasure
-		isLocked = true;
+	@Override
+	public Position getPosition() {
+		return position;
 	}
 
 	@Override
 	public boolean canMoveTo() {
-		return !isLocked;
+		return true;
+	}
+
+	@Override
+	public boolean isObtainable() {
+		return false;
 	}
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		if (isLocked) ImageIO.read(new File("exit_lock.png"));
 		return ImageIO.read(new File("exit.png"));
+	}
+
+	@Override
+	public String code() {
+		return "@";
 	}
 }
