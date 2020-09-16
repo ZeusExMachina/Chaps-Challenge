@@ -4,9 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class gameGUI{
-
+    JLabel timeLabel = new JLabel();
+    int timeVal = 10;
 
 
     public gameGUI(){
@@ -40,6 +43,14 @@ public class gameGUI{
         gc.gridx = 1;
         gc.gridy = 0;
         mainFrame.getContentPane().add(controls, gc);
+
+        JButton startTest = new JButton("Start Time");
+        startTest.addActionListener(e -> start());
+        controls.add(startTest);
+
+        timeLabel.setText(String.valueOf(timeVal));
+        controls.add(timeLabel);
+
 
         mainFrame.addKeyListener(new KeyListener() {
             boolean control = false;
@@ -98,7 +109,7 @@ public class gameGUI{
     }
 
     /**
-     * checks key event and checks if corresponds to control
+     * checks key event and calls corresponding method
      * @param e key event
      */
     public void singleKeyUse(KeyEvent e){
@@ -126,6 +137,27 @@ public class gameGUI{
                 return;
 
         }
+
+    }
+
+    /**
+     * create timer and schedule to update time display
+     */
+    public void start(){
+        java.util.Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                timeLabel.setText(String.valueOf(timeVal));
+                if(timeVal == 0){
+                    timer.cancel();
+                    timeLabel.setText("TIME IS UP");
+                }else{
+                    timeVal = timeVal -1 ;
+                }
+            }
+        };
+        timer.schedule(task, 100,timeVal * 100);
 
     }
 }
