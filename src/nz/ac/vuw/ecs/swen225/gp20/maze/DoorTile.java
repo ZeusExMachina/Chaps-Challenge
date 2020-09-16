@@ -41,8 +41,8 @@ public class DoorTile implements Tile {
 	 * @return true if player has matching key
 	 */
 	@Override
-	public boolean canMoveTo() {
-		return false;
+	public boolean canMoveTo(Maze m) {
+		return m.containsKey(colour);
 	}
 
 	@Override

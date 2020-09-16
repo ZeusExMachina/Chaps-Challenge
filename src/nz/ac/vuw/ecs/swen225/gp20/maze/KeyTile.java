@@ -13,6 +13,7 @@ import java.io.IOException;
  * the tile turns into a free tile.
  */
 public class KeyTile implements Tile {
+
 	/**
 	 * Colour of this key
 	 */
@@ -37,7 +38,7 @@ public class KeyTile implements Tile {
 	}
 
 	@Override
-	public boolean canMoveTo() {
+	public boolean canMoveTo(Maze m) {
 		return true;
 	}
 
@@ -54,6 +55,15 @@ public class KeyTile implements Tile {
 		COLOUR_TWO,
 		COLOUR_THREE,
 		COLOUR_FOUR
+	}
+
+	/**
+	 * Retrieve colour of this key
+	 *
+	 * @return this key's colour
+	 */
+	public Colour getColour() {
+		return colour;
 	}
 
 	@Override

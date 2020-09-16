@@ -8,9 +8,10 @@ import java.io.IOException;
 public interface Tile {
 	/**
 	 * Find out whether or not the player can move onto this tile
+	 * @param m current maze instance
 	 * @return true if player can move onto tile
 	 */
-	boolean canMoveTo();
+	boolean canMoveTo(Maze m);
 
 	/**
 	 * Find out whether or not the player can pick up this tile

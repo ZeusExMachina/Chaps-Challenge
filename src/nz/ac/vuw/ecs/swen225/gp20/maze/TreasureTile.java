@@ -30,7 +30,7 @@ public class TreasureTile implements Tile {
 	}
 
 	@Override
-	public boolean canMoveTo() {
+	public boolean canMoveTo(Maze m) {
 		return true;
 	}
 

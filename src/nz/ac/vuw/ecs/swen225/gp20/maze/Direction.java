@@ -33,4 +33,9 @@ public enum Direction {
 		if (this == WEST) return new Position(p.getX()-1, p.getY());
 		throw new AssertionError("Undefined direction, should not be reachable");
 	}
+
+	@Override
+	public String toString() {
+		return name().toLowerCase();
+	}
 }

@@ -29,7 +29,7 @@ public class ExitTile implements Tile {
 	}
 
 	@Override
-	public boolean canMoveTo() {
+	public boolean canMoveTo(Maze m) {
 		return true;
 	}
 

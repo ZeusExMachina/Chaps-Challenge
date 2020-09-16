@@ -28,18 +28,13 @@ public class ExitLockTile implements Tile {
 	 */
 	public ExitLockTile(int row, int col) {
 		position = new Position(col, row);
+		isLocked = true;
 	}
 
 	@Override
 	public Position getPosition() {
 		return position;
 	}
-
-	/**
-	 * Get state of exit tile.
-	 * @return true if locked
-	 */
-	public boolean isLocked() { return isLocked; }
 
 	/**
 	 * Unlock exit tile (only if all treasures are picked up). Not reversible.
@@ -49,7 +44,7 @@ public class ExitLockTile implements Tile {
 	}
 
 	@Override
-	public boolean canMoveTo() {
+	public boolean canMoveTo(Maze m) {
 		return !isLocked;
 	}
 
