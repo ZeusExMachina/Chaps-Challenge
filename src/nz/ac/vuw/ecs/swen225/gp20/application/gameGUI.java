@@ -10,6 +10,9 @@ import java.util.TimerTask;
 public class gameGUI{
     JLabel timeLabel = new JLabel();
     int timeVal = 10;
+    java.util.Timer timer = new Timer();
+
+    boolean pauseState = false;
 
 
     public gameGUI(){
@@ -44,12 +47,31 @@ public class gameGUI{
         gc.gridy = 0;
         mainFrame.getContentPane().add(controls, gc);
 
+        controls.setLayout(new GridLayout(4,1,10,0));
+
+        JPanel levelPanel = new JPanel();
+        levelPanel.setBorder(BorderFactory.createTitledBorder("Level"));
+        controls.add(levelPanel);
+
+        JPanel timerPanel = new JPanel();
+        timerPanel.setBorder(BorderFactory.createTitledBorder("Timer"));
         JButton startTest = new JButton("Start Time");
-        startTest.addActionListener(e -> start());
-        controls.add(startTest);
+        startTest.addActionListener(e -> startTime());
+        timerPanel.add(startTest);
+        startTest.setFocusable(false);
 
         timeLabel.setText(String.valueOf(timeVal));
-        controls.add(timeLabel);
+        timerPanel.add(timeLabel);
+
+        controls.add(timerPanel);
+
+        JPanel chipsPanel = new JPanel();
+        chipsPanel.setBorder(BorderFactory.createTitledBorder("Chips"));
+        controls.add(chipsPanel);
+
+        JPanel kaysPanel = new JPanel();
+        kaysPanel.setBorder(BorderFactory.createTitledBorder("Keys"));
+        controls.add(kaysPanel);
 
 
         mainFrame.addKeyListener(new KeyListener() {
@@ -86,7 +108,7 @@ public class gameGUI{
      */
     public void controlKeyUse(KeyEvent e){
         int keyPressed = e.getKeyCode();
-
+        System.out.println("test");
         switch (keyPressed){
 
             case KeyEvent.VK_X:
@@ -96,10 +118,23 @@ public class gameGUI{
                 System.out.println("Save Game");
                 break;
             case KeyEvent.VK_R:
-                System.out.println("Resume Game");
+                if(pauseState) {
+                    pauseState = false;
+                    System.out.println("Resume Game");
+                    timer = new Timer();
+                    startTime();
+                }else{
+                    System.out.println("Game already playing");
+                }
                 break;
             case KeyEvent.VK_P:
-                System.out.println("Pause Game");
+                if(!pauseState) {
+                    pauseState = true;
+                    System.out.println("Pause Game");
+                    timer.cancel();
+                }else{
+                    System.out.println("game already paused");
+                }
                 break;
             case KeyEvent.VK_1:
                 System.out.println("New Game");
@@ -141,10 +176,22 @@ public class gameGUI{
     }
 
     /**
-     * create timer and schedule to update time display
+     * reset and start timer
      */
-    public void start(){
-        java.util.Timer timer = new Timer();
+    public void startTime(){
+        try{
+            timer.cancel();
+            timer.purge();
+        }catch (Exception e){
+            return;
+        }
+        timer = new Timer();
+        timeVal = 10;
+        timer.schedule(createTask(), 1000,1000);
+
+    }
+
+    public TimerTask createTask(){
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
@@ -157,7 +204,7 @@ public class gameGUI{
                 }
             }
         };
-        timer.schedule(task, 100,timeVal * 100);
 
+        return task;
     }
 }
