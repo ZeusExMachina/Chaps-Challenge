@@ -2,8 +2,10 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class gameGUI {
+public class gameGUI{
 
 
 
@@ -39,8 +41,91 @@ public class gameGUI {
         gc.gridy = 0;
         mainFrame.getContentPane().add(controls, gc);
 
+        mainFrame.addKeyListener(new KeyListener() {
+            boolean control = false;
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                    control = true;
+                }else if(control){
+                    controlKeyUse(e);
+                }else{
+                    singleKeyUse(e);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
+            }
+        });
 
 
+
+    }
+
+    /**
+     * calls key functions that require ctrl key to be pressed.
+     * @param e - key event that is NOT control
+     */
+    public void controlKeyUse(KeyEvent e){
+        int keyPressed = e.getKeyCode();
+
+        switch (keyPressed){
+
+            case KeyEvent.VK_X:
+                System.out.println("Exit Game");
+                break;
+            case KeyEvent.VK_S:
+                System.out.println("Save Game");
+                break;
+            case KeyEvent.VK_R:
+                System.out.println("Resume Game");
+                break;
+            case KeyEvent.VK_P:
+                System.out.println("Pause Game");
+                break;
+            case KeyEvent.VK_1:
+                System.out.println("New Game");
+                break;
+
+        }
+    }
+
+    /**
+     * checks key event and checks if corresponds to control
+     * @param e key event
+     */
+    public void singleKeyUse(KeyEvent e){
+        int keyPressed = e.getKeyCode();
+
+        switch (keyPressed){
+
+            case KeyEvent.VK_UP:
+                System.out.println("Move Up");
+                return;
+            case KeyEvent.VK_RIGHT:
+                System.out.println("Move Right");
+                return;
+            case KeyEvent.VK_DOWN:
+                System.out.println("Move Down");
+                return;
+            case KeyEvent.VK_LEFT:
+                System.out.println("Move Left");
+                return;
+            case KeyEvent.VK_ESCAPE:
+                System.out.println("Close Game Paused");
+                return;
+            case KeyEvent.VK_SPACE:
+                System.out.println("Display Game Pause");
+                return;
+
+        }
 
     }
 }
