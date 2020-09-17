@@ -2,25 +2,41 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class gameGUI{
-    JLabel timeLabel = new JLabel();
-    int timeVal = 10;
+    JFrame mainFrame = new JFrame("Chip's Challenge");
+
+    JPanel controls = new JPanel();
+
     java.util.Timer timer = new Timer();
+
+    //to be received form other classes
+    int level;
+    int timeVal;
+    int chipsRemaining;
+
+    ArrayList<Object> keys = new ArrayList<>(); //TODO: Add appropriate class type
+
+    JLabel levelLabel = new JLabel();
+    JLabel timeLabel = new JLabel();
+    JLabel chipsLabel = new JLabel();
 
     boolean pauseState = false;
 
 
     public gameGUI(){
-        JFrame mainFrame = new JFrame("Chip's Challenge");
+
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
         mainFrame.setLayout(new GridBagLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setResizable(false);
 
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
@@ -37,41 +53,112 @@ public class gameGUI{
         gc.weighty = 1;
         gc.gridx = 0;
         gc.gridy = 0;
+        map.setSize((int)0.7*mainFrame.getWidth(), mainFrame.getHeight());
         mainFrame.getContentPane().add(map, gc);
 
-        JPanel controls = new JPanel();
-        controls.setBorder(BorderFactory.createTitledBorder("Controls"));
         gc.weightx = 0.3;
         gc.weighty = 1;
         gc.gridx = 1;
         gc.gridy = 0;
+        controls.setSize(new Dimension((int)0.3*mainFrame.getWidth(), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, gc);
+        //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
+        //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
 
+
+
+        controlsStart();
+
+
+    }
+
+    /**
+     * construct display for game start/menu
+     * (before level start)
+     */
+    public void controlsStart(){
+        controls.setLayout(new GridLayout(2,1,0,0));
+
+        JPanel topHalf = new JPanel();
+        topHalf.setLayout(new GridLayout(2,1,10,0));
+        JPanel bottomHalf = new JPanel();
+        controls.add(topHalf);
+        controls.add(bottomHalf);
+
+        setLevel(1);//TODO: to be received form other class
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridLayout(2,1,10,0));
+        JLabel title = new JLabel("Chip's Challenge");
+        title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        titlePanel.add(title);
+        titlePanel.add(levelLabel);
+        topHalf.add(titlePanel);
+
+        JPanel startPanel = new JPanel();
+        JButton startGame = new JButton("Start Game");
+
+        bottomHalf.setBorder(BorderFactory.createTitledBorder("Potentially display controls here}"));
+
+
+        startGame.setFocusable(false);
+        ActionListener aL = e -> {
+            for(Component c : controls.getComponents()){
+                controls.remove(c);
+            }
+            startTime();
+            controls.repaint();
+
+
+            controlsGamePlay();
+        };
+
+        startGame.addActionListener(aL);
+        startPanel.add(startGame);
+
+        topHalf.add(startPanel);
+
+    }
+
+    /**
+     * construct display of control panels for in game play
+     */
+    public void controlsGamePlay(){
         controls.setLayout(new GridLayout(4,1,10,0));
 
+        //TODO info to be called from other classes - currently random numbers
+        setTime(10);
+        setChipsRemaining(4);
+
+        //LEVEL
         JPanel levelPanel = new JPanel();
-        levelPanel.setBorder(BorderFactory.createTitledBorder("Level"));
+        //levelPanel.setBorder(BorderFactory.createTitledBorder("Level"));
+        levelLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
+        levelPanel.add(levelLabel);
         controls.add(levelPanel);
 
-        JPanel timerPanel = new JPanel();
-        timerPanel.setBorder(BorderFactory.createTitledBorder("Timer"));
-        JButton startTest = new JButton("Start Time");
-        startTest.addActionListener(e -> startTime());
-        timerPanel.add(startTest);
-        startTest.setFocusable(false);
 
-        timeLabel.setText(String.valueOf(timeVal));
+        //TIME
+        JPanel timerPanel = new JPanel();
+        //timerPanel.setBorder(BorderFactory.createTitledBorder("Timer"));
+        timeLabel.setText("TIME: " + String.format("%03d",timeVal));
+        timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         timerPanel.add(timeLabel);
 
         controls.add(timerPanel);
 
+        //CHIPS
         JPanel chipsPanel = new JPanel();
-        chipsPanel.setBorder(BorderFactory.createTitledBorder("Chips"));
+        //chipsPanel.setBorder(BorderFactory.createTitledBorder("Chips"));
+        chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        chipsPanel.add(chipsLabel);
         controls.add(chipsPanel);
 
-        JPanel kaysPanel = new JPanel();
-        kaysPanel.setBorder(BorderFactory.createTitledBorder("Keys"));
-        controls.add(kaysPanel);
+
+        //KEYS
+        JPanel keysPanel = new JPanel();
+        keysPanel.setBorder(BorderFactory.createTitledBorder("Keys"));
+        controls.add(keysPanel);
 
 
         mainFrame.addKeyListener(new KeyListener() {
@@ -98,7 +185,8 @@ public class gameGUI{
             }
         });
 
-
+        controls.revalidate();
+        controls.repaint();
 
     }
 
@@ -179,6 +267,7 @@ public class gameGUI{
      * reset and start timer
      */
     public void startTime(){
+        timeLabel.setForeground(Color.black);
         try{
             timer.cancel();
             timer.purge();
@@ -191,14 +280,21 @@ public class gameGUI{
 
     }
 
+    /**
+     * create the timer task
+     * adjust time each second
+     * @return timeTask
+     */
     public TimerTask createTask(){
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                timeLabel.setText(String.valueOf(timeVal));
+
+                timeLabel.setText("TIME: " + String.format("%03d",timeVal));
                 if(timeVal == 0){
                     timer.cancel();
-                    timeLabel.setText("TIME IS UP");
+                    timeLabel.setForeground(Color.red);
+                    //timeLabel.setText("TIME IS UP");
                 }else{
                     timeVal = timeVal -1 ;
                 }
@@ -206,5 +302,28 @@ public class gameGUI{
         };
 
         return task;
+    }
+
+    //setters
+    public void setLevel(int l){
+        this.level = l;
+        levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
+    }
+
+    public void setTime(int t){
+        this.timeVal = t;
+    }
+
+    public void setChipsRemaining(int c){
+        this.chipsRemaining = c;
+        chipsLabel.setText("Chips Remaining: " + String.valueOf(this.chipsRemaining));
+    }
+
+    public void addKey(Object key){
+        keys.add(key);
+    }
+
+    public void useKey(Object key){
+        keys.remove(key);
     }
 }
