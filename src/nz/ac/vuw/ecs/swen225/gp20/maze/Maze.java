@@ -29,6 +29,11 @@ public class Maze {
 	private int treasuresLeft;
 
 	/**
+	 * Current level number to display in window
+	 */
+	private int levelNumber;
+
+	/**
 	 * Stores information on current player
 	 */
 	private Actor chap;
@@ -39,6 +44,7 @@ public class Maze {
 	 * @param in input array
 	 */
 	public Maze(String[] in) {
+		levelNumber = 0;
 		loadLevel(in);
 	}
 
@@ -49,6 +55,7 @@ public class Maze {
 	 */
 	public void loadLevel(String[] in) {
 		inventory.clear();
+		levelNumber++;
 		treasuresLeft = 0;
 
 		for (String row : in) {
@@ -271,6 +278,15 @@ public class Maze {
 	 */
 	public int getTreasuresLeft() {
 		return treasuresLeft;
+	}
+
+	/**
+	 * Retrieve the current level number.
+	 *
+	 * @return level number
+	 */
+	public int getLevelNumber() {
+		return levelNumber;
 	}
 
 	/**
