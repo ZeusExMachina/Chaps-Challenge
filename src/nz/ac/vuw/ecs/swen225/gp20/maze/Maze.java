@@ -20,6 +20,7 @@ public class Maze {
 	 * Chap's current inventory
 	 */
 	private final List<Tile> inventory = new ArrayList<>();
+
 	/**
 	 * Amount of treasure tiles left in level
 	 */
@@ -42,20 +43,23 @@ public class Maze {
 	 * @param in input String array
 	 */
 	public void loadLevel(String[] in) {
+		inventory.clear();
+		treasuresLeft = 0;
+
 		for (String row : in) {
 			Preconditions.checkArgument(row.length() == in[0].length(),
-					"Irregularly shaped array");
+					"Non-rectangular shaped array");
 		}
 
 		board = new Tile[in.length][in[0].length()];
-		for (int i=0; i<in.length; i++) {
-			for (int j=0; j<in[i].length(); j++) {
-				char c = in[i].charAt(j);
+		for (int row=0; row<in.length; row++) {
+			for (int col=0; col<in[row].length(); col++) {
+				char c = in[row].charAt(col);
 				if (c == '!') {
-					chap = new Actor(new Position(j, i), "chap");
-					board[i][j] = new FreeTile(i, j);
+					chap = new Actor(new Position(col, row), "chap");
+					board[row][col] = new FreeTile(row, col);
 				} else {
-					board[i][j] = makeTile(c, i, j);
+					board[row][col] = makeTile(c, row, col);
 				}
 			}
 		}
@@ -132,7 +136,7 @@ public class Maze {
 	private void clearTile(Position p) {
 		Preconditions.checkNotNull(getTile(p), "Tile doesn't exist");
 
-		board[p.getY()][p.getX()] = new FreeTile(p.getX(), p.getY());
+		board[p.getY()][p.getX()] = new FreeTile(p.getY(), p.getX());
 	}
 
 	/**
@@ -204,6 +208,30 @@ public class Maze {
 				return true;
 			}
 		} catch (IllegalArgumentException ignored) {
+		}
+		return false;
+	}
+
+	/**
+	 * Retrieve the amount of treasures left to obtain on board.
+	 * @return treasures left
+	 */
+	public int getTreasuresLeft() {
+		return treasuresLeft;
+	}
+
+	/**
+	 * Figure out if player is at the end of level
+	 * @return true if player is done
+	 */
+	public boolean isLevelDone() {
+		for (Tile[] row : board) {
+			for (Tile t : row) {
+				if (t instanceof ExitTile) {
+					ExitTile e = (ExitTile) t;
+					if (e.getPosition().equals(chap.getPosition())) return true;
+				}
+			}
 		}
 		return false;
 	}

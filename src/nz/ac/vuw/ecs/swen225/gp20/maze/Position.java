@@ -20,8 +20,8 @@ public final class Position {
 
 	/**
 	 * Construct a new position
-	 * @param x column/x-coordinate
-	 * @param y row/y-coordinate
+	 * @param x column/x-coordinate/j-index
+	 * @param y row/y-coordinate/i-index
 	 */
 	public Position(int x, int y) {
 		Preconditions.checkArgument(y >= 0, "y-coordinate is negative: %s", y);

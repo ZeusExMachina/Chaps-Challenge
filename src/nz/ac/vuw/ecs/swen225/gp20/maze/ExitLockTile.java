@@ -40,7 +40,7 @@ public class ExitLockTile implements Tile {
 	 * Unlock exit tile (only if all treasures are picked up). Not reversible.
 	 */
 	public void unlock() {
-		isLocked = true;
+		isLocked = false;
 	}
 
 	@Override
