@@ -46,6 +46,6 @@ public class FreeTile implements Tile {
 
 	@Override
 	public String code() {
-		return " ";
+		return "_";
 	}
 }

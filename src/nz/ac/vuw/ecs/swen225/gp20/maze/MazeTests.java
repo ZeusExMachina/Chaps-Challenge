@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -18,16 +20,16 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | |!| | |D| |\n" +
-						  "|#|/|b| |?| |a|/|#|\n" +
+						  "|_|C|_|_|!|_|_|D|_|\n" +
+						  "|#|/|b|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -41,8 +43,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -50,8 +52,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | | | | |D| |\n" +
-						  "|#|/|b| |!| |a|/|#|\n" +
+						  "|_|C|_|_|_|_|_|D|_|\n" +
+						  "|#|/|b|_|!|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -65,8 +67,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -75,8 +77,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | |!| | |D| |\n" +
-						  "|#|/|b| |?| |a|/|#|\n" +
+						  "|_|C|_|_|!|_|_|D|_|\n" +
+						  "|#|/|b|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -90,8 +92,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -99,8 +101,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | |!| | |D| |\n" +
-						  "|#|/|b| |?| |a|/|#|\n" +
+						  "|_|C|_|_|!|_|_|D|_|\n" +
+						  "|#|/|b|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -114,8 +116,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -127,8 +129,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | | | | |D| |\n" +
-						  "|#|/| |!|?| |a|/|#|\n" +
+						  "|_|C|_|_|_|_|_|D|_|\n" +
+						  "|#|/|_|!|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -142,8 +144,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -160,8 +162,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|!|/|/|\n" +
-						  "| |C| | | | | |D| |\n" +
-						  "|#|/| | |?| |a|/|#|\n" +
+						  "|_|C|_|_|_|_|_|D|_|\n" +
+						  "|#|/|_|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -175,8 +177,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -186,8 +188,8 @@ public class MazeTests {
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "| |C| | | | |!|D| |\n" +
-						  "|#|/|b| |?| |a|/|#|\n" +
+						  "|_|C|_|_|_|_|!|D|_|\n" +
+						  "|#|/|b|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -201,8 +203,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				" C  !  D ",
-				"#/b ? a/#",
+				"_C__!__D_",
+				"#/b_?_a/#",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -221,9 +223,9 @@ public class MazeTests {
 		assertEquals(m.getTreasuresLeft(), 3);
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|!|c|/|\n" +
-						  "|/|/|A|/|X|/| |/|/|\n" +
-						  "| |C| | | | | |D| |\n" +
-						  "|#|/| | |?| |a|/|#|\n" +
+						  "|/|/|A|/|X|/|_|/|/|\n" +
+						  "|_|C|_|_|_|_|_|D|_|\n" +
+						  "|#|/|_|_|?|_|a|/|#|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
 	}
@@ -237,8 +239,8 @@ public class MazeTests {
 				"/////////",
 				"/d#/@/#c/",
 				"//A/X/B//",
-				"#C  !  D#",
-				" /b ? a/ ",
+				"#C__!__D#",
+				"_/b_?_a/_",
 				"/////////"
 		};
 		Maze m = new Maze(in);
@@ -286,11 +288,136 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.isLevelDone());
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/| | |/|!|/| | |/|\n" +
-						  "|/|/| |/| |/| |/|/|\n" +
-						  "| | | | | | | | | |\n" +
-						  "| |/| | |?| | |/| |\n" +
+						  "|/|_|_|/|!|/|_|_|/|\n" +
+						  "|/|/|_|/|_|/|_|/|/|\n" +
+						  "|_|_|_|_|_|_|_|_|_|\n" +
+						  "|_|/|_|_|?|_|_|/|_|\n" +
 						  "|/|/|/|/|/|/|/|/|/|\n";
 		assertEquals(expected, m.toString());
+	}
+
+	/**
+	 * Attempt to parse unknown character ('$') to maze
+	 */
+	@Test
+	public void test10_badSetup() {
+		String[] in = {
+				"/////////",
+				"/d#/$/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		try {
+			new Maze(in);
+		} catch (IllegalArgumentException ignored) {
+			// OK
+		}
+	}
+
+	/**
+	 * Attempt to parse unknown character ('$') to maze
+	 */
+	@Test
+	public void test11_badSetup() {
+		String[] in = {
+				"/////////",
+				"/d#/$/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		try {
+			new Maze(in);
+		} catch (IllegalArgumentException ignored) {
+			// OK
+		}
+	}
+
+	/**
+	 * Attempt to move to wall
+	 */
+	@Test
+	public void test12_movetoWall() {
+		String[] in = {
+				"/////////",
+				"/d#/@/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		Maze m = new Maze(in);
+		assertTrue(m.moveChap(Direction.EAST));
+		assertFalse(m.moveChap(Direction.NORTH));
+	}
+
+	/**
+	 * Set the text of the help tile.
+	 */
+	@Test
+	public void test13_setHelp() {
+		String[] in = {
+				"/////////",
+				"/d#/@/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		Maze m = new Maze(in);
+		m.setHelp(0, "Help!");
+	}
+
+	/**
+	 * Set the text of the help tile.
+	 */
+	@Test
+	public void test14_badHelp() {
+		String[] in = {
+				"/////////",
+				"/d#/@/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		Maze m = new Maze(in);
+		try {
+			m.setHelp(1, "Help!");
+		} catch (IllegalArgumentException e) {
+			// OK
+		}
+	}
+
+	/**
+	 * Runs all getImage methods in all Tile classes to ensure they exist.
+	 */
+	@Test
+	public void testxx_checkImages() {
+		try {
+			Actor chap = new Actor(new Position(0,0), "chap");
+			assertNotNull(chap.getImage());
+			DoorTile d = new DoorTile('A', 0, 0);
+			assertNotNull(d.getImage());
+			ExitLockTile l = new ExitLockTile( 0, 0);
+			assertNotNull(l.getImage());
+			ExitTile e = new ExitTile( 0, 0);
+			assertNotNull(e.getImage());
+			FreeTile f = new FreeTile(0,0);
+			assertNotNull(f.getImage());
+			HelpTile h = new HelpTile(0, 0);
+			assertNotNull(h.getImage());
+			KeyTile k = new KeyTile('a', 0, 0);
+			assertNotNull(k.getImage());
+			TreasureTile t = new TreasureTile(0, 0);
+			assertNotNull(t.getImage());
+			WallTile w = new WallTile(0, 0);
+			assertNotNull(w.getImage());
+		} catch (IOException e) {
+			System.out.println("CHANGE_THIS_WHEN_THERE_ARE_ACTUALLY_IMAGES!");
+		}
 	}
 }

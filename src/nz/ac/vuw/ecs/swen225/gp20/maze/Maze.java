@@ -1,4 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
+
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Maze {
 	 * Stores tiles currently on
 	 */
 	private Tile[][] board;
+
 	/**
 	 * Chap's current inventory
 	 */
@@ -25,6 +27,7 @@ public class Maze {
 	 * Amount of treasure tiles left in level
 	 */
 	private int treasuresLeft;
+
 	/**
 	 * Stores information on current player
 	 */
@@ -32,6 +35,7 @@ public class Maze {
 
 	/**
 	 * Make Maze as defined in the given String array
+	 *
 	 * @param in input array
 	 */
 	public Maze(String[] in) {
@@ -40,6 +44,7 @@ public class Maze {
 
 	/**
 	 * Parse given String array converting each character into a cell.
+	 *
 	 * @param in input String array
 	 */
 	public void loadLevel(String[] in) {
@@ -52,8 +57,8 @@ public class Maze {
 		}
 
 		board = new Tile[in.length][in[0].length()];
-		for (int row=0; row<in.length; row++) {
-			for (int col=0; col<in[row].length(); col++) {
+		for (int row = 0; row < in.length; row++) {
+			for (int col = 0; col < in[row].length(); col++) {
 				char c = in[row].charAt(col);
 				if (c == '!') {
 					chap = new Actor(new Position(col, row), "chap");
@@ -66,8 +71,49 @@ public class Maze {
 	}
 
 	/**
+	 * Set the tooltip text of a given HelpTile, specified by giving
+	 * its index (e.g. 1st HelpTile in array order, index = 0).
+	 *
+	 * @param index number it appears in 2D array if it was collapsed into a 1D array
+	 * @param text  text to set
+	 */
+	public void setHelp(int index, String text) {
+		for (Tile[] row : board) {
+			for (Tile t : row) {
+				if (t instanceof HelpTile) {
+					HelpTile h = (HelpTile) t;
+					if (index == 0) {
+						h.setHelp(text);
+						return;
+					}
+					index--;
+				}
+			}
+		}
+		throw new IllegalArgumentException("Help tile #" + index + " doesn't exist.");
+	}
+
+	/**
+	 * Called to check if Chap is standing on a HelpTile. If so,
+	 * return the corresponding help text.
+	 *
+	 * @return the corresponding help text, null if not
+	 */
+	public String isOnHelp() {
+		for (Tile[] row : board) {
+			for (Tile t : row) {
+				if (t instanceof HelpTile) {
+					return ((HelpTile) t).getHelp();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Construct tile based on character representation
-	 * @param c tile code to make
+	 *
+	 * @param c   tile code to make
 	 * @param row row or y-coordinate of position
 	 * @param col column or x-coordinate of position
 	 * @return tile made
@@ -77,7 +123,7 @@ public class Maze {
 		if (c >= 'a' && c <= 'd') return new KeyTile(c, row, col);
 		if (c == 'X') return new ExitLockTile(row, col);
 		if (c == '@') return new ExitTile(row, col);
-		if (c == ' ') return new FreeTile(row, col);
+		if (c == '_') return new FreeTile(row, col);
 		if (c == '?') return new HelpTile(row, col);
 		if (c == '#') {
 			treasuresLeft++;
@@ -90,9 +136,9 @@ public class Maze {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<board.length; i++) {
+		for (int i = 0; i < board.length; i++) {
 			sb.append('|');
-			for (int j=0; j<board[i].length; j++) {
+			for (int j = 0; j < board[i].length; j++) {
 				if (chap.getPosition().equals(j, i)) sb.append('!');
 				else sb.append(board[i][j].code());
 				sb.append('|');
@@ -104,6 +150,7 @@ public class Maze {
 
 	/**
 	 * Retrieve tile in given position
+	 *
 	 * @param p position of tile wanted
 	 * @return tile wanted
 	 */
@@ -118,6 +165,7 @@ public class Maze {
 
 	/**
 	 * Retrieve tile in given direction from given position.
+	 *
 	 * @param p position of original tile
 	 * @param d direction to move to
 	 * @return position of new tile
@@ -131,6 +179,7 @@ public class Maze {
 
 	/**
 	 * Free up tile at given position, e.g. if picked up or unlocked.
+	 *
 	 * @param p position to clear
 	 */
 	private void clearTile(Position p) {
@@ -141,6 +190,7 @@ public class Maze {
 
 	/**
 	 * Find out how many items in the inventory match a certain class/type.
+	 *
 	 * @param type class to count
 	 * @return count of items belonging to certain class
 	 */
@@ -154,6 +204,7 @@ public class Maze {
 
 	/**
 	 * Find out if a key of a given colour is inside the inventory.
+	 *
 	 * @param c colour to query
 	 * @return true if there is a key of given colour
 	 */
@@ -184,6 +235,7 @@ public class Maze {
 
 	/**
 	 * Move Chap in a given direction
+	 *
 	 * @param d given direction
 	 * @return if move successful
 	 */
@@ -214,6 +266,7 @@ public class Maze {
 
 	/**
 	 * Retrieve the amount of treasures left to obtain on board.
+	 *
 	 * @return treasures left
 	 */
 	public int getTreasuresLeft() {
@@ -222,6 +275,7 @@ public class Maze {
 
 	/**
 	 * Figure out if player is at the end of level
+	 *
 	 * @return true if player is done
 	 */
 	public boolean isLevelDone() {

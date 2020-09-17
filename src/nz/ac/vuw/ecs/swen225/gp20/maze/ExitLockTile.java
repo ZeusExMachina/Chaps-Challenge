@@ -50,7 +50,7 @@ public class ExitLockTile implements Tile {
 
 	@Override
 	public boolean isObtainable() {
-		return false;
+		return true;
 	}
 
 	@Override
