@@ -49,6 +49,21 @@ public class Maze {
 	}
 
 	/**
+	 * Load in a certain Maze state
+	 *
+	 * @param in         string input array representing board
+	 * @param levelNo    level number to display on window
+	 * @param inventory  tiles currently in player's inventory
+	 * @param chapFacing direction Chap is facing
+	 */
+	public Maze(String[] in, int levelNo, List<Tile> inventory, Direction chapFacing) {
+		levelNumber = levelNo - 1; // loadLevel() always increments by 1
+		loadLevel(in);
+		this.inventory.addAll(inventory);
+		chap.setDirection(chapFacing);
+	}
+
+	/**
 	 * Parse given String array converting each character into a cell.
 	 *
 	 * @param in input String array
@@ -64,6 +79,7 @@ public class Maze {
 		}
 
 		board = new Tile[in.length][in[0].length()];
+		boolean isExitSet = false;
 		for (int row = 0; row < in.length; row++) {
 			for (int col = 0; col < in[row].length(); col++) {
 				char c = in[row].charAt(col);
@@ -72,8 +88,16 @@ public class Maze {
 					board[row][col] = new FreeTile(row, col);
 				} else {
 					board[row][col] = makeTile(c, row, col);
+					if (board[row][col] instanceof ExitTile) isExitSet = true;
 				}
 			}
+		}
+
+		if (chap == null) {
+			throw new AssertionError("Board should have a Chap '!'");
+		}
+		if (!isExitSet) {
+			throw new AssertionError("Board should have an exit '@'");
 		}
 	}
 

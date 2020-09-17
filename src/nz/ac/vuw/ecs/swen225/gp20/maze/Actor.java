@@ -56,10 +56,20 @@ public class Actor {
 
 	/**
 	 * Get direction actor is facing
+	 *
 	 * @return direction actor is facing
 	 */
 	public Direction getDirection() {
 		return direction;
+	}
+
+	/**
+	 * Set direction actor is facing
+	 *
+	 * @param d new direction to face
+	 */
+	public void setDirection(Direction d) {
+		direction = d;
 	}
 
 	/**

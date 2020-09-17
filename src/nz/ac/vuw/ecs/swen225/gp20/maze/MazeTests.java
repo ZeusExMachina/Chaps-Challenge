@@ -368,7 +368,10 @@ public class MazeTests {
 				"/////////"
 		};
 		Maze m = new Maze(in);
-		m.setHelp(0, "Help!");
+		String helpText = "Help!";
+		m.setHelp(0, helpText);
+		assertTrue(m.moveChap(Direction.SOUTH));
+		assertEquals(helpText, m.isOnHelp());
 	}
 
 	/**
@@ -390,6 +393,27 @@ public class MazeTests {
 		} catch (IllegalArgumentException e) {
 			// OK
 		}
+	}
+
+	/**
+	 * Ensure level number incrementing is correct.
+	 */
+	@Test
+	public void test15_levelNumbers() {
+		String[] in = {
+				"/////////",
+				"/d#/@/#c/",
+				"//A/X/B//",
+				"_C__!__D_",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		Maze m = new Maze(in);
+		assertEquals(1, m.getLevelNumber());
+		m.loadLevel(in);
+		assertEquals(2, m.getLevelNumber());
+		m.loadLevel(in);
+		assertEquals(3, m.getLevelNumber());
 	}
 
 	/**
