@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -28,6 +30,9 @@ public class gameGUI{
     JLabel chipsLabel = new JLabel();
 
     boolean pauseState = false;
+    JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
+
+
 
 
     public gameGUI(){
@@ -66,6 +71,37 @@ public class gameGUI{
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
 
 
+        pauseMenu.setSize(350,200);
+        pauseMenu.setLayout(new GridLayout(2,1,0,0));
+        JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
+        pauseTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        pauseMenu.add(pauseTitle);
+        pauseMenu.add(new JLabel("ESC to resume", SwingConstants.CENTER));
+        pauseMenu.setLocationRelativeTo(null);
+        pauseMenu.setVisible(false);
+        pauseMenu.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    pauseState = false;
+                    System.out.println("Resume Game");
+                    hidePauseDialog();
+                    timer = new Timer();
+                    startTime();
+                }
+            }
+            @Override
+            public void keyReleased(KeyEvent e) {
+
+            }
+        });
+
+
+
 
         controlsStart();
 
@@ -85,7 +121,7 @@ public class gameGUI{
         controls.add(topHalf);
         controls.add(bottomHalf);
 
-        setLevel(1);//TODO: to be received form other class
+        setLevel();//TODO: to be received form other class
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(2,1,10,0));
         JLabel title = new JLabel("Chip's Challenge");
@@ -126,9 +162,8 @@ public class gameGUI{
     public void controlsGamePlay(){
         controls.setLayout(new GridLayout(4,1,10,0));
 
-        //TODO info to be called from other classes - currently random numbers
-        setTime(10);
-        setChipsRemaining(4);
+        setTime();
+        setChipsRemaining();
 
         //LEVEL
         JPanel levelPanel = new JPanel();
@@ -165,17 +200,25 @@ public class gameGUI{
             boolean control = false;
             @Override
             public void keyTyped(KeyEvent e) {
-
             }
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                    control = true;
-                }else if(control){
-                    controlKeyUse(e);
-                }else{
-                    singleKeyUse(e);
+                if(!pauseState) {
+                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                        control = true;
+                    } else if (control) {
+                        controlKeyUse(e);
+                    } else {
+                        singleKeyUse(e);
+                    }
+                }else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    pauseState = false;
+                    System.out.println("Resume Game");
+                    hidePauseDialog();
+                    timer = new Timer();
+                    startTime();
+
                 }
             }
 
@@ -188,6 +231,14 @@ public class gameGUI{
         controls.revalidate();
         controls.repaint();
 
+    }
+
+    public void displayPauseDialog(){
+        if(timeVal > 0) pauseMenu.setVisible(true);
+    }
+
+    public void hidePauseDialog(){
+        pauseMenu.setVisible(false);
     }
 
     /**
@@ -206,23 +257,10 @@ public class gameGUI{
                 System.out.println("Save Game");
                 break;
             case KeyEvent.VK_R:
-                if(pauseState) {
-                    pauseState = false;
-                    System.out.println("Resume Game");
-                    timer = new Timer();
-                    startTime();
-                }else{
-                    System.out.println("Game already playing");
-                }
+                System.out.println("Resume saved game");
                 break;
             case KeyEvent.VK_P:
-                if(!pauseState) {
-                    pauseState = true;
-                    System.out.println("Pause Game");
-                    timer.cancel();
-                }else{
-                    System.out.println("game already paused");
-                }
+                System.out.println("Last Unfinished Level");
                 break;
             case KeyEvent.VK_1:
                 System.out.println("New Game");
@@ -241,26 +279,42 @@ public class gameGUI{
         switch (keyPressed){
 
             case KeyEvent.VK_UP:
-                System.out.println("Move Up");
+                moveCalled(Direction.NORTH);
                 return;
             case KeyEvent.VK_RIGHT:
-                System.out.println("Move Right");
+                moveCalled(Direction.EAST);
                 return;
             case KeyEvent.VK_DOWN:
-                System.out.println("Move Down");
+                moveCalled(Direction.SOUTH);
                 return;
             case KeyEvent.VK_LEFT:
-                System.out.println("Move Left");
-                return;
-            case KeyEvent.VK_ESCAPE:
-                System.out.println("Close Game Paused");
+                moveCalled(Direction.WEST);
                 return;
             case KeyEvent.VK_SPACE:
-                System.out.println("Display Game Pause");
+                if(!pauseState) {
+                    pauseState = true;
+                    displayPauseDialog();
+                    System.out.println("Pause Game");
+                    timer.cancel();
+                }else{
+                    System.out.println("game already paused");
+                }
                 return;
 
         }
 
+    }
+
+    /**
+     * called when move key received
+     * checks updates for keys and chips
+     *
+     * @param d
+     */
+    public void moveCalled(Direction d){
+        setChipsRemaining();
+        //check keys somehow also
+        System.out.println(d);
     }
 
     /**
@@ -275,7 +329,6 @@ public class gameGUI{
             return;
         }
         timer = new Timer();
-        timeVal = 10;
         timer.schedule(createTask(), 1000,1000);
 
     }
@@ -294,7 +347,7 @@ public class gameGUI{
                 if(timeVal == 0){
                     timer.cancel();
                     timeLabel.setForeground(Color.red);
-                    //timeLabel.setText("TIME IS UP");
+                    //restart level
                 }else{
                     timeVal = timeVal -1 ;
                 }
@@ -305,18 +358,21 @@ public class gameGUI{
     }
 
     //setters
-    public void setLevel(int l){
-        this.level = l;
+    public void setLevel(){
+        this.level = 1;//change to get from maze
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
-    public void setTime(int t){
-        this.timeVal = t;
+    public void setTime(){
+        this.timeVal = 10;//get from maze
     }
 
-    public void setChipsRemaining(int c){
-        this.chipsRemaining = c;
+    public void setChipsRemaining(){
+        this.chipsRemaining = 4;//maze
         chipsLabel.setText("Chips Remaining: " + String.valueOf(this.chipsRemaining));
+        if(this.chipsRemaining == 0){
+            System.out.println("All chips found");
+        }
     }
 
     public void addKey(Object key){
