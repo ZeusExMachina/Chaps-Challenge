@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp20.recordAndReplay;
+package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
 /**
  * Represents an action done by an actor in the game.
