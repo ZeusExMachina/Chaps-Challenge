@@ -23,10 +23,12 @@ public class RecordReplayController {
 	  this.gui = ui;
 	  // TODO: Assign Persistence module Object here
 	  this.recorder = new Recorder();
-	  this.replayer = new Replayer(this);
+	  this.replayer = new Replayer(this, ui);
 	}
 	
+	// ----------------------------------------
 	// --------------- RECORD -----------------
+	// ----------------------------------------
 	
 	/**
 	 * Add a new action to the action history stored in the Recorder.
@@ -47,7 +49,9 @@ public class RecordReplayController {
 	  recorder.saveGame(filename);
 	}
 	
+	// ----------------------------------------
 	// --------------- REPLAY -----------------
+	// ----------------------------------------
 	
 	/**
 	 * Check whether or not a replayed game is currently being 
@@ -86,6 +90,13 @@ public class RecordReplayController {
 	}
 	
 	/**
+	 * When in step-by-step replay mode, perform the next action.
+	 */
+	public void stepReplayForward() {
+		replayer.replayNextAction();
+	}
+	
+	/**
 	 * Load a game with a given filename.
 	 * @param filename is the name of the file to load. Preferably done by getting the filename using a file chooser (e.g. JFileChooser)
 	 */
@@ -95,6 +106,9 @@ public class RecordReplayController {
 	
 	// -------------- TESTING -----------------
 	
+	/**
+	 * Perform testing
+	 */
 	public void test() {
 		recorder.recordNewAction("Bob", ActionRecord.Action.MOVE, ActionRecord.MoveDirection.LEFT, 5.04);
 		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 10.69);
@@ -104,6 +118,10 @@ public class RecordReplayController {
 		loadGameReplay(filename);
 	}
 	
+	/**
+	 * Main method for testing
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		RecordReplayController rrc = new RecordReplayController(null);
 		rrc.test();
