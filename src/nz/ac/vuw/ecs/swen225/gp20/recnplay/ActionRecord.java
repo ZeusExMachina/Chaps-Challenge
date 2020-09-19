@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp20.recnplay;
+package nz.ac.vuw.ecs.swen225.gp20.recordAndReplay;
 
 /**
  * Represents an action done by an actor in the game.
@@ -10,8 +10,58 @@ public class ActionRecord {
 	private final MoveDirection direction;
 	private final double timeStamp;
 	
-	public static enum Action { MOVE, PICKUP_KEY, PICKUP_CHIP, UNLOCK_DOOR, UNLOCK_EXIT_LOCK, EXIT_LEVEL }
-	public static enum MoveDirection { UP, LEFT, DOWN, RIGHT }
+	/**
+	 * Enumeration of the type of action that the actor performed.
+	 * TODO: Need to finalize what different movements (i.e. how many different Action enums) are necessary.
+	 */
+	public static enum Action { 
+		/**
+		 * Denotes the actor moving to a new location and not performing any additional actions.
+		 */
+		MOVE, 
+		/**
+		 * 
+		 */
+		PICKUP_KEY, 
+		/**
+		 * 
+		 */
+		PICKUP_CHIP, 
+		/**
+		 * 
+		 */
+		UNLOCK_DOOR, 
+		/**
+		 * 
+		 */
+		UNLOCK_EXIT_LOCK, 
+		/**
+		 * 
+		 */
+		EXIT_LEVEL
+	}
+	
+	/**
+	 * Enumeration of the direction that the actor moved in for this action.
+	 */
+	public static enum MoveDirection { 
+		/**
+		 * Denotes an actor moving in the "Up" (i.e. North) direction.
+		 */
+		UP, 
+		/**
+		 * Denotes an actor moving in the "Left" (i.e. West) direction.
+		 */
+		LEFT, 
+		/**
+		 * Denotes an actor moving in the "Down" (i.e. South) direction.
+		 */
+		DOWN, 
+		/**
+		 * Denotes an actor moving in the "Right" (i.e. East) direction.
+		 */
+		RIGHT
+	}
 	
 	/**
 	 * Create a new record of an action with a given actor, information 
