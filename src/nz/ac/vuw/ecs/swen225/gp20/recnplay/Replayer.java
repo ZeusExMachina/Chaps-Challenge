@@ -3,7 +3,6 @@ package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 import java.util.Queue;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.io.IOException;
@@ -18,14 +17,18 @@ import nz.ac.vuw.ecs.swen225.gp20.application.gameGUI;
  * @author Elijah Guarina
  */
 public class Replayer {
-	/**
-	 * The Controller that this Replayer is associated with.
-	 */
-	private final RecordReplayController controller;
+	
+	// ------------------------------------------------
+	// ------------------- FIELDS ---------------------
+	// ------------------------------------------------
+	
 	/**
 	 * Stores the history of actions done by actors from a loaded game replay.
 	 */
 	private Queue<ActionRecord> gameRecordHistory;
+	
+	// TODO: Add the Persistence module object as a field
+	
 	/**
 	 * Keeps track of whether the program is auto-replaying through a recorded 
 	 * game, or is going through it step-by-step.
@@ -40,39 +43,44 @@ public class Replayer {
 	 */
 	private Timer timer;
 	/**
-	 * 
+	 * This object replays actions regularly while replaying in auto-replay mode.
 	 */
 	private ActionPlayer replayedAction;
+	
+	// ------------------------------------------------
+	// ----------------- CONSTANTS --------------------
+	// ------------------------------------------------
+	
+	/**
+	 * The period between two replayed actions when the replay speed is 1.0x (only during auto-replay mode).
+	 */
+	private final long DEFAULT_DELAY_MILLIS = 1500l;
 	
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
 	 */
-	public static final double[] replaySpeeds = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+	public static final double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+	
+	// ------------------------------------------------
+	// ---------------- CONSTRUCTOR -------------------
+	// ------------------------------------------------
 	
 	/**
 	 * Create a new Replayer that is associated with a given 
 	 * Controller.
-	 * @param control is this Replayer's associated Controller
 	 * @param gui is the GUI associated with the game
 	 */
-	public Replayer(RecordReplayController control, gameGUI gui) {
-		this.controller = control;
+	public Replayer(gameGUI gui) {
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
+		this.timer = new Timer();
 		this.replayedAction = new ActionPlayer(gui);
+		// TODO: Add the Persistence module object to this constructor
 	}
 	
-	// -----------------------------------------------
-	// ------------ GETTERS & SETTERS ----------------
-	// -----------------------------------------------
-	
-	/**
-	 * Get the currently-loaded game record.
-	 * @return the loaded game record
-	 */
-	private Queue<ActionRecord> getGameRecord() {
-		return (Queue<ActionRecord>) Collections.unmodifiableCollection(gameRecordHistory);
-	}
+	// ------------------------------------------------
+	// ------------- GETTERS & SETTERS ----------------
+	// ------------------------------------------------
 	
 	/**
 	 * Check whether or not a replayed game is currently being 
@@ -99,24 +107,15 @@ public class Replayer {
 	 * @param speed is the new replay speed to set
 	 */
 	public void setReplaySpeed(double speed) {
-		// First check if the entered replay speed is valid, if so set it
+		// First check if the entered replay speed is valid, if so set it.
+		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
 		if (speed < 0.0 || speed > 2.0 || speed%0.25 != 0) { 
 			throw new IllegalArgumentException("Invalid replay speed value of " + speed + " entered.");
 		} else {
 			replaySpeed = speed;
-		}
-	}
-	
-	/**
-	 * Switch between the "auto-replay" setting and the 
-	 * "step-by-step" setting for replaying games. If switching 
-	 * to auto-replay mode, then start replaying actions at 
-	 * regular intervals.
-	 */
-	public void toggleReplayType() {
-		autoReplaying = !autoReplaying;
-		if (autoReplaying) {
-			// TODO: set up timer maybe
+			timer.cancel();
+			timer.purge();
+			timer.schedule(replayedAction, (long)(DEFAULT_DELAY_MILLIS*replaySpeed), (long)(DEFAULT_DELAY_MILLIS*replaySpeed));
 		}
 	}
 	
@@ -128,7 +127,7 @@ public class Replayer {
 	 * Replay a recorded action from a loaded game by simulating 
 	 * player input in the GUI.
 	 */
-	public class ActionPlayer extends TimerTask {
+	private class ActionPlayer extends TimerTask {
 		/**
 		 * The GUI associated with the game.
 		 */
@@ -149,15 +148,30 @@ public class Replayer {
 		public void run() {
 			if (gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
 			ActionRecord actionToReplay = gameRecordHistory.poll();
-			//TODO: add the logic for deciding what move to make for which actor
+			// TODO: add the logic for deciding what move to make for which actor
+			// Just a test
+			System.out.println("Replayed action: " + actionToReplay);
 		}
 	}
 	
 	/**
-	 * 
+	 * Switch between the "auto-replay" setting and the 
+	 * "step-by-step" setting for replaying games.
+	 * If switching to auto-replay mode, then start 
+	 * replaying actions at regular intervals. 
+	 * If switching to step-by-step mode, replay actions 
+	 * manually one at a time.
 	 */
-	public void doAutoReplay() {
-		// TODO: do some autoreplay with timer.schedule()
+	public void toggleReplayType() {
+		autoReplaying = !autoReplaying;
+		if (autoReplaying) {
+			// Switch to Auto-Replay mode - Regularly replay actions from a loaded game.
+			timer.schedule(replayedAction, (long)(DEFAULT_DELAY_MILLIS*replaySpeed), (long)(DEFAULT_DELAY_MILLIS*replaySpeed));
+		} else {
+			// Switch to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
+			timer.cancel();
+			timer.purge();
+		}
 	}
 	
 	/**
