@@ -9,10 +9,23 @@ import nz.ac.vuw.ecs.swen225.gp20.application.gameGUI;
  * @author Elijah Guarina
  */
 public class RecordReplayController {
-	private final gameGUI gui;
-	// TODO: Add Object to communicate with the Persistence module
-	private final Recorder recorder;
-	private final Replayer replayer;
+	
+	// ----------------------------------------
+	// --------------- FIELDS -----------------
+	// ----------------------------------------
+	
+	/**
+	 * Records moves done in the current game by the player.
+	 */
+	private Recorder recorder;
+	/**
+	 * Replays moves from a loaded game record.
+	 */
+	private Replayer replayer;
+	
+	// ----------------------------------------
+	// ------------ CONSTRUCTOR ---------------
+	// ----------------------------------------
 	
 	/**
 	 * Create a new RecordReplayController that is associated 
@@ -20,10 +33,9 @@ public class RecordReplayController {
 	 * @param ui is the GUI of this game
 	 */
 	public RecordReplayController(gameGUI ui) {
-	  this.gui = ui;
-	  // TODO: Assign Persistence module Object here
+	  // TODO: Add Persistence Module object as another parameter, and also add it as an argument to the Replayer object
 	  this.recorder = new Recorder();
-	  this.replayer = new Replayer(this, ui);
+	  this.replayer = new Replayer(ui);
 	}
 	
 	// ----------------------------------------
@@ -104,7 +116,9 @@ public class RecordReplayController {
 	  replayer.loadGameReplay(filename);
 	}
 	
-	// -------------- TESTING -----------------
+	// ----------------------------------------------
+	//  TESTING (WON'T BE INCLUDED IN FINAL PRODUCT) 
+	// ----------------------------------------------
 	
 	/**
 	 * Perform testing
@@ -116,6 +130,8 @@ public class RecordReplayController {
 		String filename = "recorder_test.json";
 		saveGame(filename);
 		loadGameReplay(filename);
+		//stepReplayForward();
+		toggleReplayType();
 	}
 	
 	/**
