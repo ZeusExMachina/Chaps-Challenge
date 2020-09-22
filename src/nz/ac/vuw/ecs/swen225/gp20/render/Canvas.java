@@ -25,6 +25,7 @@ public class Canvas extends JPanel {
   private BufferedImage defaultImage;
   private final int centerOffset = 4;
   private Actor chap;
+  private boolean isGameStarted = false;
   
   /**
    * private constructor as there should only be one instance of canvas at a time.
@@ -115,6 +116,7 @@ public class Canvas extends JPanel {
    * @param g - Graphics object (do not call this method)
    */
   public void paint(Graphics g) {
+    if(!isGameStarted)return;
     int xIndex = origin.getX() - centerOffset;
     int yIndex = origin.getY() - centerOffset;
     for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
@@ -156,6 +158,7 @@ public class Canvas extends JPanel {
    * @param chap - The actor chap
    */
   public void display(Tile[][] board, Actor chap) {
+    isGameStarted = true;
     this.board = board;
     this.chap = chap;
     setOrigin(chap.getPosition().getX(), chap.getPosition().getY());
