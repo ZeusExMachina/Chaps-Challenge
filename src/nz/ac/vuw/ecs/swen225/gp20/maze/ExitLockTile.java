@@ -55,7 +55,7 @@ public class ExitLockTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("exit_lock.png"));
+		return ImageIO.read(new File("resources/exit_lock.png"));
 	}
 
 	@Override

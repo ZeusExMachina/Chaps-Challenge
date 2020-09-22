@@ -41,7 +41,7 @@ public class FreeTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("free.png"));
+		return ImageIO.read(new File("resources/free.png"));
 	}
 
 	@Override

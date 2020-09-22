@@ -61,7 +61,7 @@ public class HelpTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("help.png"));
+		return ImageIO.read(new File("resources/help.png"));
 	}
 
 	@Override

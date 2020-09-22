@@ -79,7 +79,7 @@ public class Actor {
 	 * @throws IOException when the file name isn't found
 	 */
 	public BufferedImage getImage() throws IOException {
-		String file = name + "-" + direction.toString() + ".png";
+		String file = "resources/" +name + "_" + direction.toString() + ".png";
 		return ImageIO.read(new File(file));
 	}
 

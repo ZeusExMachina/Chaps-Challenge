@@ -40,7 +40,7 @@ public class WallTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("wall.png"));
+		return ImageIO.read(new File("resources/wall.png"));
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class DoorTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("door.png"));
+		return ImageIO.read(new File("resources/door.png"));
 	}
 
 	@Override

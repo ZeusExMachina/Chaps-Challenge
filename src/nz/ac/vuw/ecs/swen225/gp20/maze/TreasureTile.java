@@ -41,7 +41,7 @@ public class TreasureTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("treasure.png"));
+		return ImageIO.read(new File("resources/treasure.png"));
 	}
 
 	@Override

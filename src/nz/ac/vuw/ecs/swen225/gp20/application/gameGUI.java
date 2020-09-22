@@ -1,6 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,8 +47,9 @@ public class gameGUI{
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
 
-        JPanel map = new JPanel();
-        map.setBackground(Color.red);
+        //JPanel map = new JPanel();
+        Canvas map = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        //map.setBackground(Color.red);
 
         //to remove, contents to be map
         JLabel tempLabel = new JLabel();
