@@ -15,10 +15,19 @@ import com.google.gson.Gson;
  * @author Elijah Guarina
  */
 public class Recorder {
+	
+	// ----------------------------------------
+	// --------------- FIELDS -----------------
+	// ----------------------------------------
+	
 	/**
 	 * Stores the history of actions done by actors as a Queue of ActionRecords.
 	 */
 	private final Queue<ActionRecord> actionHistory;
+	
+	// ----------------------------------------
+	// ------------ CONSTRUCTOR ---------------
+	// ----------------------------------------
 	
 	/**
 	 * Make a new Recorder with an empty actions history.
@@ -26,6 +35,10 @@ public class Recorder {
 	public Recorder() {
 		this.actionHistory = new ArrayDeque<ActionRecord>();
 	}
+	
+	// ----------------------------------------
+	// --------------- RECORD -----------------
+	// ----------------------------------------
 	
 	/**
 	 * Add a new action to the action history stored in the Recorder.
@@ -38,11 +51,16 @@ public class Recorder {
 		actionHistory.add(new ActionRecord(actorName, action, direction, timeStamp));
 	}
 	
+	// ----------------------------------------
+	// ---------------- SAVE ------------------
+	// ----------------------------------------
+	
 	/**
 	 * Save the game history as a JSON file.
 	 * @param filename is what the resulting file will be named
 	 */
 	public void saveGame(String filename) {
+		// TODO: Add the level/stage number so that when replaying, Replayer object can tell Persistence module to load a new game with a particular level
 		try {
 			Writer writer = Files.newBufferedWriter(Paths.get(filename));
 			new Gson().toJson(actionHistory, writer);

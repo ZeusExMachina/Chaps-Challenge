@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 import com.google.common.base.Preconditions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -225,7 +226,7 @@ public class Maze {
 	 * @param type class to count
 	 * @return count of items belonging to certain class
 	 */
-	private int countTypesInInventory(Class<?> type) {
+	public int countTypesInInventory(Class<?> type) {
 		int result = 0;
 		for (Tile t : inventory) {
 			if (t.getClass().equals(type)) result++;
@@ -275,8 +276,8 @@ public class Maze {
 			Tile t = getNeighbouringTile(chap.getPosition(), d);
 			if (t.canMoveTo(this)) {
 				chap.move(t.getPosition(), d);
-				if (t.isObtainable()) {
-					inventory.add(t);
+				if (t.isCleared()) {
+					if (t.isInventoried()) inventory.add(t);
 					clearTile(chap.getPosition());
 					if (t instanceof TreasureTile) {
 						treasuresLeft--;
@@ -328,5 +329,20 @@ public class Maze {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Get an unmodifiable list of what the player has in inventory
+	 * @return immutable inventory list
+	 */
+	public List<Tile> getInventory() {
+		return Collections.unmodifiableList(inventory);
+	}
+
+	/**
+	 * Clear the inventory, e.g. in a new level.
+	 */
+	public void clearInventory() {
+		inventory.clear();
 	}
 }

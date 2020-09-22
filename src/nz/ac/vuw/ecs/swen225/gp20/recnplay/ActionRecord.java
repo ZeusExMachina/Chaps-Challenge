@@ -5,14 +5,35 @@ package nz.ac.vuw.ecs.swen225.gp20.recnplay;
  * @author Elijah Guarina
  */
 public class ActionRecord {
-	private final String actorName;
-	private final Action action;
-	private final MoveDirection direction;
-	private final double timeStamp;
+	
+	// ------------------------------------------------
+	// ------------------- FIELDS ---------------------
+	// ------------------------------------------------
 	
 	/**
+	 * The name of the actor that performed this recorded action.
+	 */
+	private final String actorName;
+	/**
+	 * Describes the type of action performed.
+	 */
+	private final Action action;
+	/**
+	 * Describes the direction the action moved in for this recorded action.
+	 */
+	private final MoveDirection direction;
+	/**
+	 * The time of the game at which the action was performed.
+	 */
+	private final double timeStamp;
+	
+	// ------------------------------------------------
+	// --- ENUMERATIONS (ACTION TYPES & DIRECTIONS) ---
+	// ------------------------------------------------
+	
+	// TODO: Need to finalize what different movements (i.e. how many different Action enums) are necessary.
+	/**
 	 * Enumeration of the type of action that the actor performed.
-	 * TODO: Need to finalize what different movements (i.e. how many different Action enums) are necessary.
 	 */
 	public static enum Action { 
 		/**
@@ -63,6 +84,10 @@ public class ActionRecord {
 		RIGHT
 	}
 	
+	// ------------------------------------------------
+	// ----------------- CONSTRUCTOR ------------------
+	// ------------------------------------------------
+	
 	/**
 	 * Create a new record of an action with a given actor, information 
 	 * about what the actor did, and the time at which the action was performed.
@@ -77,6 +102,10 @@ public class ActionRecord {
 		this.direction = dir;
 		this.timeStamp = time;
 	}
+	
+	// ------------------------------------------------
+	// ------------- GETTERS & SETTERS ----------------
+	// ------------------------------------------------
 	
 	/**
 	 * Get the name of the actor of this ActionRecord.

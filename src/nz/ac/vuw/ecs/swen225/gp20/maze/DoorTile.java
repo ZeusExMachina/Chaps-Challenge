@@ -46,8 +46,13 @@ public class DoorTile implements Tile {
 	}
 
 	@Override
-	public boolean isObtainable() {
+	public boolean isCleared() {
 		return true;
+	}
+
+	@Override
+	public boolean isInventoried() {
+		return false;
 	}
 
 	@Override
