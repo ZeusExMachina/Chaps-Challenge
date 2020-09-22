@@ -33,70 +33,74 @@ public class Canvas extends JPanel {
   private Canvas() {
     this.setPreferredSize(new Dimension(576, 576));
     //all of this is for debugging
-    this.setFocusable(true);
-    this.requestFocus();
-    this.addKeyListener((new KeyAdapter() {
-      @Override
-      public void keyPressed(KeyEvent e) {
-        super.keyPressed(e);
-        int x = origin.getX();
-        int y = origin.getY();
-        Direction dir;
-        switch (e.getKeyChar()) {
-          case 'w':
-            y--;
-            dir = Direction.NORTH;
-            break;
-          case 's':
-            y++;
-            dir = Direction.SOUTH;
-            break;
-          case 'a':
-            x--;
-            dir = Direction.WEST;
-            break;
-          case 'd':
-            x++;
-            dir = Direction.EAST;
-            break;
-          default:
-            dir = Direction.SOUTH;
-        }
-        chap.move(new Position(x, y), dir);
-        setOrigin(x, y);
-      }
-    }));
-    String[] in = {
-        "________________________",
-        "________________________",
-        "________________________",
-        "___/____________________",
-        "______/_________________",
-        "______!_________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "_______@________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "___/____________________",
-        "______/_________________",
-        "______!_________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "________________________",
-        "_______@________________",
+   
+   
+//    this.setFocusable(true);
+//    this.requestFocus();
+//    this.addKeyListener((new KeyAdapter() {
+//      @Override
+//      public void keyPressed(KeyEvent e) {
+//        super.keyPressed(e);
+//        int x = origin.getX();
+//        int y = origin.getY();
+//        Direction dir;
+//        switch (e.getKeyChar()) {
+//          case 'w':
+//            y--;
+//            dir = Direction.NORTH;
+//            break;
+//          case 's':
+//            y++;
+//            dir = Direction.SOUTH;
+//            break;
+//          case 'a':
+//            x--;
+//            dir = Direction.WEST;
+//            break;
+//          case 'd':
+//            x++;
+//            dir = Direction.EAST;
+//            break;
+//          default:
+//            dir = Direction.SOUTH;
+//        }
+//        chap.move(new Position(x, y), dir);
+//        setOrigin(x, y);
+//      }
+//    }));
+//    String[] in = {
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "___/____________________",
+//        "______/_________________",
+//        "______!_________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "_______@________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "___/____________________",
+//        "______/_________________",
+//        "______!_________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "________________________",
+//        "_______@________________",
+//
+//    };
+//    Maze m = new Maze(in);
+//    this.board = m.board;
+//    origin = new Position(12, 12);
+//    chap = new Actor(origin, "chap");
     
-    };
-    Maze m = new Maze(in);
-    board = m.board;
-    origin = new Position(12, 12);
-    chap = new Actor(origin, "chap");
+    
     //debugging code finishes here.
     try {
       defaultImage = ImageIO.read(new File("resources/wall.png"));
@@ -153,6 +157,7 @@ public class Canvas extends JPanel {
    */
   public void display(Tile[][] board, Actor chap) {
     this.board = board;
+    this.chap = chap;
     setOrigin(chap.getPosition().getX(), chap.getPosition().getY());
     this.repaint();
   }
