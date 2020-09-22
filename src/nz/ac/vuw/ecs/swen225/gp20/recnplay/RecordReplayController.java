@@ -126,12 +126,18 @@ public class RecordReplayController {
 	public void test() {
 		recorder.recordNewAction("Bob", ActionRecord.Action.MOVE, ActionRecord.MoveDirection.LEFT, 5.04);
 		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 10.69);
+		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 15.69);
+		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 20.69);
+		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 25.69);
+		recorder.recordNewAction("James", ActionRecord.Action.PICKUP_KEY, ActionRecord.MoveDirection.RIGHT, 30.69);
 		
 		String filename = "recorder_test.json";
 		saveGame(filename);
 		loadGameReplay(filename);
-		//stepReplayForward();
+		stepReplayForward();
 		toggleReplayType();
+		setReplaySpeed(2.0);
+		//loadGameReplay(filename);
 	}
 	
 	/**
