@@ -26,6 +26,10 @@ public class Replayer {
 	 * Stores the history of actions done by actors from a loaded game replay.
 	 */
 	private Queue<ActionRecord> gameRecordHistory;
+	/**
+	 * The GUI associated with the game.
+	 */
+	private GameGUI gui;
 	
 	// TODO: Add the Persistence module object as a field
 	
@@ -38,6 +42,10 @@ public class Replayer {
 	 * The speed at which recorded actions are performed.
 	 */
 	private double replaySpeed;
+	/**
+	 * The timestamp within a loaded game that this Replayer is currently at.
+	 */
+	private double currentTimeInReplay;
 	/**
 	 * Timer used to perform actions on a regular basis.
 	 */
@@ -52,9 +60,9 @@ public class Replayer {
 	// ------------------------------------------------
 	
 	/**
-	 * The period between two replayed actions when the replay speed is 1.0x (only during auto-replay mode).
+	 * The period between two distinct timestamps in a game being replayed when the replay speed is 1.0x (only relevant while in auto-replay mode).
 	 */
-	private final long DEFAULT_DELAY_MILLIS = 1500l;
+	private final long DEFAULT_DELAY_MILLIS = 100l;
 	
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
@@ -68,14 +76,17 @@ public class Replayer {
 	/**
 	 * Create a new Replayer that is associated with a given 
 	 * Controller.
-	 * @param gui is the GUI associated with the game
+	 * @param ui is the GUI associated with the game
 	 */
-	public Replayer(GameGUI gui) {
+	public Replayer(GameGUI ui) {
+		this.gui = ui;
+		// TODO: Add the Persistence module object to this constructor here
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
+		this.currentTimeInReplay = 0.0;
 		this.timer = new Timer();
-		this.replayedAction = new ActionPlayer(gui);
-		// TODO: Add the Persistence module object to this constructor
+		this.replayedAction = new ActionPlayer();
+		
 	}
 	
 	// ------------------------------------------------
@@ -113,9 +124,10 @@ public class Replayer {
 			throw new IllegalArgumentException("Invalid replay speed value of " + speed + " entered.");
 		} else {
 			replaySpeed = speed;
-			timer.cancel();
-			timer.purge();
-			timer.schedule(replayedAction, (long)(DEFAULT_DELAY_MILLIS*replaySpeed), (long)(DEFAULT_DELAY_MILLIS*replaySpeed));
+			if (autoReplaying || gameRecordHistory == null || gameRecordHistory.isEmpty()) {
+				resetTimer();
+				timer.schedule(replayedAction, (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+			}
 		}
 	}
 	
@@ -129,26 +141,39 @@ public class Replayer {
 	 */
 	private class ActionPlayer extends TimerTask {
 		/**
-		 * The GUI associated with the game.
-		 */
-		private GameGUI gui;
-		
-		/**
-		 * Create a new ActionPlayer to play through recorded actions.
-		 * @param ui is the GUI associated with the games
-		 */
-		public ActionPlayer(GameGUI ui) {
-			this.gui = ui;
-		}
-		
-		/**
-		 * Perform a move on the GUI based on the values of the ActionRecord.
+		 * Check if we can perform the next recorded action in the queue (if any).
+		 * Also increment the current time in the game being replayed if necessary.
 		 */
 		@Override
 		public void run() {
-			if (gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
+			System.out.println("current time = " + currentTimeInReplay);
+			// Only perform an action if there is a loaded game that has not been finished
+			if (gameRecordHistory != null && !gameRecordHistory.isEmpty()) {
+				// If the next action was performed at this time in the 
+				// recorded game, 
+				if (gameRecordHistory.peek().getTimeStamp() <= currentTimeInReplay) {
+					replayAction();
+				}
+				// After replaying, check if the replay has finished. If so, stop auto-replaying.
+				if (gameRecordHistory.isEmpty()) { 
+					autoReplaying = false;
+					resetTimer();
+					return;
+				}
+			}
+			// If in auto-replay mode, increment the replay time.
+			if (autoReplaying) { currentTimeInReplay += DEFAULT_DELAY_MILLIS/1000.0; }
+		}
+		
+		/**
+		 * Perform a move on the GUI based on the values of the ActionRecord 
+		 * of the next recorded action in the queue.
+		 */
+		private void replayAction() {
 			ActionRecord actionToReplay = gameRecordHistory.poll();
-			// TODO: add the logic for deciding what move to make for which actor
+			// TODO: Add the logic for deciding what move to make for which actor
+			// TODO: Note that we probably shouldn't use Maze's Direction Enum, as this package is not allowed to access Maze.
+			// TODO: Instead, might need application to translate our ActionRecord.MoveDirection Enum into Maze's Enum
 			// Just a test
 			System.out.println("Replayed action: " + actionToReplay);
 		}
@@ -164,22 +189,42 @@ public class Replayer {
 	 */
 	public void toggleReplayType() {
 		autoReplaying = !autoReplaying;
+		if (gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
 		if (autoReplaying) {
-			// Switch to Auto-Replay mode - Regularly replay actions from a loaded game.
-			timer.schedule(replayedAction, (long)(DEFAULT_DELAY_MILLIS*replaySpeed), (long)(DEFAULT_DELAY_MILLIS*replaySpeed));
+			// Switched to Auto-Replay mode - Replay actions from a loaded game in real time.
+			timer.schedule(replayedAction, 
+				gameRecordHistory != null && gameRecordHistory.isEmpty() ? (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : 0l, 
+				(long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 		} else {
-			// Switch to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
-			timer.cancel();
-			timer.purge();
+			// Switched to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
+			resetTimer();
 		}
 	}
 	
 	/**
 	 * When in step-by-step replay mode, perform the next action.
+	 * Adjusts the current time in the replayed game to the 
+	 * recorded time that the action to replay was performed.
+	 * Should only be called while in step-by-step mode. If in 
+	 * auto-replay mode, nothing will happen.
 	 */
 	public void replayNextAction() {
-		if (autoReplaying) { return; }
+		// Do nothing if auto-replaying, or if there is no game to replay
+		if (autoReplaying || gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
+		currentTimeInReplay = gameRecordHistory.peek().getTimeStamp();
 		replayedAction.run();
+	}
+	
+	/**
+	 * Remove the previously scheduled actions to be automatically 
+	 * replayed, and create a new Timer and ActionPlayer. This does 
+	 * not affect the time that the replay has been playing for.
+	 */
+	private void resetTimer() {
+		timer.cancel();
+		timer.purge();
+		timer = new Timer();
+		replayedAction = new ActionPlayer();
 	}
 	
 	// ----------------------------------------------
@@ -196,6 +241,7 @@ public class Replayer {
 			Reader reader = Files.newBufferedReader(Paths.get(filename));
 			gameRecordHistory = new ArrayDeque<ActionRecord>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+			currentTimeInReplay = 0.0;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
