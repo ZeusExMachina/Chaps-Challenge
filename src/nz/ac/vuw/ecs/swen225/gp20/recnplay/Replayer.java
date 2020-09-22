@@ -10,7 +10,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
-import nz.ac.vuw.ecs.swen225.gp20.application.gameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -70,7 +70,7 @@ public class Replayer {
 	 * Controller.
 	 * @param gui is the GUI associated with the game
 	 */
-	public Replayer(gameGUI gui) {
+	public Replayer(GameGUI gui) {
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
 		this.timer = new Timer();
@@ -131,13 +131,13 @@ public class Replayer {
 		/**
 		 * The GUI associated with the game.
 		 */
-		private gameGUI gui;
+		private GameGUI gui;
 		
 		/**
 		 * Create a new ActionPlayer to play through recorded actions.
 		 * @param ui is the GUI associated with the games
 		 */
-		public ActionPlayer(gameGUI ui) {
+		public ActionPlayer(GameGUI ui) {
 			this.gui = ui;
 		}
 		

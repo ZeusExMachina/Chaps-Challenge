@@ -1,6 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
-import nz.ac.vuw.ecs.swen225.gp20.application.gameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 
 /**
  * Communicates with the Application and the Persistence modules
@@ -32,7 +32,7 @@ public class RecordReplayController {
 	 * with a given GUI and a given Persistence module.
 	 * @param ui is the GUI of this game
 	 */
-	public RecordReplayController(gameGUI ui) {
+	public RecordReplayController(GameGUI ui) {
 	  // TODO: Add Persistence Module object as another parameter, and also add it as an argument to the Replayer object
 	  this.recorder = new Recorder();
 	  this.replayer = new Replayer(ui);

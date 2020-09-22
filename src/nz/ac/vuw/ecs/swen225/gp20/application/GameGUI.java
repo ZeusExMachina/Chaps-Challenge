@@ -11,7 +11,11 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class gameGUI{
+/**
+ * The main display gui
+ * controls level display and controls
+ */
+public class GameGUI {
     JFrame mainFrame = new JFrame("Chip's Challenge");
 
     JPanel controls = new JPanel();
@@ -20,7 +24,7 @@ public class gameGUI{
 
     //to be received form other classes
     int level;
-    int timeVal;
+    double timeVal;
     int chipsRemaining;
 
     ArrayList<Object> keys = new ArrayList<>(); //TODO: Add appropriate class type
@@ -33,9 +37,11 @@ public class gameGUI{
     JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
 
-
-
-    public gameGUI(){
+    /**
+     * Constructor for the gui
+     * made up of two made frames, maze display and control panel
+     */
+    public GameGUI(){
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -99,13 +105,7 @@ public class gameGUI{
 
             }
         });
-
-
-
-
         controlsStart();
-
-
     }
 
     /**
@@ -134,7 +134,7 @@ public class gameGUI{
         JPanel startPanel = new JPanel();
         JButton startGame = new JButton("Start Game");
 
-        bottomHalf.setBorder(BorderFactory.createTitledBorder("Potentially display controls here}"));
+        bottomHalf.setBorder(BorderFactory.createTitledBorder("Potentially display controls here"));
 
 
         startGame.setFocusable(false);
@@ -144,8 +144,6 @@ public class gameGUI{
             }
             startTime();
             controls.repaint();
-
-
             controlsGamePlay();
         };
 
@@ -176,7 +174,7 @@ public class gameGUI{
         //TIME
         JPanel timerPanel = new JPanel();
         //timerPanel.setBorder(BorderFactory.createTitledBorder("Timer"));
-        timeLabel.setText("TIME: " + String.format("%03d",timeVal));
+        timeLabel.setText("TIME: " + String.format("%03d",(int)timeVal));
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         timerPanel.add(timeLabel);
 
@@ -192,7 +190,7 @@ public class gameGUI{
 
         //KEYS
         JPanel keysPanel = new JPanel();
-        keysPanel.setBorder(BorderFactory.createTitledBorder("Keys"));
+        keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
 
 
@@ -247,7 +245,6 @@ public class gameGUI{
      */
     public void controlKeyUse(KeyEvent e){
         int keyPressed = e.getKeyCode();
-        System.out.println("test");
         switch (keyPressed){
 
             case KeyEvent.VK_X:
@@ -265,6 +262,8 @@ public class gameGUI{
             case KeyEvent.VK_1:
                 System.out.println("New Game");
                 break;
+            default:
+                break;
 
         }
     }
@@ -280,16 +279,16 @@ public class gameGUI{
 
             case KeyEvent.VK_UP:
                 moveCalled(Direction.NORTH);
-                return;
+                break;
             case KeyEvent.VK_RIGHT:
                 moveCalled(Direction.EAST);
-                return;
+                break;
             case KeyEvent.VK_DOWN:
                 moveCalled(Direction.SOUTH);
-                return;
+                break;
             case KeyEvent.VK_LEFT:
                 moveCalled(Direction.WEST);
-                return;
+                break;
             case KeyEvent.VK_SPACE:
                 if(!pauseState) {
                     pauseState = true;
@@ -299,8 +298,9 @@ public class gameGUI{
                 }else{
                     System.out.println("game already paused");
                 }
-                return;
-
+                break;
+            default:
+                break;
         }
 
     }
@@ -329,7 +329,7 @@ public class gameGUI{
             return;
         }
         timer = new Timer();
-        timer.schedule(createTask(), 1000,1000);
+        timer.schedule(createTask(), 500,100);
 
     }
 
@@ -342,14 +342,13 @@ public class gameGUI{
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-
-                timeLabel.setText("TIME: " + String.format("%03d",timeVal));
-                if(timeVal == 0){
+                timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                if(timeVal <= 0){
                     timer.cancel();
                     timeLabel.setForeground(Color.red);
                     //restart level
                 }else{
-                    timeVal = timeVal -1 ;
+                    timeVal = timeVal - 0.1 ;
                 }
             }
         };
@@ -375,11 +374,8 @@ public class gameGUI{
         }
     }
 
-    public void addKey(Object key){
-        keys.add(key);
-    }
-
-    public void useKey(Object key){
-        keys.remove(key);
+    public void updateInventory(){
+        //this.keys; //get from maze
+        return;
     }
 }
