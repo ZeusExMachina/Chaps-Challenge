@@ -14,10 +14,17 @@ public interface Tile {
 	boolean canMoveTo(Maze m);
 
 	/**
-	 * Find out whether or not the player can pick up this tile
-	 * @return true if player can pick up tile
+	 * Find out whether or not the player can clear this tile
+	 * @return true if player can clear tile
 	 */
-	boolean isObtainable();
+	boolean isCleared();
+
+	/**
+	 * Find out whether or not the player can pick up this tile
+	 * and put into inventory
+	 * @return true if player can put in inventory
+	 */
+	boolean isInventoried();
 
 	/**
 	 * Get the image representing tile

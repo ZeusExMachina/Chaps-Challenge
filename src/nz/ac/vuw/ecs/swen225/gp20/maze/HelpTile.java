@@ -55,7 +55,12 @@ public class HelpTile implements Tile {
 	}
 
 	@Override
-	public boolean isObtainable() {
+	public boolean isCleared() {
+		return false;
+	}
+
+	@Override
+	public boolean isInventoried() {
 		return false;
 	}
 

@@ -43,7 +43,12 @@ public class KeyTile implements Tile {
 	}
 
 	@Override
-	public boolean isObtainable() {
+	public boolean isCleared() {
+		return true;
+	}
+
+	@Override
+	public boolean isInventoried() {
 		return true;
 	}
 

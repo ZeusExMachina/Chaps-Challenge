@@ -225,7 +225,7 @@ public class Maze {
 	 * @param type class to count
 	 * @return count of items belonging to certain class
 	 */
-	private int countTypesInInventory(Class<?> type) {
+	public int countTypesInInventory(Class<?> type) {
 		int result = 0;
 		for (Tile t : inventory) {
 			if (t.getClass().equals(type)) result++;
@@ -275,8 +275,8 @@ public class Maze {
 			Tile t = getNeighbouringTile(chap.getPosition(), d);
 			if (t.canMoveTo(this)) {
 				chap.move(t.getPosition(), d);
-				if (t.isObtainable()) {
-					inventory.add(t);
+				if (t.isCleared()) {
+					if (t.isInventoried()) inventory.add(t);
 					clearTile(chap.getPosition());
 					if (t instanceof TreasureTile) {
 						treasuresLeft--;
