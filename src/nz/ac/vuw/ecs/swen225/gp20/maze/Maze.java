@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -332,6 +334,28 @@ public class Maze {
 	}
 
 	/**
+	 * Get the images required to render the board, restricting access
+	 * to the board.
+	 * @return array of images to display
+	 */
+	public BufferedImage[][] getImages() {
+		BufferedImage[][] result = new BufferedImage[board.length][board[0].length];
+		try {
+			for (int row = 0; row < board.length; row++) {
+				for (int col = 0; col < board[row].length; col++) {
+					result[row][col] = board[row][col].getImage();
+				}
+			}
+			Position chapPos = chap.getPosition();
+			result[chapPos.getY()][chapPos.getX()] = chap.getImage();
+		} catch (IOException e) {
+			System.out.println("Image not loaded, is /resources/ at root?");
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
 	 * Get an unmodifiable list of what the player has in inventory
 	 * @return immutable inventory list
 	 */
@@ -344,5 +368,13 @@ public class Maze {
 	 */
 	public void clearInventory() {
 		inventory.clear();
+	}
+
+	/**
+	 * Retrieve Chap's current position.
+	 * @return chap's position
+	 */
+	public Position getChapPosition() {
+		return chap.getPosition();
 	}
 }

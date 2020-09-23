@@ -57,6 +57,8 @@ public class DoorTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
+//		String file = "resources/door_" + colour.ordinal() + ".png";
+//		return ImageIO.read(new File(file));
 		return ImageIO.read(new File("resources/door.png"));
 	}
 

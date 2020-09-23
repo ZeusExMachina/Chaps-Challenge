@@ -73,6 +73,8 @@ public class KeyTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
+//		String file = "resources/key_" + colour.ordinal() + ".png";
+//		return ImageIO.read(new File(file));
 		return ImageIO.read(new File("resources/key.png"));
 	}
 
