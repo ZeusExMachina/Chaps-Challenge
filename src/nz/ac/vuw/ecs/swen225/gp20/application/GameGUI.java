@@ -37,6 +37,7 @@ public class GameGUI {
     boolean pauseState = false;
     JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
+    Canvas map;
 
     /**
      * Constructor for the gui
@@ -54,26 +55,27 @@ public class GameGUI {
         gc.fill = GridBagConstraints.BOTH;
 
         //JPanel map = new JPanel();
-        Canvas map = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        map = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        map.display();
         //map.setBackground(Color.red);
 
         //to remove, contents to be map
-        JLabel tempLabel = new JLabel();
-        tempLabel.setText("The map goes here");
-        map.add(tempLabel);
+//        JLabel tempLabel = new JLabel();
+//        tempLabel.setText("The map goes here");
+//        map.add(tempLabel);
 
         gc.weightx = 0.7;
         gc.weighty = 1;
         gc.gridx = 0;
         gc.gridy = 0;
-        map.setSize((int)0.7*mainFrame.getWidth(), mainFrame.getHeight());
+        map.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
         mainFrame.getContentPane().add(map, gc);
 
         gc.weightx = 0.3;
         gc.weighty = 1;
         gc.gridx = 1;
         gc.gridy = 0;
-        controls.setSize(new Dimension((int)0.3*mainFrame.getWidth(), mainFrame.getHeight()));
+        controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, gc);
         //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
