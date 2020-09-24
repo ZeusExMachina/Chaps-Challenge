@@ -3,7 +3,6 @@ package nz.ac.vuw.ecs.swen225.gp20.persistence;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
@@ -26,7 +25,8 @@ public class LevelCreator {
      * Create the JSON file
      */
     private void generateLevelOne(){
-        String[] levelOneRawData = {"_____________________",
+        String[] levelOneLayout = {
+                "_____________________",
                 "_____________________",
                 "_____________________",
                 "_____/////_/////_____",
@@ -50,7 +50,8 @@ public class LevelCreator {
         try {
             Writer writer = Files.newBufferedWriter(Paths.get("levels/level1.json"));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            gson.toJson(levelOneRawData, writer);
+            Level levelOne = new Level(1, levelOneLayout, 100);
+            gson.toJson(levelOne, writer);
             writer.flush();
             writer.close();
         } catch (IOException e) {
@@ -60,7 +61,7 @@ public class LevelCreator {
 
     /**
      * Generates the output file
-     * @param args
+     * @param args string args
      */
     public static void main(String[] args){
         new LevelCreator();
