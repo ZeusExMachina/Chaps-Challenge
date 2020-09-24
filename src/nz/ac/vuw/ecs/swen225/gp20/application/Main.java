@@ -8,8 +8,10 @@ public class Main {
     int timeVal = 10;
 
 
-    public Main(){
-        SwingUtilities.invokeLater(() -> board = new GameGUI());
+    public Main() {
+        SwingUtilities.invokeLater(() -> {
+            board = new GameGUI();
+        });
     }
     /**
      * Starts the game

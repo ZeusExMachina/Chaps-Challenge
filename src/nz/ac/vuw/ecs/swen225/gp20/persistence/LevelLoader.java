@@ -20,7 +20,7 @@ public class LevelLoader {
     /**
      * Constructor for LevelLoader.
      */
-    LevelLoader(){
+    public LevelLoader(){
         levels = detectLevelFiles();
     }
 
