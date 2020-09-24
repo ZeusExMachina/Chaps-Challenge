@@ -1,0 +1,60 @@
+package nz.ac.vuw.ecs.swen225.gp20.persistence;
+
+/**
+ * This class represents a level of the game. Each Level consists of a
+ * level number, a clock value, and a layout of tiles. Each of these classes
+ * contains information read in from a JSON file in the levels folder.
+ */
+public class Level {
+
+    /**
+     * The arrangement of tiles
+     */
+    private final String[] layout;
+    /**
+     * Number of seconds to play the level
+     */
+    private final int clock;
+    /**
+     * The level number shown in the GUI
+     */
+    private final int levelNumber;
+
+    /**
+     * Constructor for a Level
+     *
+     * @param levelNumber the level number displayed on the GUI
+     * @param levelLayout the arrangement of Tiles represented as a 2D array
+     *                    of Strings
+     * @param clock the number of seconds allowed to play the level
+     */
+    Level(int levelNumber, String[] levelLayout, int clock){
+        this.layout = levelLayout;
+        this.levelNumber = levelNumber;
+        this.clock = clock;
+    }
+
+    /**
+     * Get the level's layout
+     * @return a String representation of the Level's Tiles
+     */
+    public String[] getLayout() {
+        return layout;
+    }
+
+    /**
+     * Get the level's clock value
+     * @return the number of seconds allowed to complete this level
+     */
+    public int getClock() {
+        return clock;
+    }
+
+    /**
+     * Get the level number as defined in the JSON filename
+     * @return the level number
+     */
+    public int getLevelNumber() {
+        return levelNumber;
+    }
+}
