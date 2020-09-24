@@ -5,7 +5,7 @@ package nz.ac.vuw.ecs.swen225.gp20.persistence;
  * level number, a clock value, and a layout of tiles. Each of these classes
  * contains information read in from a JSON file in the levels folder.
  */
-public class Level {
+class Level {
 
     /**
      * The arrangement of tiles
@@ -28,7 +28,7 @@ public class Level {
      *                    of Strings
      * @param clock the number of seconds allowed to play the level
      */
-    Level(int levelNumber, String[] levelLayout, int clock){
+    protected Level(int levelNumber, String[] levelLayout, int clock){
         this.layout = levelLayout;
         this.levelNumber = levelNumber;
         this.clock = clock;
@@ -38,7 +38,7 @@ public class Level {
      * Get the level's layout
      * @return a String representation of the Level's Tiles
      */
-    public String[] getLayout() {
+    protected String[] getLayout() {
         return layout;
     }
 
@@ -46,7 +46,7 @@ public class Level {
      * Get the level's clock value
      * @return the number of seconds allowed to complete this level
      */
-    public int getClock() {
+    protected int getClock() {
         return clock;
     }
 
@@ -54,7 +54,7 @@ public class Level {
      * Get the level number as defined in the JSON filename
      * @return the level number
      */
-    public int getLevelNumber() {
+    protected int getLevelNumber() {
         return levelNumber;
     }
 }

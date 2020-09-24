@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.*;
 
 /**
  *  A class responsible for loading level data from json files.
@@ -15,13 +16,19 @@ public class LevelLoader {
     /**
      * Stores the JSON files that hold level layout data
      */
-    private final File[] levels;
+    private final File[] levelFiles;
+
+    /**
+     * Store the Level objects created from the JSON files
+     */
+    private final TreeMap<Integer, Level> levels;
 
     /**
      * Constructor for LevelLoader.
      */
-    LevelLoader(){
-        levels = detectLevelFiles();
+    public LevelLoader(){
+        levelFiles = detectLevelFiles();
+        levels = createLevels();
     }
 
     /**
@@ -36,29 +43,66 @@ public class LevelLoader {
     }
 
     /**
-     * Gets the number of levels in the game
+     * Converts the JSON files into Level objects, and orders them in
+     * a List by ascending level number.
      *
-     * @return The number of levels
+     * @return a sorted List of Levels
      */
-    public int getNumberOfLevels(){
-        return levels.length;
+    private TreeMap<Integer, Level> createLevels(){
+        TreeMap<Integer, Level> allLevels = new TreeMap<>();
+        for(File levelFile : levelFiles){
+            try {
+                Gson gson = new Gson();
+                JsonReader reader = new JsonReader(new FileReader(levelFile));
+                Level currentLevel = gson.fromJson(reader, Level.class);
+                allLevels.put(currentLevel.getLevelNumber(), currentLevel);
+            } catch(FileNotFoundException ignored) {}
+        }
+        return allLevels;
     }
 
     /**
-     * Get a String representation of the level.
+     * Check the level number is valid.
      *
      * @param levelNumber The number of the level (starting from 1)
-     * @return A String array representing the level tiles
-     * @throws IllegalArgumentException If the level number doesn't exist
-     * @throws FileNotFoundException If the level file is unable to be read
+     * @return True if there is a level that matches the level number given.
      */
-    public String[] getLevelData(int levelNumber) throws IllegalArgumentException, FileNotFoundException {
-        if(levelNumber < 1 || levelNumber > getNumberOfLevels()){
-            throw new IllegalArgumentException("Not a valid level number.");
+    private boolean isValidLevel(int levelNumber){
+        return levels.containsKey(levelNumber);
+    }
+
+    /**
+     * Get the level layout of Tiles in a String representation.
+     *
+     * @param levelNumber The number of the level
+     * @return A String representation of the level layout.
+     */
+    public String[] getLevelLayout(int levelNumber){
+        if(!isValidLevel(levelNumber)){
+            throw new IllegalArgumentException("That level number is invalid.");
         }
-        Gson gson = new Gson();
-        JsonReader reader = new JsonReader(new FileReader(levels[levelNumber-1]));
-        return gson.fromJson(reader, String[].class);
+        return levels.get(levelNumber).getLayout();
+    }
+
+    /**
+     * Get the clock time for the provided level.
+     *
+     * @param levelNumber The number of the level
+     * @return The amount of time in seconds to complete the level
+     */
+    public int getLevelClock(int levelNumber){
+        if(!isValidLevel(levelNumber)){
+            throw new IllegalArgumentException("That level number is invalid.");
+        }
+        return levels.get(levelNumber).getClock();
+    }
+
+    /**
+     * Obtain an ordered list of all levels loaded.
+     * @return A List of level numbers in ascending order.
+     */
+    public List<Integer> getAllLevelNumbers(){
+        return new ArrayList<>(levels.keySet());
     }
 
     /**
@@ -68,11 +112,8 @@ public class LevelLoader {
      */
     public static void main(String[] args){
         LevelLoader test = new LevelLoader();
-        try {
-            String[] test2 = test.getLevelData(1);
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not load level file");
-        }
+        System.out.println(test.getAllLevelNumbers());
+        String[] test2 = test.getLevelLayout(1);
         System.out.println("test");
     }
 }
