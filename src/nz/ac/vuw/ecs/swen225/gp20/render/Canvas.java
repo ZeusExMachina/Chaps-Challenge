@@ -33,56 +33,9 @@ public class Canvas extends JPanel {
 	 */
 	private Canvas() {
 		this.setPreferredSize(new Dimension(576, 576));
-		//all of this is for debugging
-
-
 		this.setFocusable(true);
 		this.requestFocus();
-//		this.addKeyListener((new KeyAdapter() {
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				super.keyPressed(e);
-//				int x = origin.getX();
-//				int y = origin.getY();
-//				Direction dir;
-//				switch (e.getKeyChar()) {
-//					case 'w':
-//						y--;
-//						dir = Direction.NORTH;
-//						break;
-//					case 's':
-//						y++;
-//						dir = Direction.SOUTH;
-//						break;
-//					case 'a':
-//						x--;
-//						dir = Direction.WEST;
-//						break;
-//					case 'd':
-//						x++;
-//						dir = Direction.EAST;
-//						break;
-//					default:
-//						dir = Direction.SOUTH;
-//				}
-//			}
-//		}));
-//		String[] in = {
-//				"/////////",
-//				"/d#/@/#c/",
-//				"//A/X/B//",
-//				"#C__!__D#",
-//				"_/b_?_a/_",
-//				"//_____//",
-//				"/////////"
-//		};
-//		maze = new Maze(in);
-		// removed board field
 
-		// removed chap field
-
-
-		//debugging code finishes here.
 		try {
 			defaultImage = ImageIO.read(new File("resources/wall.png"));
 		} catch (IOException e) {
@@ -112,7 +65,7 @@ public class Canvas extends JPanel {
 		BufferedImage[][] board = maze.getImages();
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
 			for (int yPlace = 0; yPlace < NUM_ROWS * TILE_SIZE; yPlace += TILE_SIZE) {
-				try { // change image to draw from array
+				try {
 					BufferedImage imageToDraw = board[yIndex][xIndex];
 					g.drawImage(imageToDraw, xPlace, yPlace, this);
 				} catch (ArrayIndexOutOfBoundsException e) {
@@ -123,7 +76,11 @@ public class Canvas extends JPanel {
 			xIndex++;
 			yIndex = origin.getY() - centerOffset;
 		}
-		// don't draw chap, chap is in image array
+		try {
+			g.drawImage(maze.getChapImage(), 4*TILE_SIZE, 4*TILE_SIZE, this);
+		} catch (IOException e) {
+			System.out.println("Chap image missing.");
+		}
 	}
 
 	/**
@@ -144,9 +101,6 @@ public class Canvas extends JPanel {
 	 */
 	public void display() {
 		isGameStarted = true;
-//    this.board = board;
-//    this.chap = chap;
-//    setOrigin(chap.getPosition().getX(), chap.getPosition().getY());
 		this.repaint();
 	}
 
@@ -156,7 +110,7 @@ public class Canvas extends JPanel {
 	 *
 	 * @param d direction to move
 	 */
-	public void setOrigin(Direction d) {
+	public void changeOrigin(Direction d) {
 		int maxXY = maze.getImages().length - 1; // change from board
 		int xPos = origin.getX();
 		int yPos = origin.getY();
@@ -173,6 +127,5 @@ public class Canvas extends JPanel {
 		this.origin = new Position(xPos, yPos);
 		this.repaint();
 	}
-
 
 }
