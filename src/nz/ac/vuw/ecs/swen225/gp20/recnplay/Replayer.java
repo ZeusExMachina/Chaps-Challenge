@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -235,15 +236,45 @@ public class Replayer {
 	 * Load a JSON file of a game replay and store it in the 
 	 * gameHistory queue.
 	 * @param filename is the name of the file to load
+	 * @throws IOException
 	 */
-	public void loadGameReplay(String filename) {
-		try {
-			Reader reader = Files.newBufferedReader(Paths.get(filename));
-			gameRecordHistory = new ArrayDeque<ActionRecord>(
-					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
-			currentTimeInReplay = 0.0;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void loadGameReplay(String filename) throws IOException {
+		Reader reader = Files.newBufferedReader(Paths.get(filename));
+		gameRecordHistory = new ArrayDeque<ActionRecord>(
+				Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+		currentTimeInReplay = 0.0;
+		// TODO: Now that the game record has been loaded, start a new game
+	}
+	
+	// ----------------------------------------------
+	//  TESTING (WON'T BE INCLUDED IN FINAL PRODUCT) 
+	// ----------------------------------------------
+	
+	/**
+	 * Main method for testing
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		RecordReplayController rrc = new RecordReplayController(null);
+		rrc.test();
+		
+		Recorder recorder = new Recorder();
+		Replayer replayer = new Replayer(null);
+		
+		recorder.recordNewAction(Direction.WEST, 5.04);
+		recorder.recordNewAction(Direction.EAST, 10.69);
+		recorder.recordNewAction(Direction.EAST, 15.69);
+		recorder.recordNewAction(Direction.NORTH, 20.69); 
+		recorder.recordNewAction(Direction.SOUTH, 25.69);
+		recorder.recordNewAction(Direction.WEST, 30.69);
+		
+		String filename = "recorder_test.json";
+		recorder.saveGame(filename);
+		try { replayer.loadGameReplay(filename); }
+		catch (Exception e) { }
+		replayer.replayNextAction();
+		replayer.toggleReplayType();
+		replayer.setReplaySpeed(1.0);
+		//loadGameReplay(filename);
 	}
 }
