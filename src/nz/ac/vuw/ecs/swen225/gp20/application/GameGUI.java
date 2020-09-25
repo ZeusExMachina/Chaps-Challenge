@@ -1,13 +1,17 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,12 +41,21 @@ public class GameGUI {
     boolean pauseState = false;
     JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
+    Maze maze;
+    Canvas board;
 
     /**
      * Constructor for the gui
      * made up of two made frames, maze display and control panel
      */
     public GameGUI(){
+        LevelLoader loader = new LevelLoader();
+        try {
+            maze = new Maze(loader.getLevelData(1));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -54,26 +67,28 @@ public class GameGUI {
         gc.fill = GridBagConstraints.BOTH;
 
         //JPanel map = new JPanel();
-        Canvas map = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        board = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        board.display();
+        board.setMaze(maze);
         //map.setBackground(Color.red);
 
         //to remove, contents to be map
-        JLabel tempLabel = new JLabel();
-        tempLabel.setText("The map goes here");
-        map.add(tempLabel);
+//        JLabel tempLabel = new JLabel();
+//        tempLabel.setText("The map goes here");
+//        map.add(tempLabel);
 
         gc.weightx = 0.7;
         gc.weighty = 1;
         gc.gridx = 0;
         gc.gridy = 0;
-        map.setSize((int)0.7*mainFrame.getWidth(), mainFrame.getHeight());
-        mainFrame.getContentPane().add(map, gc);
+        board.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
+        mainFrame.getContentPane().add(board, gc);
 
         gc.weightx = 0.3;
         gc.weighty = 1;
         gc.gridx = 1;
         gc.gridy = 0;
-        controls.setSize(new Dimension((int)0.3*mainFrame.getWidth(), mainFrame.getHeight()));
+        controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, gc);
         //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
@@ -196,7 +211,7 @@ public class GameGUI {
         controls.add(keysPanel);
 
 
-        mainFrame.addKeyListener(new KeyListener() {
+        board.addKeyListener(new KeyAdapter() {
             boolean control = false;
             @Override
             public void keyTyped(KeyEvent e) {
@@ -204,6 +219,7 @@ public class GameGUI {
 
             @Override
             public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
                 if(!pauseState) {
                     if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                         control = true;
@@ -316,7 +332,9 @@ public class GameGUI {
     public void moveCalled(Direction d){
         setChipsRemaining();
         //check keys somehow also
-        System.out.println(d);
+
+        maze.moveChap(d);
+        board.setOrigin(d);
     }
 
     /**
