@@ -36,6 +36,6 @@ public enum Direction {
 
 	@Override
 	public String toString() {
-		return name().toLowerCase();
+		return name().toUpperCase();
 	}
 }
