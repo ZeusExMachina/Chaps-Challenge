@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
+import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -64,15 +66,23 @@ public class GameGUI {
         mainFrame.setResizable(false);
 
         JMenuBar mb = new JMenuBar();
-        JMenu load = new JMenu("Replay");
+        JMenu load = new JMenu("Modes");
         mb.add(load);
+
         JMenuItem loadReplay = new JMenuItem("Load Replay");
+        JMenuItem gameMenu = new JMenuItem("Main Menu");
 
         loadReplay.addActionListener(e -> {
             clearControlFrame();
             replayControls();
         });
+
+        gameMenu.addActionListener(e -> {
+            clearControlFrame();
+            controlsStart();
+        });
         load.add(loadReplay);
+        load.add(gameMenu);
 
         mainFrame.setJMenuBar(mb);
 
@@ -103,6 +113,7 @@ public class GameGUI {
         gc.gridy = 0;
         controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, gc);
+        controls.setPreferredSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
 
@@ -259,7 +270,47 @@ public class GameGUI {
 
     }
 
+    /**
+     * controls for selecting type and file for game replay
+     */
     public void replayControls(){
+        Replayer reloadObject = new Replayer(this);
+        controls.setLayout(new GridLayout(4,1,10,0));
+        JLabel title = new JLabel("Replay Game");
+        title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        controls.add(title);
+
+        JPanel loadPanel = new JPanel();
+        controls.add(loadPanel);
+
+        JButton selectFile = new JButton("Load File");
+        selectFile.setFocusable(false);
+        JLabel fileNameDisplay = new JLabel("No File");
+
+        ActionListener aL = e -> {
+            JFileChooser j = new JFileChooser();
+            j.showSaveDialog(null);
+            try {
+                reloadObject.loadGameReplay(j.getSelectedFile().getName());
+                fileNameDisplay.setForeground(Color.black);
+                selectFile.setText(j.getSelectedFile().getName());
+            } catch (IOException | NullPointerException exp) {
+                fileNameDisplay.setForeground(Color.red);
+                fileNameDisplay.setText("Invalid File");
+                //exp.printStackTrace();
+            }
+        };
+
+        selectFile.addActionListener(aL);
+
+
+        loadPanel.add(selectFile);
+        loadPanel.add(fileNameDisplay);
+
+        controls.revalidate();
+        controls.repaint();
+
 
     }
 
@@ -352,7 +403,6 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
-        //check keys somehow also
 
         maze.moveChap(d);
         board.setOrigin(d);

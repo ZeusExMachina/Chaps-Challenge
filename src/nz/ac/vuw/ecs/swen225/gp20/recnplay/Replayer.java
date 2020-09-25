@@ -238,7 +238,7 @@ public class Replayer {
 	 * @param filename is the name of the file to load
 	 * @throws IOException
 	 */
-	public void loadGameReplay(String filename) throws IOException {
+	public void loadGameReplay(String filename) throws IOException, NullPointerException {
 		Reader reader = Files.newBufferedReader(Paths.get(filename));
 		gameRecordHistory = new ArrayDeque<ActionRecord>(
 				Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
@@ -255,8 +255,6 @@ public class Replayer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		RecordReplayController rrc = new RecordReplayController(null);
-		rrc.test();
 		
 		Recorder recorder = new Recorder();
 		Replayer replayer = new Replayer(null);
