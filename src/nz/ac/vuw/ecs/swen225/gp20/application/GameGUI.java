@@ -50,12 +50,7 @@ public class GameGUI {
      */
     public GameGUI(){
         LevelLoader loader = new LevelLoader();
-        try {
-            maze = new Maze(loader.getLevelData(1));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
+        maze = new Maze(loader.getLevelLayout(1));
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
