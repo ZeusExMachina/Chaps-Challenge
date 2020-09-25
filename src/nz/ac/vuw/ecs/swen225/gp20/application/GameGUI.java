@@ -51,8 +51,8 @@ public class GameGUI {
     public GameGUI(){
         LevelLoader loader = new LevelLoader();
         try {
-            maze = new Maze(loader.getLevelData(1));
-        } catch (FileNotFoundException e) {
+            maze = new Maze(loader.getLevelLayout(1));
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -62,6 +62,19 @@ public class GameGUI {
         mainFrame.setLayout(new GridBagLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
+
+        JMenuBar mb = new JMenuBar();
+        JMenu load = new JMenu("Replay");
+        mb.add(load);
+        JMenuItem loadReplay = new JMenuItem("Load Replay");
+
+        loadReplay.addActionListener(e -> {
+            clearControlFrame();
+            replayControls();
+        });
+        load.add(loadReplay);
+
+        mainFrame.setJMenuBar(mb);
 
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
@@ -156,11 +169,8 @@ public class GameGUI {
 
         startGame.setFocusable(false);
         ActionListener aL = e -> {
-            for(Component c : controls.getComponents()){
-                controls.remove(c);
-            }
+            clearControlFrame();
             startTime();
-            controls.repaint();
             controlsGamePlay();
         };
 
@@ -247,6 +257,17 @@ public class GameGUI {
         controls.revalidate();
         controls.repaint();
 
+    }
+
+    public void replayControls(){
+
+    }
+
+    public void clearControlFrame(){
+        for(Component c : controls.getComponents()){
+            controls.remove(c);
+        }
+        controls.repaint();
     }
 
     public void displayPauseDialog(){
