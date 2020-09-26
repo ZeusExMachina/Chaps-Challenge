@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+
 /**
  * Represents an action done by an actor in the game.
  * @author Elijah Guarina
@@ -9,80 +11,15 @@ public class ActionRecord {
 	// ------------------------------------------------
 	// ------------------- FIELDS ---------------------
 	// ------------------------------------------------
-	
-	/**
-	 * The name of the actor that performed this recorded action.
-	 */
-	private final String actorName;
-	/**
-	 * Describes the type of action performed.
-	 */
-	private final Action action;
+
 	/**
 	 * Describes the direction the action moved in for this recorded action.
 	 */
-	private final MoveDirection direction;
+	private final Direction direction;
 	/**
 	 * The time of the game at which the action was performed.
 	 */
 	private final double timeStamp;
-	
-	// ------------------------------------------------
-	// --- ENUMERATIONS (ACTION TYPES & DIRECTIONS) ---
-	// ------------------------------------------------
-	
-	// TODO: Need to finalize what different movements (i.e. how many different Action enums) are necessary.
-	/**
-	 * Enumeration of the type of action that the actor performed.
-	 */
-	public static enum Action { 
-		/**
-		 * Denotes the actor moving to a new location and not performing any additional actions.
-		 */
-		MOVE, 
-		/**
-		 * 
-		 */
-		PICKUP_KEY, 
-		/**
-		 * 
-		 */
-		PICKUP_CHIP, 
-		/**
-		 * 
-		 */
-		UNLOCK_DOOR, 
-		/**
-		 * 
-		 */
-		UNLOCK_EXIT_LOCK, 
-		/**
-		 * 
-		 */
-		EXIT_LEVEL
-	}
-	
-	/**
-	 * Enumeration of the direction that the actor moved in for this action.
-	 */
-	public static enum MoveDirection { 
-		/**
-		 * Denotes an actor moving in the "Up" (i.e. North) direction.
-		 */
-		UP, 
-		/**
-		 * Denotes an actor moving in the "Left" (i.e. West) direction.
-		 */
-		LEFT, 
-		/**
-		 * Denotes an actor moving in the "Down" (i.e. South) direction.
-		 */
-		DOWN, 
-		/**
-		 * Denotes an actor moving in the "Right" (i.e. East) direction.
-		 */
-		RIGHT
-	}
 	
 	// ------------------------------------------------
 	// ----------------- CONSTRUCTOR ------------------
@@ -91,14 +28,10 @@ public class ActionRecord {
 	/**
 	 * Create a new record of an action with a given actor, information 
 	 * about what the actor did, and the time at which the action was performed.
-	 * @param actor is the name of the actor that performed this action
-	 * @param act is the type of action performed
 	 * @param dir is the direction the actor moved in
 	 * @param time is the time stamp at which this action was performed
 	 */
-	public ActionRecord(String actor, Action act, MoveDirection dir, double time) {
-		this.actorName = actor;
-		this.action = act;
+	public ActionRecord(Direction dir, double time) {
 		this.direction = dir;
 		this.timeStamp = time;
 	}
@@ -108,26 +41,10 @@ public class ActionRecord {
 	// ------------------------------------------------
 	
 	/**
-	 * Get the name of the actor of this ActionRecord.
-	 * @return the name of the actor of this ActionRecord
-	 */
-	public String getActorName() {
-		return actorName;
-	}
-	
-	/**
-	 * Get the action of this ActionRecord
-	 * @return the action performed
-	 */
-	public Action getAction() {
-		return action;
-	}
-	
-	/**
 	 * Get the direction that the actor moved in
 	 * @return the direction the actor moved in for this action
 	 */
-	public MoveDirection getMoveDirection() {
+	public Direction getMoveDirection() {
 		return direction;
 	}
 	
@@ -144,7 +61,6 @@ public class ActionRecord {
 	 */
 	@Override
 	public String toString() {
-		return actorName.concat(action.toString()).concat(direction.toString())
-				.concat(Double.toString(timeStamp));
+		return direction.toString().concat(",").concat(Double.toString(timeStamp));
 	}
 }

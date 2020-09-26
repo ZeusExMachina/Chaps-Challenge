@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
+import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 
 import javax.swing.*;
@@ -11,9 +12,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 /**
  * The main display gui
@@ -49,13 +52,39 @@ public class GameGUI {
      */
     public GameGUI(){
         LevelLoader loader = new LevelLoader();
-        maze = new Maze(loader.getLevelLayout(1));
+        try {
+            maze = new Maze(loader.getLevelLayout(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
         mainFrame.setLayout(new GridBagLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
+
+        JMenuBar mb = new JMenuBar();
+        JMenu load = new JMenu("Modes");
+        mb.add(load);
+
+        JMenuItem loadReplay = new JMenuItem("Load Replay");
+        JMenuItem gameMenu = new JMenuItem("Main Menu");
+
+        loadReplay.addActionListener(e -> {
+            clearControlFrame();
+            replayControls();
+        });
+
+        gameMenu.addActionListener(e -> {
+            clearControlFrame();
+            controlsStart();
+        });
+        load.add(loadReplay);
+        load.add(gameMenu);
+
+        mainFrame.setJMenuBar(mb);
 
         GridBagConstraints gc = new GridBagConstraints();
         gc.fill = GridBagConstraints.BOTH;
@@ -78,6 +107,7 @@ public class GameGUI {
         gc.gridy = 0;
         controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, gc);
+        controls.setPreferredSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
 
@@ -144,11 +174,8 @@ public class GameGUI {
 
         startGame.setFocusable(false);
         ActionListener aL = e -> {
-            for(Component c : controls.getComponents()){
-                controls.remove(c);
-            }
+            clearControlFrame();
             startTime();
-            controls.repaint();
             controlsGamePlay();
         };
 
@@ -237,10 +264,114 @@ public class GameGUI {
 
     }
 
+    /**
+     * controls for selecting type and file for game replay
+     */
+    public void replayControls(){
+        Replayer replayObject = new Replayer(this);
+        controls.setLayout(new GridLayout(2,1,10,0));
+
+        //start button - enabled to toggle
+        JButton startReplay = new JButton("Start Replay");
+        startReplay.setEnabled(false);
+
+        //two frames for each half
+        JPanel topHalf = new JPanel();
+        topHalf.setLayout(new GridLayout(4,1,10,0));
+        controls.add(topHalf);
+        JPanel bottomHalf = new JPanel();
+        bottomHalf.setLayout(new GridLayout(1,2,10,0));
+        controls.add(bottomHalf);
+
+        //top half - title and file select
+        JLabel title = new JLabel("Replay Game");
+        title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        topHalf.add(title);
+
+
+        //LOAD PANEL = LOAD FILE OPTIONS
+        JPanel loadPanel = new JPanel();
+        topHalf.add(loadPanel);
+
+        JButton selectFile = new JButton("Load File");
+        selectFile.setFocusable(false);
+        JLabel fileNameDisplay = new JLabel("No File");
+
+        ActionListener aL = e -> {
+            JFileChooser j = new JFileChooser();
+            j.showSaveDialog(null);
+            try { //TODO: test for valid file format
+                replayObject.loadGameReplay(j.getSelectedFile().getName());
+                fileNameDisplay.setForeground(Color.black);
+                selectFile.setText(j.getSelectedFile().getName());
+                startReplay.setEnabled(true);
+            } catch (IOException | NullPointerException exp) {
+                fileNameDisplay.setForeground(Color.red);
+                fileNameDisplay.setText("Invalid File");
+                startReplay.setEnabled(false);
+                //exp.printStackTrace();
+            }
+        };
+
+        selectFile.addActionListener(aL);
+
+        loadPanel.add(selectFile);
+        loadPanel.add(fileNameDisplay);
+
+        //SPEED PANEL - speed options
+        JPanel speedPanel = new JPanel();
+        topHalf.add(speedPanel);
+        JLabel speedTitle = new JLabel("Replay Speed:");
+        speedPanel.add(speedTitle);
+        List<Double> speedValues = Arrays.asList(replayObject.REPLAY_SPEEDS);
+        String[] speedStrings = (speedValues.stream().map(data -> data.toString()).collect(Collectors.toList()).toArray(new String[0]));
+
+        JComboBox speedSelectBox = new JComboBox(speedStrings);
+        speedSelectBox.setSelectedItem(speedStrings[3]);//should be value 1
+        speedPanel.add(speedSelectBox);
+
+        //start panel - button and speed error
+        JPanel startPanel = new JPanel();
+        topHalf.add(startPanel);
+
+        ActionListener startAL = e -> {
+            try {
+                replayObject.setReplaySpeed(Double.parseDouble(speedSelectBox.getSelectedItem().toString()));
+                //TODO: exception thrown here inside replayer class - null pointer
+            } catch (IllegalArgumentException exp) {
+
+            }
+        };
+        startReplay.addActionListener(startAL);
+        startPanel.add(startReplay);
+
+        controls.revalidate();
+        controls.repaint();
+
+
+    }
+
+    /**
+     * reset the control frame for (clear all components)
+     */
+    public void clearControlFrame(){
+        for(Component c : controls.getComponents()){
+            controls.remove(c);
+        }
+        controls.repaint();
+    }
+
+    /**
+     * display the pause jDialog
+     */
     public void displayPauseDialog(){
         if(timeVal > 0) pauseMenu.setVisible(true);
     }
 
+    /**
+     * hide the pause jDialog
+     */
     public void hidePauseDialog(){
         pauseMenu.setVisible(false);
     }
@@ -319,7 +450,6 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
-        //check keys somehow also
 
         if (maze.moveChap(d)) board.changeOrigin(d);
     }

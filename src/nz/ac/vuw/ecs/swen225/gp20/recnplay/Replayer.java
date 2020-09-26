@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.google.gson.Gson;
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -67,7 +68,7 @@ public class Replayer {
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
 	 */
-	public static final double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+	public static final Double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
 	
 	// ------------------------------------------------
 	// ---------------- CONSTRUCTOR -------------------
@@ -117,7 +118,7 @@ public class Replayer {
 	 * Only accepts speeds from replaySpeeds.
 	 * @param speed is the new replay speed to set
 	 */
-	public void setReplaySpeed(double speed) {
+	public void setReplaySpeed(double speed) throws IllegalArgumentException{
 		// First check if the entered replay speed is valid, if so set it.
 		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
 		if (speed < 0.0 || speed > 2.0 || speed%0.25 != 0) { 
@@ -235,15 +236,43 @@ public class Replayer {
 	 * Load a JSON file of a game replay and store it in the 
 	 * gameHistory queue.
 	 * @param filename is the name of the file to load
+	 * @throws IOException
 	 */
-	public void loadGameReplay(String filename) {
-		try {
-			Reader reader = Files.newBufferedReader(Paths.get(filename));
-			gameRecordHistory = new ArrayDeque<ActionRecord>(
-					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
-			currentTimeInReplay = 0.0;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void loadGameReplay(String filename) throws IOException, NullPointerException {
+		Reader reader = Files.newBufferedReader(Paths.get(filename));
+		gameRecordHistory = new ArrayDeque<ActionRecord>(
+				Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+		currentTimeInReplay = 0.0;
+		// TODO: Now that the game record has been loaded, start a new game
+	}
+	
+	// ----------------------------------------------
+	//  TESTING (WON'T BE INCLUDED IN FINAL PRODUCT) 
+	// ----------------------------------------------
+	
+	/**
+	 * Main method for testing
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		Recorder recorder = new Recorder();
+		Replayer replayer = new Replayer(null);
+		
+		recorder.recordNewAction(Direction.WEST, 5.04);
+		recorder.recordNewAction(Direction.EAST, 10.69);
+		recorder.recordNewAction(Direction.EAST, 15.69);
+		recorder.recordNewAction(Direction.NORTH, 20.69); 
+		recorder.recordNewAction(Direction.SOUTH, 25.69);
+		recorder.recordNewAction(Direction.WEST, 30.69);
+		
+		String filename = "recorder_test.json";
+		recorder.saveGame(filename);
+		try { replayer.loadGameReplay(filename); }
+		catch (Exception e) { }
+		replayer.replayNextAction();
+		replayer.toggleReplayType();
+		replayer.setReplaySpeed(1.0);
+		//loadGameReplay(filename);
 	}
 }
