@@ -27,7 +27,7 @@ public class GameGUI {
 
     JPanel controls = new JPanel();
 
-    java.util.Timer timer = new Timer();
+    Timer timer = new Timer();
 
     //to be received form other classes
     int level;
@@ -93,12 +93,6 @@ public class GameGUI {
         board = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
         board.display();
         board.setMaze(maze);
-        //map.setBackground(Color.red);
-
-        //to remove, contents to be map
-//        JLabel tempLabel = new JLabel();
-//        tempLabel.setText("The map goes here");
-//        map.add(tempLabel);
 
         gc.weightx = 0.7;
         gc.weighty = 1;
@@ -457,8 +451,7 @@ public class GameGUI {
     public void moveCalled(Direction d){
         setChipsRemaining();
 
-        maze.moveChap(d);
-        board.setOrigin(d);
+        if (maze.moveChap(d)) board.changeOrigin(d);
     }
 
     /**

@@ -5,8 +5,8 @@ import com.google.common.base.Preconditions;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * From handout: This is the domain model that forms the core of the application, it
@@ -346,8 +346,8 @@ public class Maze {
 					result[row][col] = board[row][col].getImage();
 				}
 			}
-			Position chapPos = chap.getPosition();
-			result[chapPos.getY()][chapPos.getX()] = chap.getImage();
+//			Position chapPos = chap.getPosition();
+//			result[chapPos.getY()][chapPos.getX()] = chap.getImage();
 		} catch (IOException e) {
 			System.out.println("Image not loaded, is /resources/ at root?");
 			e.printStackTrace();
@@ -359,8 +359,14 @@ public class Maze {
 	 * Get an unmodifiable list of what the player has in inventory
 	 * @return immutable inventory list
 	 */
-	public List<Tile> getInventory() {
-		return Collections.unmodifiableList(inventory);
+	public List<BufferedImage> getInventory() {
+		return inventory.stream().map(tile -> {
+			try {
+				return tile.getImage();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}).collect(Collectors.toUnmodifiableList());
 	}
 
 	/**
@@ -376,5 +382,13 @@ public class Maze {
 	 */
 	public Position getChapPosition() {
 		return chap.getPosition();
+	}
+
+	/**
+	 * Retrieve image representing Chap
+	 * @return chap's image
+	 */
+	public BufferedImage getChapImage() throws IOException {
+		return chap.getImage();
 	}
 }

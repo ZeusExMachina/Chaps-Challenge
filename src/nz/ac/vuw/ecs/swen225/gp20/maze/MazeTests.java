@@ -125,7 +125,7 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.containsKey(KeyTile.Colour.COLOUR_TWO));
+		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
@@ -158,7 +158,7 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.containsKey(KeyTile.Colour.COLOUR_TWO));
+		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|!|/|/|\n" +
@@ -211,7 +211,7 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.containsKey(KeyTile.Colour.COLOUR_TWO));
+		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.moveChap(Direction.EAST));

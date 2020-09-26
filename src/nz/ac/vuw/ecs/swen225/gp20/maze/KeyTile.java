@@ -56,10 +56,10 @@ public class KeyTile implements Tile {
 	 * Enumerates colours available in assets
 	 */
 	public enum Colour {
-		COLOUR_ONE,
-		COLOUR_TWO,
-		COLOUR_THREE,
-		COLOUR_FOUR
+		RED,
+		GREEN,
+		BLUE,
+		YELLOW
 	}
 
 	/**
@@ -73,7 +73,7 @@ public class KeyTile implements Tile {
 
 	@Override
 	public BufferedImage getImage() throws IOException {
-//		String file = "resources/key_" + colour.ordinal() + ".png";
+//		String file = "resources/key_" + colour.name().toLowerCase() + ".png";
 //		return ImageIO.read(new File(file));
 		return ImageIO.read(new File("resources/key.png"));
 	}
