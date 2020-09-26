@@ -68,7 +68,7 @@ public class Replayer {
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
 	 */
-	public static final double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+	public static final Double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
 	
 	// ------------------------------------------------
 	// ---------------- CONSTRUCTOR -------------------
@@ -118,7 +118,7 @@ public class Replayer {
 	 * Only accepts speeds from replaySpeeds.
 	 * @param speed is the new replay speed to set
 	 */
-	public void setReplaySpeed(double speed) {
+	public void setReplaySpeed(double speed) throws IllegalArgumentException{
 		// First check if the entered replay speed is valid, if so set it.
 		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
 		if (speed < 0.0 || speed > 2.0 || speed%0.25 != 0) { 
