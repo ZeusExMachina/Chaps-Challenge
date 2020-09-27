@@ -37,6 +37,8 @@ public class GameGUI {
 
     ArrayList<Object> keys = new ArrayList<>(); //TODO: Add appropriate class type
 
+    LevelLoader loader = new LevelLoader();
+
     JLabel levelLabel = new JLabel();
     JLabel timeLabel = new JLabel();
     JLabel chipsLabel = new JLabel();
@@ -52,7 +54,8 @@ public class GameGUI {
      * made up of two made frames, maze display and control panel
      */
     public GameGUI(){
-        LevelLoader loader = new LevelLoader();
+
+        setLevel(1);
         try {
             maze = new Maze(loader.getLevelLayout(1));
         } catch (Exception e) {
@@ -92,7 +95,7 @@ public class GameGUI {
 //        gc.fill = GridBagConstraints.BOTH;
 
         //JPanel map = new JPanel();
-        board = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
+        board = Canvas.getInstance();
         board.display();
         board.setMaze(maze);
 
@@ -158,7 +161,7 @@ public class GameGUI {
         controls.add(topHalf);
         controls.add(bottomHalf);
 
-        setLevel();//TODO: to be received form other class
+
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(2,1,10,0));
         JLabel title = new JLabel("Chip's Challenge");
@@ -358,6 +361,16 @@ public class GameGUI {
      * reset the control frame for (clear all components)
      */
     public void clearControlFrame(){
+        try {
+            maze = new Maze(loader.getLevelLayout(1));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        board = Canvas.getInstance();
+        board.display();
+        board.setMaze(maze);
+        board.repaint();
         for(Component c : controls.getComponents()){
             controls.remove(c);
         }
@@ -496,8 +509,8 @@ public class GameGUI {
     }
 
     //setters
-    public void setLevel(){
-        this.level = 1;//change to get from maze
+    public void setLevel(int level){
+        this.level = level;//change to get from maze
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
