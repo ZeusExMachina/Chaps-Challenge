@@ -7,6 +7,7 @@ import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -64,6 +65,7 @@ public class GameGUI {
         mainFrame.setLayout(new GridBagLayout());
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setResizable(false);
+        mainFrame.setLayout(new BorderLayout());
 
         JMenuBar mb = new JMenuBar();
         JMenu load = new JMenu("Modes");
@@ -86,27 +88,27 @@ public class GameGUI {
 
         mainFrame.setJMenuBar(mb);
 
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.fill = GridBagConstraints.BOTH;
+//        GridBagConstraints gc = new GridBagConstraints();
+//        gc.fill = GridBagConstraints.BOTH;
 
         //JPanel map = new JPanel();
         board = Canvas.getInstance(); // Sorry I (Devon) added this for testing.
         board.display();
         board.setMaze(maze);
 
-        gc.weightx = 0.7;
-        gc.weighty = 1;
-        gc.gridx = 0;
-        gc.gridy = 0;
+//        gc.weightx = 0.7;
+//        gc.weighty = 1;
+//        gc.gridx = 0;
+//        gc.gridy = 0;
         board.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
-        mainFrame.getContentPane().add(board, gc);
+        mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
 
-        gc.weightx = 0.3;
-        gc.weighty = 1;
-        gc.gridx = 1;
-        gc.gridy = 0;
+//        gc.weightx = 0.3;
+//        gc.weighty = 1;
+//        gc.gridx = 1;
+//        gc.gridy = 0;
         controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
-        mainFrame.getContentPane().add(controls, gc);
+        mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
         controls.setPreferredSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMaximumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
         //controls.setMinimumSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
