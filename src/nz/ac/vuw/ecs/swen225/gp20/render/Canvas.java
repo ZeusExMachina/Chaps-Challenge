@@ -52,7 +52,7 @@ public class Canvas extends JPanel {
 	private final int centerOffset = 4;
 	/**
 	 * Whether the game has started or not. Stops class trying
-	 * to display when things haven't been initalised yet.
+	 * to display when things haven't been initialised yet.
 	 */
 	private boolean isGameStarted = false;
 
@@ -125,7 +125,7 @@ public class Canvas extends JPanel {
 	 * @param d direction to move
 	 */
 	public void changeOrigin(Direction d) {
-		int maxXY = board.length-1; // change from board
+		int maxXY = board.length-1;
 		int xPos = origin.getX();
 		int yPos = origin.getY();
 
