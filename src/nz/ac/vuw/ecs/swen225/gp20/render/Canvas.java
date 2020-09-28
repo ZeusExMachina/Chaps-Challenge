@@ -84,11 +84,16 @@ public class Canvas extends JPanel {
 		String help = maze.isOnHelp();
 		int line = 1;
 		if (help != null) {
-			while (help.length() > 0) {
-				int lineLength = 10;
-				String toDisplay = help.substring(0, Math.min(help.length(), lineLength));
-				help = help.substring(Math.min(help.length(), lineLength));
-				g.drawString(toDisplay, 50, 50+50*line);
+			g.setColor(Color.WHITE);
+			g.setFont(g.getFont().deriveFont(g.getFont().getSize()*2F));
+			while (help.length() > 0) { // split up help string so it doesn't go off screen
+				int split = help.indexOf('\n');
+				if (split == -1) split = help.length();
+
+				String toDisplay = help.substring(0, split);
+				help = help.substring(split+1);
+				// TODO: change font, maybe monospace for retro feel
+				g.drawString(toDisplay, 50, 150+50*line);
 				line++;
 			}
 		}
