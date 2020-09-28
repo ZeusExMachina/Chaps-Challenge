@@ -16,19 +16,48 @@ import java.io.IOException;
  * Class to display and handle the drawing of the board and actors.
  */
 public class Canvas extends JPanel {
+	/**
+	 * the images to be displayed on the screen.
+	 */
 	private BufferedImage[][] board;
+	/**
+	 * number of columns to be displayed on the screen
+	 * at one time.
+	 */
 	private final int NUM_COLS = 9;
+	/**
+	 * number of rows to be displayed on the screen at one time.
+	 */
 	private final int NUM_ROWS = 9;
+	/**
+	 * The width and height of each tile.
+	 */
 	private final int TILE_SIZE = 64;
+	/**
+	 * The position the display should be centered around the board.
+	 */
 	private Position origin;
+	/**
+	 * The image to display when the display runs of the side
+	 * of the board.
+	 */
 	private BufferedImage defaultImage;
+	/**
+	 * The image of chap that (which direction he is facing).
+	 */
 	private BufferedImage chapImage;
+	/**
+	 * the X and Y offset for where the center of the screen is.
+	 */
 	private final int centerOffset = 4;
+	/**
+	 * Whether the game has started or not. Stops class trying
+	 * to display when things haven't been initalised yet.
+	 */
 	private boolean isGameStarted = false;
 
 	/**
-	 * private constructor as there should only be one instance of canvas at a time.
-	 * Has a lot of code for debugging.
+	 * Constructor, sets the size and allows it to be focusable.
 	 */
 	public Canvas() {
 		this.setPreferredSize(new Dimension(576, 576));
@@ -36,10 +65,18 @@ public class Canvas extends JPanel {
 		this.requestFocus();
 	}
 	
+	/**
+	 * Sets the default image to be displayed, if no image is found.
+	 * @param b - BufferedImage to be set.
+	 */
 	public void setDefaultImage(BufferedImage b){
 		this.defaultImage = b;
 	}
 	
+	/**
+	 * Sets the origin for where the display should be centered.
+	 * @param origin - position where chap is.
+	 */
 	public void setOrigin(Position origin) {
 		this.origin = origin;
 	}
@@ -70,11 +107,9 @@ public class Canvas extends JPanel {
 	}
 	
 	/**
-	 * Update and display the board.
-	 * <p>
-	 * //   * @param board - 2D array of tiles representing the board
-	 * //   * @param chap - The actor chap
-	 * //   *             Tile[][] board, Actor chap
+	 * Displays the board to the screen.
+	 * @param b -  2Dimensional array of images to be displayed.
+	 * @param chap - Image of chap to display.
 	 */
 	public void display(BufferedImage[][] b, BufferedImage chap) {
 		isGameStarted = true;
