@@ -38,6 +38,7 @@ public class Canvas extends JPanel {
 
 		try {
 			defaultImage = ImageIO.read(new File("resources/wall.png"));
+			Inventory.getInstance().setDefaultImage(defaultImage);
 		} catch (IOException e) {
 			System.out.println("Could not find 'wall.png' in resources");
 		}

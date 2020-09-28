@@ -4,6 +4,7 @@ import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
+import nz.ac.vuw.ecs.swen225.gp20.render.Inventory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -194,7 +195,7 @@ public class GameGUI {
 
 
         //KEYS
-        JPanel keysPanel = new JPanel();
+        Inventory keysPanel = Inventory.getInstance();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
 

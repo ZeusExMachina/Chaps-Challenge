@@ -6,4 +6,6 @@ public class Renderer {
   public static Renderer getInstance() {
     return instance;
   }
+  
+  public void update(){}
 }
