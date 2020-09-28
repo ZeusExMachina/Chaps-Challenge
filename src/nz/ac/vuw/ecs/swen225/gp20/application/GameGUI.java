@@ -5,6 +5,8 @@ import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
+import nz.ac.vuw.ecs.swen225.gp20.render.Inventory;
+import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +46,7 @@ public class GameGUI {
     JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
     Maze maze;
-    Canvas board;
+    Renderer render = Renderer.getInstance();
 
     /**
      * Constructor for the gui
@@ -87,9 +89,9 @@ public class GameGUI {
 
         mainFrame.setJMenuBar(mb);
 
-        board = Canvas.getInstance();
-        board.display();
-        board.setMaze(maze);
+        Canvas board = render.getCanvas();
+        render.setMaze(maze);
+        render.display();
         board.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
         mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
 
@@ -206,17 +208,13 @@ public class GameGUI {
 
 
         //KEYS
-        JPanel keysPanel = new JPanel();
+        Inventory keysPanel = render.getInventory();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
 
 
-        board.addKeyListener(new KeyAdapter() {
+        render.getCanvas().addKeyListener(new KeyAdapter() {
             boolean control = false;
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
@@ -436,7 +434,7 @@ public class GameGUI {
     public void moveCalled(Direction d){
         setChipsRemaining();
 
-        if (maze.moveChap(d)) board.changeOrigin(d);
+        if (maze.moveChap(d)) render.update(d);
     }
 
     /**
