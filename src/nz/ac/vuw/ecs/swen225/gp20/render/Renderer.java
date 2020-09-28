@@ -25,7 +25,6 @@ public class Renderer {
       System.out.println("Could not find 'wall.png' in resources");
     }
     canvas.setDefaultImage(defaultImage);
-    inventory.setDefaultImage(defaultImage);
   }
   public static Renderer getInstance() {
     return instance;
