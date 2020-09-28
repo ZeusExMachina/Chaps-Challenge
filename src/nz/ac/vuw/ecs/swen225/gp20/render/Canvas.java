@@ -81,6 +81,17 @@ public class Canvas extends JPanel {
 		} catch (IOException e) {
 			System.out.println("Chap image missing.");
 		}
+		String help = maze.isOnHelp();
+		int line = 1;
+		if (help != null) {
+			while (help.length() > 0) {
+				int lineLength = 10;
+				String toDisplay = help.substring(0, Math.min(help.length(), lineLength));
+				help = help.substring(Math.min(help.length(), lineLength));
+				g.drawString(toDisplay, 50, 50+50*line);
+				line++;
+			}
+		}
 	}
 
 	/**
