@@ -81,18 +81,28 @@ public class Canvas extends JPanel {
 		} catch (IOException e) {
 			System.out.println("Chap image missing.");
 		}
+		drawHelpText(g);
+	}
+	
+	/**
+	 * Draws the helptext when chap is standing on a help tile.
+	 * @param g - Graphics element to draw on.
+	 */
+	private void drawHelpText(Graphics g){
 		String help = maze.isOnHelp();
 		int line = 1;
 		if (help != null) {
+			g.setColor(new Color(70,70,70,190));
+			int numLines  = help.length() - help.replace("\n", "").length();
+			g.fillRect(30,150, this.getWidth() - 60,  50+numLines*50);
 			g.setColor(Color.WHITE);
-			g.setFont(g.getFont().deriveFont(g.getFont().getSize()*2F));
+			g.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 20));
 			while (help.length() > 0) { // split up help string so it doesn't go off screen
 				int split = help.indexOf('\n');
 				if (split == -1) split = help.length();
-
+				
 				String toDisplay = help.substring(0, split);
 				help = help.substring(split+1);
-				// TODO: change font, maybe monospace for retro feel
 				g.drawString(toDisplay, 50, 150+50*line);
 				line++;
 			}
