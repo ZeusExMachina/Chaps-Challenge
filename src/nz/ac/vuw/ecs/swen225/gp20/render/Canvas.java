@@ -16,44 +16,34 @@ import java.io.IOException;
  * Class to display and handle the drawing of the board and actors.
  */
 public class Canvas extends JPanel {
-	private static final Canvas instance = new Canvas();
-	private Maze maze; // formerly Tile[][]
+	private BufferedImage[][] board;
 	private final int NUM_COLS = 9;
 	private final int NUM_ROWS = 9;
 	private final int TILE_SIZE = 64;
 	private Position origin;
 	private BufferedImage defaultImage;
+	private BufferedImage chapImage;
 	private final int centerOffset = 4;
-	//  private Actor chap;
 	private boolean isGameStarted = false;
 
 	/**
 	 * private constructor as there should only be one instance of canvas at a time.
 	 * Has a lot of code for debugging.
 	 */
-	private Canvas() {
+	public Canvas() {
 		this.setPreferredSize(new Dimension(576, 576));
 		this.setFocusable(true);
 		this.requestFocus();
-
-		try {
-			defaultImage = ImageIO.read(new File("resources/wall.png"));
-			Inventory.getInstance().setDefaultImage(defaultImage);
-		} catch (IOException e) {
-			System.out.println("Could not find 'wall.png' in resources");
-		}
-
 	}
-
-	/**
-	 * Set Maze object reference.
-	 * @param m new maze
-	 */
-	public void setMaze(Maze m) {
-		maze = m;
-		origin = maze.getChapPosition();
+	
+	public void setDefaultImage(BufferedImage b){
+		this.defaultImage = b;
 	}
-
+	
+	public void setOrigin(Position origin) {
+		this.origin = origin;
+	}
+	
 	/**
 	 * Override of the original JPanel paint, draws the board.
 	 *
@@ -63,7 +53,6 @@ public class Canvas extends JPanel {
 		if (!isGameStarted) return;
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
-		BufferedImage[][] board = maze.getImages();
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
 			for (int yPlace = 0; yPlace < NUM_ROWS * TILE_SIZE; yPlace += TILE_SIZE) {
 				try {
@@ -77,22 +66,9 @@ public class Canvas extends JPanel {
 			xIndex++;
 			yIndex = origin.getY() - centerOffset;
 		}
-		try {
-			g.drawImage(maze.getChapImage(), 4*TILE_SIZE, 4*TILE_SIZE, this);
-		} catch (IOException e) {
-			System.out.println("Chap image missing.");
-		}
+		g.drawImage(chapImage, centerOffset*TILE_SIZE, centerOffset*TILE_SIZE, this);
 	}
-
-	/**
-	 * Get the current instance of Canvas.
-	 *
-	 * @return - The current instance of Canvas.
-	 */
-	public static Canvas getInstance() {
-		return instance;
-	}
-
+	
 	/**
 	 * Update and display the board.
 	 * <p>
@@ -100,8 +76,10 @@ public class Canvas extends JPanel {
 	 * //   * @param chap - The actor chap
 	 * //   *             Tile[][] board, Actor chap
 	 */
-	public void display() {
+	public void display(BufferedImage[][] b, BufferedImage chap) {
 		isGameStarted = true;
+		this.board = b;
+		this.chapImage = chap;
 		this.repaint();
 	}
 
@@ -112,7 +90,7 @@ public class Canvas extends JPanel {
 	 * @param d direction to move
 	 */
 	public void changeOrigin(Direction d) {
-		int maxXY = maze.getImages().length - 1; // change from board
+		int maxXY = board.length-1; // change from board
 		int xPos = origin.getX();
 		int yPos = origin.getY();
 
