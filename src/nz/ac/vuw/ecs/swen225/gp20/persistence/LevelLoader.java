@@ -50,9 +50,9 @@ public class LevelLoader {
      */
     private TreeMap<Integer, Level> createLevels(){
         TreeMap<Integer, Level> allLevels = new TreeMap<>();
+        Gson gson = new Gson();
         for(File levelFile : levelFiles){
             try {
-                Gson gson = new Gson();
                 JsonReader reader = new JsonReader(new FileReader(levelFile));
                 Level currentLevel = gson.fromJson(reader, Level.class);
                 allLevels.put(currentLevel.getLevelNumber(), currentLevel);
@@ -98,6 +98,19 @@ public class LevelLoader {
     }
 
     /**
+     * Get the help text for the provided level.
+     *
+     * @param levelNumber The number of the level.
+     * @return The help text in an array
+     */
+    public String[] getLevelHelpText(int levelNumber){
+        if(!isValidLevel(levelNumber)){
+            throw new IllegalArgumentException("That level number is invalid.");
+        }
+        return levels.get(levelNumber).getHelpText();
+    }
+
+    /**
      * Obtain an ordered list of all levels loaded.
      * @return A List of level numbers in ascending order.
      */
@@ -113,7 +126,7 @@ public class LevelLoader {
     public static void main(String[] args){
         LevelLoader test = new LevelLoader();
         System.out.println(test.getAllLevelNumbers());
-        String[] test2 = test.getLevelLayout(1);
+        String[] test2 = test.getLevelHelpText(1);
         System.out.println("test");
     }
 }

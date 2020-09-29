@@ -47,10 +47,17 @@ public class LevelCreator {
                 "_____________________",
                 "_____________________"
         };
+
+        String[] levelOneHelpText = {
+                        "Move Chap around using the arrows keys.\n" +
+                        "Pick up keys to unlock the doors.\n" +
+                        "Pick up treasures to unlock the exit."
+        };
+
         try {
             Writer writer = Files.newBufferedWriter(Paths.get("levels/level1.json"));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            Level levelOne = new Level(1, levelOneLayout, 100);
+            Level levelOne = new Level(1, levelOneLayout, 100, levelOneHelpText);
             gson.toJson(levelOne, writer);
             writer.flush();
             writer.close();

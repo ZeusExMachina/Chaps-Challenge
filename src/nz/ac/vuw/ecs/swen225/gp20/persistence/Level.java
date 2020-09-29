@@ -21,21 +21,29 @@ class Level {
     private final int levelNumber;
 
     /**
+     * The help information to be displayed
+     */
+    private String[] helpText;
+
+    /**
      * Constructor for a Level
      *
      * @param levelNumber the level number displayed on the GUI
      * @param levelLayout the arrangement of Tiles represented as a 2D array
      *                    of Strings
      * @param clock the number of seconds allowed to play the level
+     * @param helpText the instructions given by HelpTiles
      */
-    protected Level(int levelNumber, String[] levelLayout, int clock){
+    protected Level(int levelNumber, String[] levelLayout, int clock, String[] helpText){
         this.layout = levelLayout;
         this.levelNumber = levelNumber;
         this.clock = clock;
+        this.helpText = helpText;
     }
 
     /**
      * Get the level's layout
+     *
      * @return a String representation of the Level's Tiles
      */
     protected String[] getLayout() {
@@ -44,6 +52,7 @@ class Level {
 
     /**
      * Get the level's clock value
+     *
      * @return the number of seconds allowed to complete this level
      */
     protected int getClock() {
@@ -52,9 +61,17 @@ class Level {
 
     /**
      * Get the level number as defined in the JSON filename
+     *
      * @return the level number
      */
     protected int getLevelNumber() {
         return levelNumber;
     }
+
+    /**
+     * Get the levels help text
+     *
+     * @return an array of help instructions
+     */
+    protected String[] getHelpText(){ return helpText; }
 }
