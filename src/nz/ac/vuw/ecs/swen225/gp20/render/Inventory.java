@@ -17,6 +17,7 @@ public class Inventory extends JPanel {
   /**
    * Constructor, sets the preferred size.
    */
+  
   public Inventory(){
     this.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black),"Inventory" ));
     this.setPreferredSize(new Dimension(192,128));

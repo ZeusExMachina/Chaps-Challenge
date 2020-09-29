@@ -1,6 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp20.render;
 
-import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 
 import java.awt.image.BufferedImage;
@@ -73,10 +72,8 @@ public class Renderer {
   /**
    * Updates both the Canvas and Inventory instances to display
    * the correct images and information.
-   * @param d - The direction chap last moved.
    */
-  public void update(Direction d){
-    canvas.changeOrigin(d);
+  public void update(){
     ArrayList<BufferedImage> imageInventory = new ArrayList<>(maze.getInventory());
     inventory.setInventoryImages(imageInventory);
     display();
