@@ -38,7 +38,11 @@ public class HelpTile implements Tile {
 	 * @return displayed help text
 	 */
 	public String getHelp() {
-		return help;
+		// TODO before merging change this back
+//		return help;
+		return "Move Chap around using the arrow keys.\n" +
+				"Pick up keys to unlock the doors.\n" +
+				"Pick up treasures to unlock the exit.\n";
 	}
 
 	/**

@@ -134,12 +134,10 @@ public class Maze {
 	 * @return the corresponding help text, null if not
 	 */
 	public String isOnHelp() {
-		for (Tile[] row : board) {
-			for (Tile t : row) {
-				if (t instanceof HelpTile) {
-					return ((HelpTile) t).getHelp();
-				}
-			}
+		Position pos = chap.getPosition();
+		Tile t = board[pos.getY()][pos.getX()];
+		if (t instanceof HelpTile) {
+			return ((HelpTile) t).getHelp();
 		}
 		return null;
 	}
