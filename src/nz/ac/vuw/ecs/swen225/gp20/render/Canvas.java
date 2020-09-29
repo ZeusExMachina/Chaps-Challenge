@@ -102,7 +102,8 @@ public class Canvas extends JPanel {
 				if (split == -1) split = help.length();
 
 				String toDisplay = help.substring(0, split);
-				help = help.substring(split+1);
+				if (split < help.length()) help = help.substring(split+1);
+				else throw new IllegalArgumentException("Help text should have a \n at the end.");
 				g.drawString(toDisplay, 50, 150+50*line);
 				line++;
 			}
