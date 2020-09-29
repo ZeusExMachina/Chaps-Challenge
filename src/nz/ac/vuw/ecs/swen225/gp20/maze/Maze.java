@@ -17,6 +17,10 @@ import java.util.stream.Collectors;
  */
 public class Maze {
 	/**
+	 * The current instance of Maze.
+	 */
+	private static final Maze instance = new Maze();
+	/**
 	 * Stores tiles currently on
 	 */
 	private Tile[][] board;
@@ -42,13 +46,17 @@ public class Maze {
 	private Actor chap;
 
 	/**
-	 * Make Maze as defined in the given String array
-	 *
-	 * @param in input array
+	 * Private constructor so only 1 instance made
 	 */
-	public Maze(String[] in) {
-		levelNumber = 0;
-		loadLevel(in);
+	private Maze() {
+	}
+
+	/**
+	 * Singleton pattern, return the single instance of Maze
+	 * @return Maze instance
+	 */
+	public static Maze getInstance() {
+		return instance;
 	}
 
 	/**
@@ -59,21 +67,29 @@ public class Maze {
 	 * @param inventory  tiles currently in player's inventory
 	 * @param chapFacing direction Chap is facing
 	 */
-	public Maze(String[] in, int levelNo, List<Tile> inventory, Direction chapFacing) {
-		levelNumber = levelNo - 1; // loadLevel() always increments by 1
-		loadLevel(in);
+	public void loadState(String[] in, int levelNo, List<Tile> inventory, Direction chapFacing) {
+		loadLevel(in, levelNo);
 		this.inventory.addAll(inventory);
 		chap.setDirection(chapFacing);
+	}
+
+	/**
+	 * Load level as below, but increment current level number if no number given.
+	 * @param in input String array
+	 */
+	public void loadLevel(String[] in) {
+		loadLevel(in, levelNumber++);
 	}
 
 	/**
 	 * Parse given String array converting each character into a cell.
 	 *
 	 * @param in input String array
+	 * @param levelNo level number of loaded level
 	 */
-	public void loadLevel(String[] in) {
+	public void loadLevel(String[] in, int levelNo) {
 		inventory.clear();
-		levelNumber++;
+		levelNumber = levelNo;
 		treasuresLeft = 0;
 
 		for (String row : in) {
@@ -369,9 +385,11 @@ public class Maze {
 	}
 
 	/**
-	 * Clear the inventory, e.g. in a new level.
+	 * Reset maze, e.g. in a new level or restarting.
+	 * @param data level data from Persistence module
 	 */
-	public void clearInventory() {
+	public void resetMaze(String[] data) {
+		loadLevel(data, levelNumber);
 		inventory.clear();
 	}
 

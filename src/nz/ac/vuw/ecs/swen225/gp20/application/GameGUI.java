@@ -57,12 +57,8 @@ public class GameGUI {
     public GameGUI(){
 
         setLevel(1);
-        try {
-            maze = new Maze(loader.getLevelLayout(1));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
+        maze = Maze.getInstance();
+        maze.loadLevel(loader.getLevelLayout(1), 1);
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -252,7 +248,6 @@ public class GameGUI {
         //here
         controls.revalidate();
         controls.repaint();
-
     }
 
     /**
@@ -360,7 +355,7 @@ public class GameGUI {
      */
     public void resetMaze(){
         try {
-            maze = new Maze(loader.getLevelLayout(1));
+            maze.resetMaze(loader.getLevelLayout(1));
             Canvas board = render.getCanvas();
             board.display(maze);
             board.repaint();

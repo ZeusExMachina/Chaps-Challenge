@@ -33,6 +33,10 @@ public class Canvas extends JPanel {
 	 */
 	private Maze maze;
 	/**
+	 * The position the display should be centered around the board.
+	 */
+	private Position origin;
+	/**
 	 * the X and Y offset for where the center of the screen is.
 	 */
 	private final int centerOffset = 4;
@@ -41,6 +45,8 @@ public class Canvas extends JPanel {
 	 * to display when things haven't been initialised yet.
 	 */
 	private boolean isGameStarted = false;
+	private BufferedImage defaultImage = null;
+	private BufferedImage chapImage = null;
 
 	/**
 	 * Constructor, sets the size and allows it to be focusable.
@@ -58,15 +64,8 @@ public class Canvas extends JPanel {
 	 */
 	public void paint(Graphics g) {
 		if (!isGameStarted) return;
-		Position origin = maze.getChapPosition();
-		BufferedImage defaultImage = null, chapImage = null;
+
 		BufferedImage[][] board = maze.getImages();
-		try {
-			defaultImage = new WallTile(0, 0).getImage();
-			chapImage = maze.getChapImage();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
@@ -117,6 +116,13 @@ public class Canvas extends JPanel {
 	public void display(Maze m) {
 		isGameStarted = true;
 		maze = m;
+		try {
+			defaultImage = new WallTile(0, 0).getImage();
+			chapImage = maze.getChapImage();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		origin = maze.getChapPosition();
 		this.repaint();
 	}
 
@@ -128,18 +134,20 @@ public class Canvas extends JPanel {
 	 */
 	public void changeOrigin(Direction d) {
 		int maxXY = maze.getImages().length-1;
-		int xPos = maze.getChapPosition().getX();
-		int yPos = maze.getChapPosition().getY();
+		int xPos = origin.getX();
+		int yPos = origin.getY();
 
 		if (d.equals(Direction.NORTH)) yPos--;
-		if (d.equals(Direction.SOUTH)) yPos++;
-		if (d.equals(Direction.WEST)) xPos--;
-		if (d.equals(Direction.EAST)) xPos++;
+		else if (d.equals(Direction.SOUTH)) yPos++;
+		else if (d.equals(Direction.WEST)) xPos--;
+		else if (d.equals(Direction.EAST)) xPos++;
 
 		if (xPos > maxXY) xPos = maxXY;
-		if (xPos < 0) xPos = 0;
+		else if (xPos < 0) xPos = 0;
 		if (yPos > maxXY) yPos = maxXY;
-		if (yPos < 0) yPos = 0;
+		else if (yPos < 0) yPos = 0;
+
+		origin = new Position(xPos, yPos);
 		this.repaint();
 	}
 

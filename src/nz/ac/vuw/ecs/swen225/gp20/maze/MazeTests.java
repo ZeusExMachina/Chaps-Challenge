@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MazeTests {
 
 	/**
-	 * Ensure maze can be set up with all kinds of basic tiles.
+	 * Construct a new Maze with level loaded.
+	 * @return maze instance
 	 */
-	@Test
-	public void test01_setUpMaze() {
+	private Maze getMaze() {
 		String[] in = {
 				"/////////",
 				"/d#/@/#c/",
@@ -24,7 +24,17 @@ public class MazeTests {
 				"#/b_?_a/#",
 				"/////////"
 		};
-		Maze m = new Maze(in);
+		Maze m = Maze.getInstance();
+		m.loadLevel(in, 1);
+		return m;
+	}
+
+	/**
+	 * Ensure maze can be set up with all kinds of basic tiles.
+	 */
+	@Test
+	public void test01_setUpMaze() {
+		Maze m = getMaze();
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
 						  "|/|/|A|/|X|/|B|/|/|\n" +
@@ -39,15 +49,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test02_moveChapSouth() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.SOUTH));
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
@@ -63,15 +65,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test03_moveChapBack() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.NORTH));
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
@@ -88,15 +82,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test04_moveChapNorth() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertFalse(m.moveChap(Direction.NORTH));
 		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
 						  "|/|d|#|/|@|/|#|c|/|\n" +
@@ -112,15 +98,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test05_pickUp() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH));
@@ -140,15 +118,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test06_unlock() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH));
@@ -173,15 +143,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test07_noUnlock() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertFalse(m.moveChap(Direction.NORTH));
@@ -199,15 +161,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test08_getTreasure() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH));
@@ -235,15 +189,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test09_finishLevel() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"#C__!__D#",
-				"_/b_?_a/_",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.SOUTH)); // get key to B
@@ -271,7 +217,9 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.WEST)); // unlock C
-		assertTrue(m.moveChap(Direction.WEST)); // get treasure
+		assertTrue(m.moveChap(Direction.WEST));
+		assertTrue(m.moveChap(Direction.SOUTH)); // get treasure
+		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
@@ -279,7 +227,9 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST)); // unlock D
-		assertTrue(m.moveChap(Direction.EAST)); // get treasure
+		assertTrue(m.moveChap(Direction.EAST));
+		assertTrue(m.moveChap(Direction.SOUTH)); // get treasure
+		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
 		assertTrue(m.moveChap(Direction.WEST));
@@ -314,7 +264,7 @@ public class MazeTests {
 				"/////////"
 		};
 		try {
-			new Maze(in);
+			Maze.getInstance().loadLevel(in, 0);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -334,7 +284,7 @@ public class MazeTests {
 				"/////////"
 		};
 		try {
-			new Maze(in);
+			Maze.getInstance().loadLevel(in, 0);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -345,15 +295,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test12_movetoWall() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.EAST));
 		assertFalse(m.moveChap(Direction.NORTH));
 	}
@@ -363,15 +305,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test13_setHelp() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		String helpText = "Help!";
 		m.setHelp(0, helpText);
 		assertTrue(m.moveChap(Direction.SOUTH));
@@ -383,15 +317,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test14_badHelp() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		try {
 			m.setHelp(1, "Help!");
 		} catch (IllegalArgumentException e) {
@@ -412,11 +338,11 @@ public class MazeTests {
 				"#/b_?_a/#",
 				"/////////"
 		};
-		Maze m = new Maze(in);
+		Maze m = getMaze();
 		assertEquals(1, m.getLevelNumber());
-		m.loadLevel(in);
+		m.loadLevel(in, 2);
 		assertEquals(2, m.getLevelNumber());
-		m.loadLevel(in);
+		m.loadLevel(in, 3);
 		assertEquals(3, m.getLevelNumber());
 	}
 
@@ -424,7 +350,7 @@ public class MazeTests {
 	 * Runs all getImage methods in all Tile classes to ensure they exist.
 	 */
 	@Test
-	public void testxx_checkImages() {
+	public void test16_checkImages() {
 		try {
 			Actor chap = new Actor(new Position(0,0), "chap");
 			assertNotNull(chap.getImage());
@@ -445,7 +371,7 @@ public class MazeTests {
 			WallTile w = new WallTile(0, 0);
 			assertNotNull(w.getImage());
 		} catch (IOException e) {
-			System.out.println("CHANGE_THIS_WHEN_THERE_ARE_ACTUALLY_IMAGES!");
+			throw new AssertionError("Images missing.");
 		}
 	}
 }
