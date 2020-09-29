@@ -26,7 +26,7 @@ public class MazeTests {
 		};
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
-		m.loadLevel(in, 1, help);
+		m.loadLevel(in, help);
 		return m;
 	}
 
@@ -266,7 +266,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, 0, help);
+			Maze.getInstance().loadLevel(in, help);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -287,7 +287,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, 0, help);
+			Maze.getInstance().loadLevel(in, help);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -327,32 +327,10 @@ public class MazeTests {
 	}
 
 	/**
-	 * Ensure level number incrementing is correct.
-	 */
-	@Test
-	public void test15_levelNumbers() {
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"_C__!__D_",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		String[] help = {"Unit tests"};
-		Maze m = getMaze();
-		assertEquals(1, m.getLevelNumber());
-		m.loadLevel(in, 2, help);
-		assertEquals(2, m.getLevelNumber());
-		m.loadLevel(in, 3, help);
-		assertEquals(3, m.getLevelNumber());
-	}
-
-	/**
 	 * Runs all getImage methods in all Tile classes to ensure they exist.
 	 */
 	@Test
-	public void test16_checkImages() {
+	public void test15_checkImages() {
 		try {
 			Actor chap = new Actor(new Position(0,0), "chap");
 			assertNotNull(chap.getImage());
