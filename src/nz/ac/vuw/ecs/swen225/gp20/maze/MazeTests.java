@@ -25,7 +25,8 @@ public class MazeTests {
 				"/////////"
 		};
 		Maze m = Maze.getInstance();
-		m.loadLevel(in, 1);
+		String[] help = {"Unit tests"};
+		m.loadLevel(in, 1, help);
 		return m;
 	}
 
@@ -263,8 +264,9 @@ public class MazeTests {
 				"#/b_?_a/#",
 				"/////////"
 		};
+		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, 0);
+			Maze.getInstance().loadLevel(in, 0, help);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -283,8 +285,9 @@ public class MazeTests {
 				"#/b_?_a/#",
 				"/////////"
 		};
+		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, 0);
+			Maze.getInstance().loadLevel(in, 0, help);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -338,11 +341,12 @@ public class MazeTests {
 				"#/b_?_a/#",
 				"/////////"
 		};
+		String[] help = {"Unit tests"};
 		Maze m = getMaze();
 		assertEquals(1, m.getLevelNumber());
-		m.loadLevel(in, 2);
+		m.loadLevel(in, 2, help);
 		assertEquals(2, m.getLevelNumber());
-		m.loadLevel(in, 3);
+		m.loadLevel(in, 3, help);
 		assertEquals(3, m.getLevelNumber());
 	}
 

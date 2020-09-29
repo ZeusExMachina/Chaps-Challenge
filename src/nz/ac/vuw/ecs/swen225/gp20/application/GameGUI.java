@@ -58,7 +58,7 @@ public class GameGUI {
 
         setLevel(1);
         maze = Maze.getInstance();
-        maze.loadLevel(loader.getLevelLayout(1), 1);
+        maze.loadLevel(loader.getLevelLayout(1), 1, loader.getLevelHelpText(1));
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -355,7 +355,7 @@ public class GameGUI {
      */
     public void resetMaze(){
         try {
-            maze.resetMaze(loader.getLevelLayout(1));
+            maze.loadLevel(loader.getLevelLayout(level), level, loader.getLevelHelpText(level));
             Canvas board = render.getCanvas();
             board.display(maze);
             board.repaint();

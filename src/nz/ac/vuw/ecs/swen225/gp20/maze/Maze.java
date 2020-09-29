@@ -60,34 +60,13 @@ public class Maze {
 	}
 
 	/**
-	 * Load in a certain Maze state
-	 *
-	 * @param in         string input array representing board
-	 * @param levelNo    level number to display on window
-	 * @param inventory  tiles currently in player's inventory
-	 * @param chapFacing direction Chap is facing
-	 */
-	public void loadState(String[] in, int levelNo, List<Tile> inventory, Direction chapFacing) {
-		loadLevel(in, levelNo);
-		this.inventory.addAll(inventory);
-		chap.setDirection(chapFacing);
-	}
-
-	/**
-	 * Load level as below, but increment current level number if no number given.
-	 * @param in input String array
-	 */
-	public void loadLevel(String[] in) {
-		loadLevel(in, levelNumber++);
-	}
-
-	/**
 	 * Parse given String array converting each character into a cell.
 	 *
 	 * @param in input String array
 	 * @param levelNo level number of loaded level
+	 * @param helpText helpText String array
 	 */
-	public void loadLevel(String[] in, int levelNo) {
+	public void loadLevel(String[] in, int levelNo, String[] helpText) {
 		inventory.clear();
 		levelNumber = levelNo;
 		treasuresLeft = 0;
@@ -99,6 +78,7 @@ public class Maze {
 
 		board = new Tile[in.length][in[0].length()];
 		boolean isExitSet = false;
+		int helpTileIndex = 0;
 		for (int row = 0; row < in.length; row++) {
 			for (int col = 0; col < in[row].length(); col++) {
 				char c = in[row].charAt(col);
@@ -108,6 +88,10 @@ public class Maze {
 				} else {
 					board[row][col] = makeTile(c, row, col);
 					if (board[row][col] instanceof ExitTile) isExitSet = true;
+					if (board[row][col] instanceof HelpTile) {
+						setHelp(helpTileIndex, helpText[helpTileIndex]);
+						helpTileIndex++;
+					}
 				}
 			}
 		}
@@ -380,15 +364,6 @@ public class Maze {
 				throw new RuntimeException(e);
 			}
 		}).collect(Collectors.toUnmodifiableList());
-	}
-
-	/**
-	 * Reset maze, e.g. in a new level or restarting.
-	 * @param data level data from Persistence module
-	 */
-	public void resetMaze(String[] data) {
-		loadLevel(data, levelNumber);
-		inventory.clear();
 	}
 
 	/**
