@@ -361,9 +361,8 @@ public class GameGUI {
     public void resetMaze(){
         try {
             maze = new Maze(loader.getLevelLayout(1));
-            board = Canvas.getInstance();
-            board.display();
-            board.setMaze(maze);
+            Canvas board = render.getCanvas();
+            board.display(maze);
             board.repaint();
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,10 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.render;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -39,13 +36,6 @@ public class Renderer {
   private Renderer() {
     canvas = new Canvas();
     inventory = new Inventory();
-    BufferedImage defaultImage = null;
-    try {
-      defaultImage = ImageIO.read(new File("resources/wall.png"));
-    } catch (IOException e) {
-      System.out.println("Could not find 'wall.png' in resources");
-    }
-    canvas.setDefaultImage(defaultImage);
   }
   
   /**
@@ -55,14 +45,13 @@ public class Renderer {
   public static Renderer getInstance() {
     return instance;
   }
-  
+
   /**
    * Sets the Maze to be used for getting game information from.
    * @param m - Maze instance.
    */
   public void setMaze(Maze m){
-    this.maze = m;
-    canvas.setOrigin(maze.getChapPosition());
+    maze = m;
   }
   
   /**
@@ -97,11 +86,7 @@ public class Renderer {
    * Displays the canvas and the inventory.
    */
   public void display() {
-    try{
-      canvas.display(maze.getImages(), maze.getChapImage());
-    }catch(IOException e){
-      System.out.println("Couldn't find chap image.");
-    }
+    canvas.display(maze);
     inventory.display();
     
   }

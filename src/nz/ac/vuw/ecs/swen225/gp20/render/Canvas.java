@@ -1,14 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp20.render;
 
-import nz.ac.vuw.ecs.swen225.gp20.maze.*;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
+import nz.ac.vuw.ecs.swen225.gp20.maze.WallTile;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 
@@ -16,10 +15,6 @@ import java.io.IOException;
  * Class to display and handle the drawing of the board and actors.
  */
 public class Canvas extends JPanel {
-	/**
-	 * the images to be displayed on the screen.
-	 */
-	private BufferedImage[][] board;
 	/**
 	 * number of columns to be displayed on the screen
 	 * at one time.
@@ -34,18 +29,9 @@ public class Canvas extends JPanel {
 	 */
 	private final int TILE_SIZE = 64;
 	/**
-	 * The position the display should be centered around the board.
+	 * TODO
 	 */
-	private Position origin;
-	/**
-	 * The image to display when the display runs of the side
-	 * of the board.
-	 */
-	private BufferedImage defaultImage;
-	/**
-	 * The image of chap that (which direction he is facing).
-	 */
-	private BufferedImage chapImage;
+	private Maze maze;
 	/**
 	 * the X and Y offset for where the center of the screen is.
 	 */
@@ -66,35 +52,27 @@ public class Canvas extends JPanel {
 	}
 
 	/**
-	 * Sets the default image to be displayed, if no image is found.
-	 * @param b - BufferedImage to be set.
-	 */
-	public void setDefaultImage(BufferedImage b){
-		this.defaultImage = b;
-	}
-
-	/**
-	 * Sets the origin for where the display should be centered.
-	 * @param origin - position where chap is.
-	 */
-	public void setOrigin(Position origin) {
-		this.origin = origin;
-	}
-
-	/**
 	 * Override of the original JPanel paint, draws the board.
 	 *
 	 * @param g - Graphics object (do not call this method)
 	 */
 	public void paint(Graphics g) {
 		if (!isGameStarted) return;
+		Position origin = maze.getChapPosition();
+		BufferedImage defaultImage = null, chapImage = null;
+		BufferedImage[][] board = maze.getImages();
+		try {
+			defaultImage = new WallTile(0, 0).getImage();
+			chapImage = maze.getChapImage();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
 			for (int yPlace = 0; yPlace < NUM_ROWS * TILE_SIZE; yPlace += TILE_SIZE) {
 				try {
-					BufferedImage imageToDraw = board[yIndex][xIndex];
-					g.drawImage(imageToDraw, xPlace, yPlace, this);
+					g.drawImage(board[yIndex][xIndex], xPlace, yPlace, this);
 				} catch (ArrayIndexOutOfBoundsException e) {
 					g.drawImage(defaultImage, xPlace, yPlace, this);
 				}
@@ -134,13 +112,11 @@ public class Canvas extends JPanel {
 
 	/**
 	 * Displays the board to the screen.
-	 * @param b -  2Dimensional array of images to be displayed.
-	 * @param chap - Image of chap to display.
+	 * @param m TODO
 	 */
-	public void display(BufferedImage[][] b, BufferedImage chap) {
+	public void display(Maze m) {
 		isGameStarted = true;
-		this.board = b;
-		this.chapImage = chap;
+		maze = m;
 		this.repaint();
 	}
 
@@ -151,9 +127,9 @@ public class Canvas extends JPanel {
 	 * @param d direction to move
 	 */
 	public void changeOrigin(Direction d) {
-		int maxXY = board.length-1;
-		int xPos = origin.getX();
-		int yPos = origin.getY();
+		int maxXY = maze.getImages().length-1;
+		int xPos = maze.getChapPosition().getX();
+		int yPos = maze.getChapPosition().getY();
 
 		if (d.equals(Direction.NORTH)) yPos--;
 		if (d.equals(Direction.SOUTH)) yPos++;
@@ -164,7 +140,6 @@ public class Canvas extends JPanel {
 		if (xPos < 0) xPos = 0;
 		if (yPos > maxXY) yPos = maxXY;
 		if (yPos < 0) yPos = 0;
-		this.origin = new Position(xPos, yPos);
 		this.repaint();
 	}
 
