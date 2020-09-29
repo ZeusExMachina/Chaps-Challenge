@@ -239,12 +239,10 @@ public class Maze {
 	/**
 	 * Find out how many items in the inventory match a certain class/type.
 	 *
-	 * @param type class to count
+	 * @param type Tile class to count
 	 * @return count of items belonging to certain class
 	 */
-	protected int countTypesInInventory(Class<?> type) {
-		Preconditions.checkArgument(type.isAssignableFrom(Tile.class), "Passing in a non-Tile class");
-
+	protected int countTypesInInventory(Class<? extends Tile> type) {
 		int result = 0;
 		for (Tile t : inventory) {
 			if (t.getClass().equals(type)) result++;
