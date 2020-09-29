@@ -309,10 +309,8 @@ public class MazeTests {
 	@Test
 	public void test13_setHelp() {
 		Maze m = getMaze();
-		String helpText = "Help!";
-		m.setHelp(0, helpText);
 		assertTrue(m.moveChap(Direction.SOUTH));
-		assertEquals(helpText, m.isOnHelp());
+		assertEquals("Unit tests", m.isOnHelp());
 	}
 
 	/**
