@@ -1,0 +1,15 @@
+-- Breakpoints for showing inter-module communication --
+
+- Maze
+
+
+- Application
+
+
+- Renderer
+
+
+- Persistence
+
+
+- Record and Replay
