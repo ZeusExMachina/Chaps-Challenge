@@ -226,7 +226,9 @@ public class Maze {
 	 * @param type class to count
 	 * @return count of items belonging to certain class
 	 */
-	public int countTypesInInventory(Class<?> type) {
+	protected int countTypesInInventory(Class<?> type) {
+		Preconditions.checkArgument(type.isAssignableFrom(Tile.class), "Passing in a non-Tile class");
+
 		int result = 0;
 		for (Tile t : inventory) {
 			if (t.getClass().equals(type)) result++;
@@ -292,6 +294,7 @@ public class Maze {
 				return true;
 			}
 		} catch (IllegalArgumentException ignored) {
+			// go straight to return false
 		}
 		return false;
 	}
@@ -344,8 +347,6 @@ public class Maze {
 					result[row][col] = board[row][col].getImage();
 				}
 			}
-//			Position chapPos = chap.getPosition();
-//			result[chapPos.getY()][chapPos.getX()] = chap.getImage();
 		} catch (IOException e) {
 			System.out.println("Image not loaded, is /resources/ at root?");
 			e.printStackTrace();
@@ -385,6 +386,7 @@ public class Maze {
 	/**
 	 * Retrieve image representing Chap
 	 * @return chap's image
+	 * @throws IOException if image isn't found
 	 */
 	public BufferedImage getChapImage() throws IOException {
 		return chap.getImage();
