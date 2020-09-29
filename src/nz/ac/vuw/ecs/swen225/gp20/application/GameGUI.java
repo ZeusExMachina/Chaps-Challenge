@@ -36,13 +36,15 @@ public class GameGUI {
     double timeVal;
     int chipsRemaining;
 
-    ArrayList<Object> keys = new ArrayList<>(); //TODO: Add appropriate class type
+
+    LevelLoader loader = new LevelLoader();
 
     JLabel levelLabel = new JLabel();
     JLabel timeLabel = new JLabel();
     JLabel chipsLabel = new JLabel();
 
     boolean pauseState = false;
+    boolean inGame = false;
     JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
     Maze maze;
@@ -53,7 +55,8 @@ public class GameGUI {
      * made up of two made frames, maze display and control panel
      */
     public GameGUI(){
-        LevelLoader loader = new LevelLoader();
+
+        setLevel(1);
         try {
             maze = new Maze(loader.getLevelLayout(1));
         } catch (Exception e) {
@@ -127,6 +130,39 @@ public class GameGUI {
 
             }
         });
+
+        board.addKeyListener(new KeyAdapter() {
+            boolean control = false;
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                super.keyPressed(e);
+                if(!pauseState) {
+                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                        control = true;
+                    } else if (control) {
+                        controlKeyUse(e);
+                    } else {
+                        singleKeyUse(e);
+                    }
+                }else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+                    pauseState = false;
+                    System.out.println("Resume Game");
+                    hidePauseDialog();
+                    timer = new Timer();
+                    startTime();
+
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
+            }
+        });
         controlsStart();
     }
 
@@ -143,7 +179,7 @@ public class GameGUI {
         controls.add(topHalf);
         controls.add(bottomHalf);
 
-        setLevel();//TODO: to be received form other class
+
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(2,1,10,0));
         JLabel title = new JLabel("Chip's Challenge");
@@ -164,6 +200,7 @@ public class GameGUI {
             clearControlFrame();
             startTime();
             controlsGamePlay();
+            resetMaze();
         };
 
         startGame.addActionListener(aL);
@@ -177,6 +214,7 @@ public class GameGUI {
      * construct display of control panels for in game play
      */
     public void controlsGamePlay(){
+        inGame = true;
         controls.setLayout(new GridLayout(4,1,10,0));
 
         setTime();
@@ -211,37 +249,7 @@ public class GameGUI {
         Inventory keysPanel = render.getInventory();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
-
-
-        render.getCanvas().addKeyListener(new KeyAdapter() {
-            boolean control = false;
-            @Override
-            public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
-                if(!pauseState) {
-                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                        control = true;
-                    } else if (control) {
-                        controlKeyUse(e);
-                    } else {
-                        singleKeyUse(e);
-                    }
-                }else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                    pauseState = false;
-                    System.out.println("Resume Game");
-                    hidePauseDialog();
-                    timer = new Timer();
-                    startTime();
-
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
-            }
-        });
-
+        //here
         controls.revalidate();
         controls.repaint();
 
@@ -321,6 +329,7 @@ public class GameGUI {
         ActionListener startAL = e -> {
             try {
                 replayObject.setReplaySpeed(Double.parseDouble(speedSelectBox.getSelectedItem().toString()));
+                resetMaze();
                 //TODO: exception thrown here inside replayer class - null pointer
             } catch (IllegalArgumentException exp) {
 
@@ -339,10 +348,27 @@ public class GameGUI {
      * reset the control frame for (clear all components)
      */
     public void clearControlFrame(){
+        inGame = false;
         for(Component c : controls.getComponents()){
             controls.remove(c);
         }
         controls.repaint();
+    }
+
+    /**
+     * reset the mae display
+     */
+    public void resetMaze(){
+        try {
+            maze = new Maze(loader.getLevelLayout(1));
+            board = Canvas.getInstance();
+            board.display();
+            board.setMaze(maze);
+            board.repaint();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -394,33 +420,34 @@ public class GameGUI {
      */
     public void singleKeyUse(KeyEvent e){
         int keyPressed = e.getKeyCode();
+        if(inGame) {
+            switch (keyPressed) {
 
-        switch (keyPressed){
-
-            case KeyEvent.VK_UP:
-                moveCalled(Direction.NORTH);
-                break;
-            case KeyEvent.VK_RIGHT:
-                moveCalled(Direction.EAST);
-                break;
-            case KeyEvent.VK_DOWN:
-                moveCalled(Direction.SOUTH);
-                break;
-            case KeyEvent.VK_LEFT:
-                moveCalled(Direction.WEST);
-                break;
-            case KeyEvent.VK_SPACE:
-                if(!pauseState) {
-                    pauseState = true;
-                    displayPauseDialog();
-                    System.out.println("Pause Game");
-                    timer.cancel();
-                }else{
-                    System.out.println("game already paused");
-                }
-                break;
-            default:
-                break;
+                case KeyEvent.VK_UP:
+                    moveCalled(Direction.NORTH);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    moveCalled(Direction.EAST);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    moveCalled(Direction.SOUTH);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    moveCalled(Direction.WEST);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    if (!pauseState) {
+                        pauseState = true;
+                        displayPauseDialog();
+                        System.out.println("Pause Game");
+                        timer.cancel();
+                    } else {
+                        System.out.println("game already paused");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
     }
@@ -477,8 +504,8 @@ public class GameGUI {
     }
 
     //setters
-    public void setLevel(){
-        this.level = 1;//change to get from maze
+    public void setLevel(int level){
+        this.level = level;//change to get from maze
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
