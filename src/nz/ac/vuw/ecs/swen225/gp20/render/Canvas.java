@@ -90,7 +90,7 @@ public class Canvas extends JPanel {
 	}
 
 	/**
-	 * Draws the helptext when chap is standing on a help tile.
+	 * Draws the help text when chap is standing on a help tile.
 	 * @param g - Graphics element to draw on.
 	 */
 	private void drawHelpText(Graphics g){

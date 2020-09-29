@@ -415,7 +415,6 @@ public class GameGUI {
         int keyPressed = e.getKeyCode();
         if(inGame) {
             switch (keyPressed) {
-
                 case KeyEvent.VK_UP:
                     moveCalled(Direction.NORTH);
                     break;
@@ -453,7 +452,6 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
-
         if (maze.moveChap(d)) render.update(d);
         if(maze.isLevelDone()){
             levelCompleteDialog();

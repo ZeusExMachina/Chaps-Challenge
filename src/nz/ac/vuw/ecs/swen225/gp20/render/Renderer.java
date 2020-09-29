@@ -88,6 +88,5 @@ public class Renderer {
   public void display() {
     canvas.display(maze);
     inventory.display();
-    
   }
 }
