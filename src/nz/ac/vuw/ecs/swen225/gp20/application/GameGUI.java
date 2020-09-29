@@ -25,30 +25,30 @@ import java.util.stream.Collectors;
  * controls level display and controls
  */
 public class GameGUI {
-    JFrame mainFrame = new JFrame("Chip's Challenge");
+    private JFrame mainFrame = new JFrame("Chip's Challenge");
 
-    JPanel controls = new JPanel();
+    private JPanel controls = new JPanel();
 
-    Timer timer = new Timer();
+    private Timer timer = new Timer();
 
     //to be received form other classes
-    int level;
-    double timeVal;
-    int chipsRemaining;
+    private int level;
+    private double timeVal;
+    private int chipsRemaining;
 
 
-    LevelLoader loader = new LevelLoader();
+    private LevelLoader loader = new LevelLoader();
 
-    JLabel levelLabel = new JLabel();
-    JLabel timeLabel = new JLabel();
-    JLabel chipsLabel = new JLabel();
+    private JLabel levelLabel = new JLabel();
+    private JLabel timeLabel = new JLabel();
+    private JLabel chipsLabel = new JLabel();
 
-    boolean pauseState = false;
-    boolean inGame = false;
-    JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
+    private boolean pauseState = false;
+    private boolean inGame = false;
+    private JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
-    Maze maze;
-    Renderer render = Renderer.getInstance();
+    private Maze maze;
+    private Renderer render = Renderer.getInstance();
 
     /**
      * Constructor for the gui
@@ -56,9 +56,10 @@ public class GameGUI {
      */
     public GameGUI(){
 
-        setLevel(1);
+
         maze = Maze.getInstance();
-        maze.loadLevel(loader.getLevelLayout(1), loader.getLevelHelpText(1));
+        setLevel();
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -218,7 +219,6 @@ public class GameGUI {
 
         //LEVEL
         JPanel levelPanel = new JPanel();
-        //levelPanel.setBorder(BorderFactory.createTitledBorder("Level"));
         levelLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         levelPanel.add(levelLabel);
         controls.add(levelPanel);
@@ -226,16 +226,13 @@ public class GameGUI {
 
         //TIME
         JPanel timerPanel = new JPanel();
-        //timerPanel.setBorder(BorderFactory.createTitledBorder("Timer"));
         timeLabel.setText("TIME: " + String.format("%03d",(int)timeVal));
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         timerPanel.add(timeLabel);
-
         controls.add(timerPanel);
 
         //CHIPS
         JPanel chipsPanel = new JPanel();
-        //chipsPanel.setBorder(BorderFactory.createTitledBorder("Chips"));
         chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
         chipsPanel.add(chipsLabel);
         controls.add(chipsPanel);
@@ -245,7 +242,8 @@ public class GameGUI {
         Inventory keysPanel = render.getInventory();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
-        //here
+
+
         controls.revalidate();
         controls.repaint();
     }
@@ -498,25 +496,25 @@ public class GameGUI {
     }
 
     //setters
-    public void setLevel(int level){
-        this.level = level;//change to get from maze
+    public void setLevel(){
+        this.level = loader.getAllLevelNumbers().get(maze.getLevelNumber());
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
+    /**
+     * set level clock at start of level
+     */
     public void setTime(){
-        this.timeVal = 10;//get from maze
+        this.timeVal = loader.getLevelClock(level);
     }
 
+    /**
+     * Set number of chips remaining called from maze class
+     */
     public void setChipsRemaining(){
-        this.chipsRemaining = 4;//maze
+        this.chipsRemaining = maze.getTreasuresLeft();
         chipsLabel.setText("Chips Remaining: " + String.valueOf(this.chipsRemaining));
-        if(this.chipsRemaining == 0){
-            System.out.println("All chips found");
-        }
+
     }
 
-    public void updateInventory(){
-        //this.keys; //get from maze
-        return;
-    }
 }
