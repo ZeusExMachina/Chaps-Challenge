@@ -498,8 +498,7 @@ public class GameGUI {
 
     //setters
     public void setLevel(){
-        this.level = maze.getLevelNumber();
-        this.level = 1;
+        this.level = loader.getAllLevelNumbers().get(maze.getLevelNumber());
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
