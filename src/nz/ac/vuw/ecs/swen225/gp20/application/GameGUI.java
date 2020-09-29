@@ -32,7 +32,7 @@ public class GameGUI {
     private Timer timer = new Timer();
 
     //to be received form other classes
-    private int level;
+    private int level = 1;
     private double timeVal;
     private int chipsRemaining;
 
@@ -497,7 +497,7 @@ public class GameGUI {
 
     //setters
     public void setLevel(){
-        this.level = loader.getAllLevelNumbers().get(maze.getLevelNumber());
+        this.level = loader.getAllLevelNumbers().get(level-1);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
