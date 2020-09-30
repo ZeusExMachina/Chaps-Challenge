@@ -31,6 +31,10 @@ public class Canvas extends JPanel {
 	/**
 	 * TODO
 	 */
+	private int maxXY;
+	/**
+	 * TODO
+	 */
 	private Maze maze;
 	/**
 	 * The position the display should be centered around the board.
@@ -66,6 +70,7 @@ public class Canvas extends JPanel {
 		if (!isGameStarted) return;
 
 		BufferedImage[][] board = maze.getImages();
+		maxXY = board.length;
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
@@ -134,7 +139,6 @@ public class Canvas extends JPanel {
 	 * @param d direction to move
 	 */
 	public void changeOrigin(Direction d) {
-		int maxXY = maze.getImages().length-1;
 		int xPos = origin.getX();
 		int yPos = origin.getY();
 
