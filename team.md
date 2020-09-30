@@ -4,6 +4,6 @@
 | --- | --- | --- |
 | Application | Madeleine Mills | millsmade1
 | Maze | Johniel Bocacao | bocacajohn
-| Persistence | Jared Boult | 
+| Persistence | Jared Boult | boultjare
 | Record and Replay | Elijah Guarina | guarinelij
-| Renderer | Devon Gregory | 
+| Renderer | Devon Gregory | gregordevo
