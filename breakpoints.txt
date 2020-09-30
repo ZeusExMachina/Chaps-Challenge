@@ -1,15 +1,23 @@
--- Breakpoints for showing inter-module communication --
+# Breakpoints
+Showing inter-module communication
 
-- Maze
-
-
+## Maze
+Maze has no outgoing dependencies.
+Maze is used by:
 - Application
-
-
+    - GameGUI:62 loadLevel()
+    - GameGUI:456 moveChap()
 - Renderer
+    - Canvas:92 isOnHelp()
+    - Renderer:80 getInventory()
+
+## Application
 
 
-- Persistence
+## Renderer
 
 
-- Record and Replay
+## Persistence
+
+
+## Record and Replay
