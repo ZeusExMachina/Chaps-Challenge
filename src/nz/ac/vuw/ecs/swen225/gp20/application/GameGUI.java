@@ -485,7 +485,7 @@ public class GameGUI {
                 if(timeVal <= 0){
                     timer.cancel();
                     timeLabel.setForeground(Color.red);
-                    //restart level
+                    timeOut();
                 }else{
                     timeVal = timeVal - 0.1 ;
                 }
@@ -514,6 +514,32 @@ public class GameGUI {
     public void setChipsRemaining(){
         this.chipsRemaining = maze.getTreasuresLeft();
         chipsLabel.setText("Chips Remaining: " + String.valueOf(this.chipsRemaining));
+
+    }
+
+    /**
+     * display a dialog if the player does nto complete the level in the allocated time
+     */
+    public void timeOut(){
+        inGame = false;
+        JDialog timeOutDisplay = new JDialog(mainFrame, "Time is Up!");
+        timeOutDisplay.setSize(350,200);
+        JLabel gameOverLabel = new JLabel("Time's Up!", SwingConstants.CENTER);
+        gameOverLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        JPanel buttonFrame = new JPanel();
+        JButton restartButton = new JButton("Restart");
+        restartButton.addActionListener(e -> {
+            timeOutDisplay.dispose();
+            clearControlFrame();
+            controlsStart();
+        });
+        timeOutDisplay.setLayout(new GridLayout(2,1,0,0));
+        timeOutDisplay.add(gameOverLabel);
+        buttonFrame.add(restartButton);
+        timeOutDisplay.add(buttonFrame);
+        timeOutDisplay.setVisible(true);
+        timeOutDisplay.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
 
     }
 
