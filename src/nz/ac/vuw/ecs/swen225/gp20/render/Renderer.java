@@ -88,7 +88,6 @@ public class Renderer {
   }
   
   public void reset(){
-    canvas = new Canvas();
-    inventory = new Inventory();
+    inventory.inventoryImages.clear();
   }
 }
