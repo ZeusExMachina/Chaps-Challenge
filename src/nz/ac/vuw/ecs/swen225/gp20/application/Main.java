@@ -1,17 +1,23 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 import javax.swing.*;
 
+/**
+ * Main class for chip's challenge. Starts the game and call for gui construction
+ */
 public class Main {
 
     //create board/gui object here
+    /**
+     * instance of board in gui
+     */
     private GameGUI board;
-    int timeVal = 10;
 
 
+    /**
+     * construct main class by building gui display
+     */
     public Main() {
-        SwingUtilities.invokeLater(() -> {
-            board = new GameGUI();
-        });
+        SwingUtilities.invokeLater(() -> board = new GameGUI());
     }
     /**
      * Starts the game

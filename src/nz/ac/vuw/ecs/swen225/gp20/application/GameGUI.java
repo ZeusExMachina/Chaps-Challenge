@@ -25,30 +25,71 @@ import java.util.stream.Collectors;
  * controls level display and controls
  */
 public class GameGUI {
-    private JFrame mainFrame = new JFrame("Chip's Challenge");
+    /**
+     * main game frame
+     */
+    private final JFrame mainFrame = new JFrame("Chip's Challenge");
 
-    private JPanel controls = new JPanel();
+    /**
+     * left jPanel- content changes with each game state
+     */
+    private final JPanel controls = new JPanel();
 
+    /**
+     * Timer object for game, adjusts time display
+     */
     private Timer timer = new Timer();
 
     //to be received form other classes
+    /**
+     * current game level - always starts with 1
+     */
     private int level = 1;
+    /**
+     * time in seconds, allocated to level
+     */
     private double timeVal;
-    private int chipsRemaining;
 
 
-    private LevelLoader loader = new LevelLoader();
+    /**
+     * Define level loader object - for calling correct level information
+     */
+    private final LevelLoader loader = new LevelLoader();
 
-    private JLabel levelLabel = new JLabel();
-    private JLabel timeLabel = new JLabel();
-    private JLabel chipsLabel = new JLabel();
+    /**
+     * responsible for level number display
+     */
+    private final JLabel levelLabel = new JLabel();
+    /**
+     * responsible for time level display, adjusted in timer task
+     */
+    private final JLabel timeLabel = new JLabel();
+    /**
+     * responsible for remaining chips in current game and display
+     */
+    private final JLabel chipsLabel = new JLabel();
 
+    /**
+     * true if game is paused, restricts game functionality
+     */
     private boolean pauseState = false;
+    /**
+     * true if currently inside a level, game is active
+     */
     private boolean inGame = false;
-    private JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
+    /**
+     * dialog to display in paused state
+     */
+    private final JDialog pauseMenu = new JDialog(mainFrame, "PAUSED");
 
-    private Maze maze;
-    private Renderer render = Renderer.getInstance();
+    /**
+     * maze currently active, responsible for all objects inside level
+     */
+    private final Maze maze;
+    /**
+     * display the level and keys
+     */
+    private final Renderer render = Renderer.getInstance();
 
     /**
      * Constructor for the gui
@@ -129,6 +170,9 @@ public class GameGUI {
         });
 
         board.addKeyListener(new KeyAdapter() {
+            /**
+             * true if control key is currently held down
+             */
             boolean control = false;
             @Override
             public void keyTyped(KeyEvent e) {
@@ -309,10 +353,10 @@ public class GameGUI {
         topHalf.add(speedPanel);
         JLabel speedTitle = new JLabel("Replay Speed:");
         speedPanel.add(speedTitle);
-        List<Double> speedValues = Arrays.asList(replayObject.REPLAY_SPEEDS);
-        String[] speedStrings = (speedValues.stream().map(data -> data.toString()).collect(Collectors.toList()).toArray(new String[0]));
+        List<Double> speedValues = Arrays.asList(Replayer.REPLAY_SPEEDS);
+        String[] speedStrings = speedValues.stream().map(Object::toString).toArray(String[]::new);
 
-        JComboBox speedSelectBox = new JComboBox(speedStrings);
+        JComboBox<String> speedSelectBox = new JComboBox<>(speedStrings);
         speedSelectBox.setSelectedItem(speedStrings[3]);//should be value 1
         speedPanel.add(speedSelectBox);
 
@@ -322,11 +366,10 @@ public class GameGUI {
 
         ActionListener startAL = e -> {
             try {
-                replayObject.setReplaySpeed(Double.parseDouble(speedSelectBox.getSelectedItem().toString()));
+                replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
                 resetMaze();
-                //TODO: exception thrown here inside replayer class - null pointer
-            } catch (IllegalArgumentException exp) {
-
+            } catch (IllegalArgumentException | NullPointerException exp) {
+                System.out.println("Error loading replay");
             }
         };
         startReplay.addActionListener(startAL);
@@ -415,6 +458,7 @@ public class GameGUI {
         int keyPressed = e.getKeyCode();
         if(inGame) {
             switch (keyPressed) {
+
                 case KeyEvent.VK_UP:
                     moveCalled(Direction.NORTH);
                     break;
@@ -446,9 +490,9 @@ public class GameGUI {
 
     /**
      * called when move key received
-     * checks updates for keys and chips
+     * checks updates for chips and completion conditions
      *
-     * @param d
+     * @param d value of direction enum
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
@@ -480,7 +524,7 @@ public class GameGUI {
      * @return timeTask
      */
     public TimerTask createTask(){
-        TimerTask task = new TimerTask() {
+        return new TimerTask() {
             @Override
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
@@ -493,11 +537,12 @@ public class GameGUI {
                 }
             }
         };
-
-        return task;
     }
 
-    //setters
+    /**
+     * set the current level to passed int
+     * @param levelInt - level to set game to
+     */
     public void setLevel(int levelInt){
         this.level = loader.getAllLevelNumbers().get(levelInt);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
@@ -511,11 +556,10 @@ public class GameGUI {
     }
 
     /**
-     * Set number of chips remaining called from maze class
+     * Set number of chips remaining in maze object
      */
     public void setChipsRemaining(){
-        this.chipsRemaining = maze.getTreasuresLeft();
-        chipsLabel.setText("Chips Remaining: " + String.valueOf(this.chipsRemaining));
+        chipsLabel.setText("Chips Remaining: " + maze.getTreasuresLeft());
 
     }
 
