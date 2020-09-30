@@ -18,6 +18,13 @@ Maze is used by:
 
 
 ## Persistence
+Persistence has no outgoing dependencies.
+Persistence is used by:
+- Application
+    - GameGUI:40 new LevelLoader()
+    - GameGUI:62 getLevelLayout() and getLevelHelpText()
+    - GameGUI:504 getAllLevelNumbers()
+    - GameGUI:512 getLevelClock()
 
 
 ## Record and Replay
