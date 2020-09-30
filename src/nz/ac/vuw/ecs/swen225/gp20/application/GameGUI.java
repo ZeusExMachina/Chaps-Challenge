@@ -58,7 +58,7 @@ public class GameGUI {
 
 
         maze = Maze.getInstance();
-        setLevel();
+        setLevel(0); // start at level zero
         maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
 
         mainFrame.setSize(900, 600);
@@ -183,6 +183,7 @@ public class GameGUI {
         title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
+        levelLabel.setFont(new java.awt.Font("Arial", ~Font.BOLD, 16));
         titlePanel.add(levelLabel);
         topHalf.add(titlePanel);
 
@@ -454,6 +455,9 @@ public class GameGUI {
         setChipsRemaining();
 
         if (maze.moveChap(d)) render.update(d);
+        if(maze.isLevelDone()){
+            levelCompleteDialog();
+        }
     }
 
     /**
@@ -485,7 +489,7 @@ public class GameGUI {
                 if(timeVal <= 0){
                     timer.cancel();
                     timeLabel.setForeground(Color.red);
-                    timeOut();
+                    timeOutDialog();
                 }else{
                     timeVal = timeVal - 0.1 ;
                 }
@@ -496,8 +500,8 @@ public class GameGUI {
     }
 
     //setters
-    public void setLevel(){
-        this.level = loader.getAllLevelNumbers().get(level-1);
+    public void setLevel(int levelInt){
+        this.level = loader.getAllLevelNumbers().get(levelInt);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
     }
 
@@ -518,9 +522,9 @@ public class GameGUI {
     }
 
     /**
-     * display a dialog if the player does nto complete the level in the allocated time
+     * display a dialog if the player does not complete the level in the allocated time
      */
-    public void timeOut(){
+    public void timeOutDialog(){
         inGame = false;
         JDialog timeOutDisplay = new JDialog(mainFrame, "Time is Up!");
         timeOutDisplay.setSize(350,200);
@@ -539,6 +543,55 @@ public class GameGUI {
         timeOutDisplay.add(buttonFrame);
         timeOutDisplay.setVisible(true);
         timeOutDisplay.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+
+
+    }
+    /**
+     * display a dialog when the players completes a level
+     */
+    public void levelCompleteDialog(){
+        timer.cancel();
+        inGame = false;
+        JDialog levelComplete = new JDialog(mainFrame, "Level Completed");
+        levelComplete.setLayout(new GridLayout(2,1,0,0));
+        levelComplete.setSize(350,200);
+
+        JLabel gameOverLabel = new JLabel("Level Complete!", SwingConstants.CENTER);
+        gameOverLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+
+        JPanel buttonFrame = new JPanel();
+
+        buttonFrame.setLayout(new GridLayout(2,1,0,0));
+        JPanel leftFrame = new JPanel();
+        JPanel rightFrame = new JPanel();
+        buttonFrame.add(leftFrame);
+        buttonFrame.add(rightFrame);
+        JButton restartButton = new JButton("Restart");
+        restartButton.addActionListener(e -> {
+            levelComplete.dispose();
+            clearControlFrame();
+            controlsStart();
+        });
+
+        buttonFrame.setLayout(new GridLayout(1,2,10,0));
+        JButton nextLevelButton = new JButton("Next Level");
+        nextLevelButton.addActionListener(e -> {
+            setLevel(level + 1);
+            levelComplete.dispose();
+            clearControlFrame();
+            controlsStart();
+        });
+
+        if(!loader.getAllLevelNumbers().contains(this.level + 1)){//not the last level
+            nextLevelButton.setEnabled(false);
+        }
+
+        levelComplete.add(gameOverLabel);
+        leftFrame.add(restartButton);
+        rightFrame.add(nextLevelButton);
+        levelComplete.add(buttonFrame);
+        levelComplete.setVisible(true);
+        levelComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
     }
