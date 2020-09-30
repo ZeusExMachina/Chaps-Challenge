@@ -22,11 +22,11 @@ public class Renderer {
   /**
    * The current instance of the Canvas being used.
    */
-  private final Canvas canvas;
+  private Canvas canvas;
   /**
    * The current instance of the Inventory being used.
    */
-  private final Inventory inventory;
+  private Inventory inventory;
   
   /**
    * Private constructor, creates the Canvas and Inventory instances to
@@ -85,5 +85,10 @@ public class Renderer {
   public void display() {
     canvas.display(maze);
     inventory.display();
+  }
+  
+  public void reset(){
+    canvas = new Canvas();
+    inventory = new Inventory();
   }
 }
