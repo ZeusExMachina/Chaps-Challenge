@@ -132,28 +132,5 @@ public class Canvas extends JPanel {
 		this.repaint();
 	}
 
-	/**
-	 * Sets the origin (the position on the board where chap is)
-	 * and makes sure that the x and y coords are in bounds.
-	 *
-	 * @param d direction to move
-	 */
-	public void changeOrigin(Direction d) {
-		int xPos = origin.getX();
-		int yPos = origin.getY();
-
-		if (d.equals(Direction.NORTH)) yPos--;
-		else if (d.equals(Direction.SOUTH)) yPos++;
-		else if (d.equals(Direction.WEST)) xPos--;
-		else if (d.equals(Direction.EAST)) xPos++;
-
-		if (xPos > maxXY) xPos = maxXY;
-		else if (xPos < 0) xPos = 0;
-		if (yPos > maxXY) yPos = maxXY;
-		else if (yPos < 0) yPos = 0;
-
-		origin = new Position(xPos, yPos);
-		this.repaint();
-	}
 
 }

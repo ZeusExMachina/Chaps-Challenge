@@ -8,8 +8,12 @@ Maze is used by:
     - GameGUI:62 loadLevel()
     - GameGUI:456 moveChap()
 - Renderer
-    - Canvas:92 isOnHelp()
-    - Renderer:80 getInventory()
+    - Canvas:72 getImages()
+    - Canvas:97 isOnHelp()
+    - Canvas:127 getChapImage()
+    - Canvas:131 getChapPosition()
+
+    - Renderer:77 getInventory()
 
 ## Application
 

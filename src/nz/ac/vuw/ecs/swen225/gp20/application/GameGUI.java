@@ -452,7 +452,7 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
-        if (maze.moveChap(d)) render.update(d);
+        if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
