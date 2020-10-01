@@ -88,6 +88,6 @@ public class Renderer {
   }
   
   public void reset(){
-    inventory.inventoryImages.clear();
+   if(inventory.inventoryImages != null) inventory.inventoryImages.clear();
   }
 }
