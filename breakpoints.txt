@@ -19,7 +19,10 @@ Maze is used by:
 
 
 ## Renderer
-
+Renderer has outgoing dependencies to:
+- Maze (see above)
+Renderer is used by:
+- Application (see above)
 
 ## Persistence
 Persistence has no outgoing dependencies.
