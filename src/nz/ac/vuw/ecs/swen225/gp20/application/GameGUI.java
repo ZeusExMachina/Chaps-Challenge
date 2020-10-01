@@ -28,7 +28,7 @@ public class GameGUI {
     /**
      * main game frame
      */
-    private final JFrame mainFrame = new JFrame("Chip's Challenge");
+    private final JFrame mainFrame = new JFrame("Chap's Challenge");
 
     /**
      * left jPanel- content changes with each game state
@@ -49,8 +49,6 @@ public class GameGUI {
      * time in seconds, allocated to level
      */
     private double timeVal;
-
-
     /**
      * Define level loader object - for calling correct level information
      */
@@ -157,7 +155,6 @@ public class GameGUI {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
                     pauseState = false;
-                    System.out.println("Resume Game");
                     hidePauseDialog();
                     timer = new Timer();
                     startTime();
@@ -223,7 +220,7 @@ public class GameGUI {
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(2,1,10,0));
-        JLabel title = new JLabel("Chip's Challenge");
+        JLabel title = new JLabel("Chap's Challenge");
         title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
@@ -233,8 +230,12 @@ public class GameGUI {
 
         JPanel startPanel = new JPanel();
         JButton startGame = new JButton("Start Game");
-
-        bottomHalf.setBorder(BorderFactory.createTitledBorder("Potentially display controls here"));
+        bottomHalf.setLayout(new GridLayout(10,2,10,0));
+        bottomHalf.add(new JLabel("Arrow Keys : Move"));
+        bottomHalf.add(new JLabel("Space      : Pause"));
+        bottomHalf.add(new JLabel("Esc        : Resume"));
+        bottomHalf.add(new JLabel("Ctrl + X   : Exit Game"));
+        bottomHalf.add(new JLabel("Ctrl + 1   : Reset Level"));
 
 
         startGame.setFocusable(false);
@@ -249,6 +250,9 @@ public class GameGUI {
         startPanel.add(startGame);
 
         topHalf.add(startPanel);
+
+        controls.revalidate();
+        controls.repaint();
 
     }
 
@@ -429,7 +433,8 @@ public class GameGUI {
         switch (keyPressed){
 
             case KeyEvent.VK_X:
-                System.out.println("Exit Game");
+                //exit the program
+                System.exit(0);
                 break;
             case KeyEvent.VK_S:
                 System.out.println("Save Game");
@@ -441,7 +446,10 @@ public class GameGUI {
                 System.out.println("Last Unfinished Level");
                 break;
             case KeyEvent.VK_1:
-                System.out.println("New Game");
+                //restart the game - from current level
+                resetMaze();
+                clearControlFrame();
+                controlsStart();
                 break;
             default:
                 break;
@@ -474,7 +482,6 @@ public class GameGUI {
                     if (!pauseState) {
                         pauseState = true;
                         displayPauseDialog();
-                        System.out.println("Pause Game");
                         timer.cancel();
                     } else {
                         System.out.println("game already paused");
