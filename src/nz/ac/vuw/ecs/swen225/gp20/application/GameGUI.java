@@ -399,7 +399,6 @@ public class GameGUI {
         try {
             maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
             setChipsRemaining();
-            render.reset();
             render.update();
         } catch (Exception e) {
             e.printStackTrace();

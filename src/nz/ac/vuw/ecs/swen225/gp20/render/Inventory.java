@@ -3,7 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.render;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Creates and displays chaps inventory
@@ -12,7 +12,7 @@ public class Inventory extends JPanel {
   /**
    * ArrayList of image of objects that are in chaps inventory.
    */
-  ArrayList<BufferedImage> inventoryImages;
+  List<BufferedImage> inventoryImages;
   
   /**
    * Constructor, sets the preferred size.
@@ -46,7 +46,7 @@ public class Inventory extends JPanel {
    * Set the images to display.
    * @param inventoryImages - images of whats in chaps inventory.
    */
-  public void setInventoryImages(ArrayList<BufferedImage> inventoryImages) {
+  public void setInventoryImages(List<BufferedImage> inventoryImages) {
     this.inventoryImages = inventoryImages;
     display();
   }

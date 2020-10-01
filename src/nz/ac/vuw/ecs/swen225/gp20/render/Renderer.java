@@ -74,8 +74,7 @@ public class Renderer {
    * the correct images and information.
    */
   public void update(){
-    ArrayList<BufferedImage> imageInventory = new ArrayList<>(maze.getInventory());
-    inventory.setInventoryImages(imageInventory);
+    inventory.setInventoryImages(maze.getInventory());
     display();
   }
   
@@ -85,9 +84,5 @@ public class Renderer {
   public void display() {
     canvas.display(maze);
     inventory.display();
-  }
-  
-  public void reset(){
-   if(inventory.inventoryImages != null) inventory.inventoryImages.clear();
   }
 }
