@@ -398,9 +398,9 @@ public class GameGUI {
     public void resetMaze(){
         try {
             maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
-            Canvas board = render.getCanvas();
-            board.display(maze);
-            board.repaint();
+            setChipsRemaining();
+            render.reset();
+            render.update();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -605,17 +605,27 @@ public class GameGUI {
 
         buttonFrame.setLayout(new GridLayout(2,1,0,0));
         JPanel leftFrame = new JPanel();
+        JPanel midFrame = new JPanel();
         JPanel rightFrame = new JPanel();
+        buttonFrame.setLayout(new GridLayout(1,3,10,0));
         buttonFrame.add(leftFrame);
+        buttonFrame.add(midFrame);
         buttonFrame.add(rightFrame);
         JButton restartButton = new JButton("Restart");
         restartButton.addActionListener(e -> {
             levelComplete.dispose();
             clearControlFrame();
+            controlsGamePlay();
+        });
+
+        JButton menuButton = new JButton("Menu");
+        menuButton.addActionListener(e -> {
+            levelComplete.dispose();
+            clearControlFrame();
             controlsStart();
         });
 
-        buttonFrame.setLayout(new GridLayout(1,2,10,0));
+
         JButton nextLevelButton = new JButton("Next Level");
         nextLevelButton.addActionListener(e -> {
             setLevel(level + 1);
@@ -630,7 +640,8 @@ public class GameGUI {
 
         levelComplete.add(gameOverLabel);
         leftFrame.add(restartButton);
-        rightFrame.add(nextLevelButton);
+        midFrame.add(nextLevelButton);
+        rightFrame.add(menuButton);
         levelComplete.add(buttonFrame);
         levelComplete.setVisible(true);
         levelComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
