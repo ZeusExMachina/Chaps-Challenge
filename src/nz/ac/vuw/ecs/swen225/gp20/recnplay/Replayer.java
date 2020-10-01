@@ -31,9 +31,6 @@ public class Replayer {
 	 * The GUI associated with the game.
 	 */
 	private GameGUI gui;
-	
-	// TODO: Add the Persistence module object as a field
-	
 	/**
 	 * Keeps track of whether the program is auto-replaying through a recorded 
 	 * game, or is going through it step-by-step.
@@ -81,13 +78,9 @@ public class Replayer {
 	 */
 	public Replayer(GameGUI ui) {
 		this.gui = ui;
-		// TODO: Add the Persistence module object to this constructor here
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
 		this.currentTimeInReplay = 0.0;
-		this.timer = new Timer();
-		this.replayedAction = new ActionPlayer();
-		
 	}
 	
 	// ------------------------------------------------
@@ -117,8 +110,9 @@ public class Replayer {
 	 * Set the replay speed for the recorded game to be replayed at.
 	 * Only accepts speeds from replaySpeeds.
 	 * @param speed is the new replay speed to set
+	 * @throws IllegalArgumentException
 	 */
-	public void setReplaySpeed(double speed) throws IllegalArgumentException{
+	public void setReplaySpeed(double speed) throws IllegalArgumentException {
 		// First check if the entered replay speed is valid, if so set it.
 		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
 		if (speed < 0.0 || speed > 2.0 || speed%0.25 != 0) { 
@@ -147,7 +141,7 @@ public class Replayer {
 		 */
 		@Override
 		public void run() {
-			System.out.println("current time = " + currentTimeInReplay);
+			//System.out.println("current time = " + currentTimeInReplay);
 			// Only perform an action if there is a loaded game that has not been finished
 			if (gameRecordHistory != null && !gameRecordHistory.isEmpty()) {
 				// If the next action was performed at this time in the 
@@ -173,8 +167,8 @@ public class Replayer {
 		private void replayAction() {
 			ActionRecord actionToReplay = gameRecordHistory.poll();
 			// TODO: Add the logic for deciding what move to make for which actor
-			// TODO: Note that we probably shouldn't use Maze's Direction Enum, as this package is not allowed to access Maze.
-			// TODO: Instead, might need application to translate our ActionRecord.MoveDirection Enum into Maze's Enum
+			gui.moveCalled(actionToReplay.getMoveDirection(), false);
+			
 			// Just a test
 			System.out.println("Replayed action: " + actionToReplay);
 		}
@@ -237,13 +231,18 @@ public class Replayer {
 	 * gameHistory queue.
 	 * @param filename is the name of the file to load
 	 * @throws IOException
+	 * @throws NullPointerException
 	 */
 	public void loadGameReplay(String filename) throws IOException, NullPointerException {
 		Reader reader = Files.newBufferedReader(Paths.get(filename));
 		gameRecordHistory = new ArrayDeque<ActionRecord>(
 				Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+		// Reset fields
+		autoReplaying = false;
 		currentTimeInReplay = 0.0;
-		// TODO: Now that the game record has been loaded, start a new game
+		replaySpeed = 1.0;
+		timer = new Timer();
+		replayedAction = new ActionPlayer();
 	}
 	
 	// ----------------------------------------------
@@ -255,19 +254,17 @@ public class Replayer {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
-		Recorder recorder = new Recorder();
+		Recorder recorder = new Recorder(1, 100.0);
 		Replayer replayer = new Replayer(null);
 		
-		recorder.recordNewAction(Direction.WEST, 5.04);
-		recorder.recordNewAction(Direction.EAST, 10.69);
-		recorder.recordNewAction(Direction.EAST, 15.69);
-		recorder.recordNewAction(Direction.NORTH, 20.69); 
-		recorder.recordNewAction(Direction.SOUTH, 25.69);
-		recorder.recordNewAction(Direction.WEST, 30.69);
+		recorder.recordNewAction(Direction.WEST, 0.04);
+		recorder.recordNewAction(Direction.EAST, 3.69);
+		recorder.recordNewAction(Direction.EAST, 6.69);
+		recorder.recordNewAction(Direction.NORTH, 9.69); 
+		recorder.recordNewAction(Direction.SOUTH, 12.69);
+		recorder.recordNewAction(Direction.WEST, 15.69);
 		
-		String filename = "recorder_test.json";
-		recorder.saveGame(filename);
+		String filename = recorder.saveGame();
 		try { replayer.loadGameReplay(filename); }
 		catch (Exception e) { }
 		replayer.replayNextAction();

@@ -1,4 +1,4 @@
-package nz.ac.vuw.ecs.swen225.gp20.recnplay;
+	package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
 import java.util.Queue;
 import java.util.ArrayDeque;
@@ -6,9 +6,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
+import java.time.LocalDateTime;
 import com.google.gson.Gson;
-
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
@@ -26,6 +25,14 @@ public class Recorder {
 	 * Stores the history of actions done by actors as a Queue of ActionRecords.
 	 */
 	private final Queue<ActionRecord> actionHistory;
+	/**
+	 * The level number for the game being recorded.
+	 */
+	private final int levelNum;
+	/**
+	 * The starting time amount of the level for the game being recorded.
+	 */
+	private final double startingTime;
 	
 	// ----------------------------------------
 	// ------------ CONSTRUCTOR ---------------
@@ -33,9 +40,14 @@ public class Recorder {
 	
 	/**
 	 * Make a new Recorder with an empty actions history.
+	 * @param lvlNum is the level number for the game being recorded.
+	 * @param startTime is the starting time amount of the 
+	 * 			level for the game being recorded
 	 */
-	public Recorder() {
+	public Recorder(int lvlNum, double startTime) {
 		this.actionHistory = new ArrayDeque<ActionRecord>();
+		this.levelNum = lvlNum;
+		this.startingTime = startTime;
 	}
 	
 	// ----------------------------------------
@@ -48,7 +60,7 @@ public class Recorder {
 	 * @param timeStamp is the time at which this action was performed
 	 */
 	public void recordNewAction(Direction direction, double timeStamp) {
-		actionHistory.add(new ActionRecord(direction, timeStamp));
+		actionHistory.add(new ActionRecord(direction, startingTime-timeStamp));
 	}
 	
 	// ----------------------------------------
@@ -56,18 +68,32 @@ public class Recorder {
 	// ----------------------------------------
 	
 	/**
-	 * Save the game history as a JSON file.
-	 * @param filename is what the resulting file will be named
+	 * Generate the name for a recorded game file.
+	 * @return a String of the save file name
 	 */
-	public void saveGame(String filename) {
-		// TODO: Add the level/stage number so that when replaying, Replayer object can tell Persistence module to load a new game with a particular level
+	private String generateSaveFileName() {
+		LocalDateTime currentDateTime = LocalDateTime.now();
+		return "chap-record_level" + levelNum
+				+ "_" + currentDateTime.getDayOfMonth() + "-" + currentDateTime.getMonthValue() + "-" + currentDateTime.getYear()
+				+ "_" + currentDateTime.getHour() + "-" + currentDateTime.getMinute()
+				+ ".json";
+	}
+	
+	/**
+	 * Save the game history as a JSON file.
+	 * @return the name of the saved file, or null if the file saving failed 
+	 */
+	public String saveGame() {
+		String fileName = null;
 		try {
-			Writer writer = Files.newBufferedWriter(Paths.get(filename));
+			fileName = generateSaveFileName();
+			Writer writer = Files.newBufferedWriter(Paths.get(fileName));
 			new Gson().toJson(actionHistory, writer);
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return fileName;
 	}
 }
