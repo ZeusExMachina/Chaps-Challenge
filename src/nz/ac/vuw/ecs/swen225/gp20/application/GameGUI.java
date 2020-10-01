@@ -241,7 +241,6 @@ public class GameGUI {
         startGame.setFocusable(false);
         ActionListener aL = e -> {
             clearControlFrame();
-            startTime();
             controlsGamePlay();
             resetMaze();
         };
@@ -404,6 +403,8 @@ public class GameGUI {
             maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
             setChipsRemaining();
             render.update();
+            startTime();
+            createTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -534,9 +535,11 @@ public class GameGUI {
             @Override
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                if(timeVal <= 10) {
+                    timeLabel.setForeground(Color.red);
+                }
                 if(timeVal <= 0){
                     timer.cancel();
-                    timeLabel.setForeground(Color.red);
                     timeOutDialog();
                 }else{
                     timeVal = timeVal - 0.1 ;
@@ -621,6 +624,7 @@ public class GameGUI {
         restartButton.addActionListener(e -> {
             levelComplete.dispose();
             clearControlFrame();
+            resetMaze();
             controlsGamePlay();
         });
 
