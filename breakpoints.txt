@@ -33,5 +33,4 @@ Persistence is used by:
     - GameGUI:504 getAllLevelNumbers()
     - GameGUI:512 getLevelClock()
 
-
 ## Record and Replay

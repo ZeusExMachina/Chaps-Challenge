@@ -104,7 +104,7 @@ public class Maze {
 	 * @param index number it appears in 2D array if it was collapsed into a 1D array
 	 * @param text  text to set
 	 */
-	public void setHelp(int index, String text) {
+	protected void setHelp(int index, String text) {
 		for (Tile[] row : board) {
 			for (Tile t : row) {
 				if (t instanceof HelpTile) {
@@ -179,7 +179,7 @@ public class Maze {
 	 * @param p position of tile wanted
 	 * @return tile wanted
 	 */
-	public Tile getTile(Position p) {
+	private Tile getTile(Position p) {
 		Preconditions.checkArgument(p.getY() >= 0, "y-coordinate is negative: %s", p);
 		Preconditions.checkArgument(p.getX() >= 0, "x-coordinate is negative: %s", p);
 		Preconditions.checkArgument(p.getY() < board.length, "y-coordinate is out of bounds: %s", p);
@@ -195,7 +195,7 @@ public class Maze {
 	 * @param d direction to move to
 	 * @return position of new tile
 	 */
-	public Tile getNeighbouringTile(Position p, Direction d) {
+	private Tile getNeighbouringTile(Position p, Direction d) {
 		// Preconditions will be handled in getTile() and Position constructor
 
 		Position newPos = d.movePosition(p);

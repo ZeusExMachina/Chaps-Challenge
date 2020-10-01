@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
+import java.io.File;
 import java.util.Queue;
 import java.util.ArrayDeque;
 import java.util.Arrays;
@@ -229,14 +230,15 @@ public class Replayer {
 	/**
 	 * Load a JSON file of a game replay and store it in the 
 	 * gameHistory queue.
-	 * @param filename is the name of the file to load
+	 * @param file is the name of the file to load
 	 * @throws IOException
 	 * @throws NullPointerException
 	 */
-	public void loadGameReplay(String filename) throws IOException, NullPointerException {
-		Reader reader = Files.newBufferedReader(Paths.get(filename));
-		gameRecordHistory = new ArrayDeque<ActionRecord>(
-				Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+	public void loadGameReplay(File file) throws IOException, NullPointerException {
+		try (Reader reader = Files.newBufferedReader(file.toPath())) {
+			gameRecordHistory = new ArrayDeque<ActionRecord>(
+					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+		}
 		// Reset fields
 		autoReplaying = false;
 		currentTimeInReplay = 0.0;
@@ -264,12 +266,12 @@ public class Replayer {
 		recorder.recordNewAction(Direction.SOUTH, 12.69);
 		recorder.recordNewAction(Direction.WEST, 15.69);
 		
-		String filename = recorder.saveGame();
+		/*TODO fix this String filename = recorder.saveGame();
 		try { replayer.loadGameReplay(filename); }
 		catch (Exception e) { }
 		replayer.replayNextAction();
 		replayer.toggleReplayType();
-		replayer.setReplaySpeed(1.0);
+		replayer.setReplaySpeed(1.0);*/
 		//loadGameReplay(filename);
 	}
 }

@@ -339,9 +339,9 @@ public class GameGUI {
 
         ActionListener aL = e -> {
             JFileChooser j = new JFileChooser();
-            j.showSaveDialog(null);
+            j.showOpenDialog(mainFrame);
             try { //TODO: test for valid file format
-                replayObject.loadGameReplay(j.getSelectedFile().getName());
+                replayObject.loadGameReplay(j.getSelectedFile());
                 fileNameDisplay.setForeground(Color.black);
                 fileNameDisplay.setText(j.getSelectedFile().getName());
                 startReplay.setEnabled(true);
