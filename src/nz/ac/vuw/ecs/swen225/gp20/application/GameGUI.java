@@ -3,7 +3,6 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
-import nz.ac.vuw.ecs.swen225.gp20.recnplay.Recorder;
 import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 import nz.ac.vuw.ecs.swen225.gp20.render.Inventory;
@@ -29,7 +28,7 @@ public class GameGUI {
     /**
      * main game frame
      */
-    private final JFrame mainFrame = new JFrame("Chip's Challenge");
+    private final JFrame mainFrame = new JFrame("Chap's Challenge");
 
     /**
      * left jPanel- content changes with each game state
@@ -50,8 +49,6 @@ public class GameGUI {
      * time in seconds, allocated to level
      */
     private double timeVal;
-
-
     /**
      * Define level loader object - for calling correct level information
      */
@@ -91,10 +88,6 @@ public class GameGUI {
      * display the level and keys
      */
     private final Renderer render = Renderer.getInstance();
-    /**
-     * Record moves made by the player.
-     */
-    private Recorder recorder;
 
     /**
      * Constructor for the gui
@@ -162,7 +155,6 @@ public class GameGUI {
             public void keyPressed(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
                     pauseState = false;
-                    System.out.println("Resume Game");
                     hidePauseDialog();
                     timer = new Timer();
                     startTime();
@@ -228,7 +220,7 @@ public class GameGUI {
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new GridLayout(2,1,10,0));
-        JLabel title = new JLabel("Chip's Challenge");
+        JLabel title = new JLabel("Chap's Challenge");
         title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
         title.setHorizontalAlignment(JLabel.CENTER);
         titlePanel.add(title);
@@ -238,14 +230,17 @@ public class GameGUI {
 
         JPanel startPanel = new JPanel();
         JButton startGame = new JButton("Start Game");
-
-        bottomHalf.setBorder(BorderFactory.createTitledBorder("Potentially display controls here"));
+        bottomHalf.setLayout(new GridLayout(10,2,10,0));
+        bottomHalf.add(new JLabel("Arrow Keys : Move"));
+        bottomHalf.add(new JLabel("Space      : Pause"));
+        bottomHalf.add(new JLabel("Esc        : Resume"));
+        bottomHalf.add(new JLabel("Ctrl + X   : Exit Game"));
+        bottomHalf.add(new JLabel("Ctrl + 1   : Reset Level"));
 
 
         startGame.setFocusable(false);
         ActionListener aL = e -> {
             clearControlFrame();
-            startTime();
             controlsGamePlay();
             resetMaze();
         };
@@ -254,6 +249,9 @@ public class GameGUI {
         startPanel.add(startGame);
 
         topHalf.add(startPanel);
+
+        controls.revalidate();
+        controls.repaint();
 
     }
 
@@ -293,8 +291,6 @@ public class GameGUI {
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
 
-        // Start a new recorder
-        recorder = new Recorder(level, timeVal);
 
         controls.revalidate();
         controls.repaint();
@@ -340,7 +336,7 @@ public class GameGUI {
             try { //TODO: test for valid file format
                 replayObject.loadGameReplay(j.getSelectedFile().getName());
                 fileNameDisplay.setForeground(Color.black);
-                fileNameDisplay.setText(j.getSelectedFile().getName());
+                selectFile.setText(j.getSelectedFile().getName());
                 startReplay.setEnabled(true);
             } catch (IOException | NullPointerException exp) {
                 fileNameDisplay.setForeground(Color.red);
@@ -375,7 +371,6 @@ public class GameGUI {
             try {
                 replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
                 resetMaze();
-                replayObject.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
             } catch (IllegalArgumentException | NullPointerException exp) {
                 System.out.println("Error loading replay");
             }
@@ -408,6 +403,8 @@ public class GameGUI {
             maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
             setChipsRemaining();
             render.update();
+            startTime();
+            createTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -437,7 +434,8 @@ public class GameGUI {
         switch (keyPressed){
 
             case KeyEvent.VK_X:
-                System.out.println("Exit Game");
+                //exit the program
+                System.exit(0);
                 break;
             case KeyEvent.VK_S:
                 System.out.println("Save Game");
@@ -449,7 +447,10 @@ public class GameGUI {
                 System.out.println("Last Unfinished Level");
                 break;
             case KeyEvent.VK_1:
-                System.out.println("New Game");
+                //restart the game - from current level
+                resetMaze();
+                clearControlFrame();
+                controlsStart();
                 break;
             default:
                 break;
@@ -467,22 +468,21 @@ public class GameGUI {
             switch (keyPressed) {
 
                 case KeyEvent.VK_UP:
-                    moveCalled(Direction.NORTH, true);
+                    moveCalled(Direction.NORTH);
                     break;
                 case KeyEvent.VK_RIGHT:
-                    moveCalled(Direction.EAST, true);
+                    moveCalled(Direction.EAST);
                     break;
                 case KeyEvent.VK_DOWN:
-                    moveCalled(Direction.SOUTH, true);
+                    moveCalled(Direction.SOUTH);
                     break;
                 case KeyEvent.VK_LEFT:
-                    moveCalled(Direction.WEST, true);
+                    moveCalled(Direction.WEST);
                     break;
                 case KeyEvent.VK_SPACE:
                     if (!pauseState) {
                         pauseState = true;
                         displayPauseDialog();
-                        System.out.println("Pause Game");
                         timer.cancel();
                     } else {
                         System.out.println("game already paused");
@@ -500,16 +500,13 @@ public class GameGUI {
      * checks updates for chips and completion conditions
      *
      * @param d value of direction enum
-     * @param recording determines whether or not to record this 
-     * 			move action
      */
-    public void moveCalled(Direction d, boolean recording){
+    public void moveCalled(Direction d){
         setChipsRemaining();
         if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
-        if (recording) recorder.recordNewAction(d, timeVal);
     }
 
     /**
@@ -538,9 +535,11 @@ public class GameGUI {
             @Override
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                if(timeVal <= 10) {
+                    timeLabel.setForeground(Color.red);
+                }
                 if(timeVal <= 0){
                     timer.cancel();
-                    timeLabel.setForeground(Color.red);
                     timeOutDialog();
                 }else{
                     timeVal = timeVal - 0.1 ;
@@ -625,6 +624,7 @@ public class GameGUI {
         restartButton.addActionListener(e -> {
             levelComplete.dispose();
             clearControlFrame();
+            resetMaze();
             controlsGamePlay();
         });
 
