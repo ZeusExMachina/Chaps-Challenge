@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
+import nz.ac.vuw.ecs.swen225.gp20.recnplay.Recorder;
 import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
 import nz.ac.vuw.ecs.swen225.gp20.render.Canvas;
 import nz.ac.vuw.ecs.swen225.gp20.render.Inventory;
@@ -88,6 +89,10 @@ public class GameGUI {
      * display the level and keys
      */
     private final Renderer render = Renderer.getInstance();
+    /**
+     * Record moves made by the player.
+     */
+    private Recorder recorder;
 
     /**
      * Constructor for the gui
@@ -291,6 +296,8 @@ public class GameGUI {
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         controls.add(keysPanel);
 
+        // Start a new recorder
+        recorder = new Recorder(level, timeVal);
 
         controls.revalidate();
         controls.repaint();
@@ -336,7 +343,7 @@ public class GameGUI {
             try { //TODO: test for valid file format
                 replayObject.loadGameReplay(j.getSelectedFile().getName());
                 fileNameDisplay.setForeground(Color.black);
-                selectFile.setText(j.getSelectedFile().getName());
+                fileNameDisplay.setText(j.getSelectedFile().getName());
                 startReplay.setEnabled(true);
             } catch (IOException | NullPointerException exp) {
                 fileNameDisplay.setForeground(Color.red);
@@ -371,6 +378,7 @@ public class GameGUI {
             try {
                 replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
                 resetMaze();
+                replayObject.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
             } catch (IllegalArgumentException | NullPointerException exp) {
                 System.out.println("Error loading replay");
             }
@@ -467,18 +475,18 @@ public class GameGUI {
         if(inGame) {
             switch (keyPressed) {
 
-                case KeyEvent.VK_UP:
-                    moveCalled(Direction.NORTH);
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    moveCalled(Direction.EAST);
-                    break;
-                case KeyEvent.VK_DOWN:
-                    moveCalled(Direction.SOUTH);
-                    break;
-                case KeyEvent.VK_LEFT:
-                    moveCalled(Direction.WEST);
-                    break;
+	            case KeyEvent.VK_UP:
+	                moveCalled(Direction.NORTH, true);
+	                break;
+	            case KeyEvent.VK_RIGHT:
+	                moveCalled(Direction.EAST, true);
+	                break;
+	            case KeyEvent.VK_DOWN:
+	                moveCalled(Direction.SOUTH, true);
+	                break;
+	            case KeyEvent.VK_LEFT:
+	                moveCalled(Direction.WEST, true);
+	                break;
                 case KeyEvent.VK_SPACE:
                     if (!pauseState) {
                         pauseState = true;
@@ -500,13 +508,16 @@ public class GameGUI {
      * checks updates for chips and completion conditions
      *
      * @param d value of direction enum
+     * @param recording determines whether or not to record this 
+     * 			move action
      */
-    public void moveCalled(Direction d){
+    public void moveCalled(Direction d, boolean recording){
         setChipsRemaining();
         if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
+        if (recording) recorder.recordNewAction(d, timeVal);
     }
 
     /**
