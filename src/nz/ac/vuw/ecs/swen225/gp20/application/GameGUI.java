@@ -30,18 +30,14 @@ public class GameGUI {
      * main game frame
      */
     private final JFrame mainFrame = new JFrame("Chap's Challenge");
-
     /**
      * left jPanel- content changes with each game state
      */
     private final JPanel controls = new JPanel();
-
     /**
      * Timer object for game, adjusts time display
      */
     private Timer timer = new Timer();
-
-    //to be received form other classes
     /**
      * current game level - always starts with 1
      */
@@ -345,11 +341,15 @@ public class GameGUI {
                 fileNameDisplay.setForeground(Color.black);
                 fileNameDisplay.setText(j.getSelectedFile().getName());
                 startReplay.setEnabled(true);
-            } catch (IOException | NullPointerException exp) {
+            } catch (IOException | com.google.gson.JsonSyntaxException exp) {
                 fileNameDisplay.setForeground(Color.red);
                 fileNameDisplay.setText("Invalid File");
                 startReplay.setEnabled(false);
                 //exp.printStackTrace();
+            }catch(NullPointerException exp){
+                fileNameDisplay.setForeground(Color.black);
+                fileNameDisplay.setText("No File");
+                startReplay.setEnabled(false);
             }
         };
 

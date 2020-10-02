@@ -234,7 +234,7 @@ public class Replayer {
 	 * @throws IOException
 	 * @throws NullPointerException
 	 */
-	public void loadGameReplay(File file) throws IOException, NullPointerException {
+	public void loadGameReplay(File file) throws IOException, NullPointerException, com.google.gson.JsonSyntaxException {
 		try (Reader reader = Files.newBufferedReader(file.toPath())) {
 			gameRecordHistory = new ArrayDeque<ActionRecord>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));

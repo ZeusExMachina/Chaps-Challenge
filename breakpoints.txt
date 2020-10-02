@@ -15,8 +15,34 @@ Maze is used by:
 
     - Renderer:77 getInventory()
 
-## Application
 
+## Application
+is used by:
+-Record and Replay
+    -Replayer:171 moveCalled()
+
+outgoing dependencies:
+-Persistence
+    -GameGui:112 getLevelLayout(), getLevelHelpText()
+    -GameGui:411 getLevelLayout(), getLevelHelpText() - reset
+    -GameGui:567 getAllLevelNumbers()
+    -GameGui:575 getLevelClock()
+    -GameGui:685 getAllLevelNumbers()
+-Maze
+    -GameGui:100 getInstance()
+    -GameGui:102 loadLevel()
+    -GameGui:411 loadLevel() - reset
+    -GameGui:516 moveChap()
+    -GameGui:517 isLevelDone()
+    -GameGui:582 getTreasuresLeft()
+-Render
+    -GameGui:132 getCanvas()
+    -GameGui:192 getInventory()
+    -GameGui:87 getInstance()
+-Recnplay
+    -GameGui:520 recordNewAction()
+    -GameGui:340 loadGameReplay()
+    -GameGui:381 toggleReplayType()
 
 ## Renderer
 Renderer has outgoing dependencies to:
