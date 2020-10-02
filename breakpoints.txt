@@ -57,9 +57,10 @@ Renderer is used by:
 Persistence has no outgoing dependencies.
 Persistence is used by:
 - Application
-    - GameGUI:40 new LevelLoader()
-    - GameGUI:62 getLevelLayout() and getLevelHelpText()
-    - GameGUI:504 getAllLevelNumbers()
-    - GameGUI:512 getLevelClock()
+    - GameGUI:52 new LevelLoader()
+    - GameGUI:102 getLevelLayout() and getLevelHelpText()
+    - GameGUI:567 getAllLevelNumbers()
+    - GameGUI:575 getLevelClock()
+    - GameGUI:658 getAllLevelNumber()
 
 ## Record and Replay
