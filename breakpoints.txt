@@ -5,8 +5,11 @@ Showing inter-module communication
 Maze has no outgoing dependencies.
 Maze is used by:
 - Application
-    - GameGUI:62 loadLevel()
-    - GameGUI:456 moveChap()
+    - GameGUI:102 loadLevel()
+    - GameGUI:411 loadLevel()
+    - GameGUI:516 moveChap()
+    - GameGUI:517 isLevelDone()
+    - GameGUI:582 getTreasuresLeft()
 - Renderer
     - Canvas:72 getImages()
     - Canvas:97 isOnHelp()
