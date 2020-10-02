@@ -46,6 +46,7 @@ outgoing dependencies:
     -GameGui:520 recordNewAction()
     -GameGui:340 loadGameReplay()
     -GameGui:381 toggleReplayType()
+    -GameGUI:379 setReplaySpeed()
 
 ## Renderer
 Renderer has outgoing dependencies to:
@@ -64,3 +65,10 @@ Persistence is used by:
     - GameGUI:658 getAllLevelNumber()
 
 ## Record and Replay
+Outgoing dependencies:
+    -Replayer:171 moveCalled()
+Incoming dependencies:
+    -GameGUI:520 recordNewAction()
+    -GameGUI:340 loadGameReplay()
+    -GameGUI:381 toggleReplayType()
+    -GameGUI:379 setReplaySpeed()
