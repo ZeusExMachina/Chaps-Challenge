@@ -122,7 +122,7 @@ public class Canvas extends JPanel {
 		isGameStarted = true;
 		maze = m;
 		try {
-			defaultImage = new WallTile(0, 0).findImage();
+			defaultImage = new WallTile(0, 0).getImage();
 			chapImage = maze.getChapImage();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import java.awt.image.BufferedImage;
+
 /**
  * From handout: If Chap steps onto the tile, the treasure (chip) is picked up
  * and added to the treasure chest. Then the tile turns into a free tile.
@@ -9,6 +11,10 @@ public class TreasureTile extends Tile {
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a TreasureTile
@@ -17,6 +23,7 @@ public class TreasureTile extends Tile {
 	 */
 	public TreasureTile(int row, int col) {
 		position = new Position(col, row);
+		image = loadImage("treasure.png");
 	}
 
 	@Override
@@ -40,8 +47,8 @@ public class TreasureTile extends Tile {
 	}
 
 	@Override
-	public String getImageName() {
-		return "treasure.png";
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	@Override

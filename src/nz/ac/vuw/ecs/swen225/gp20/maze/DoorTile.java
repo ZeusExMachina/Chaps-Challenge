@@ -2,11 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 /**
  * From handout: Chap can only move onto those tiles if they have the
@@ -22,6 +18,10 @@ public class DoorTile extends Tile {
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a DoorTile with a colour represented by a character
@@ -35,6 +35,7 @@ public class DoorTile extends Tile {
 		Preconditions.checkArgument(i < KeyTile.Colour.values().length, "Non-existent index given for door colour");
 		colour = KeyTile.Colour.values()[i];
 		position = new Position(col, row);
+		image = Tile.loadImage("door_" + colour.name().toLowerCase() + ".png");
 	}
 
 	/**
@@ -57,8 +58,8 @@ public class DoorTile extends Tile {
 	}
 
 	@Override
-	public String getImageName() {
-		return "door_" + colour.name().toLowerCase() + ".png";
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	@Override

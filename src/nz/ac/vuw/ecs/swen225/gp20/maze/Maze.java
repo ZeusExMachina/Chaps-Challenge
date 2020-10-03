@@ -323,15 +323,10 @@ public class Maze {
 	 */
 	public BufferedImage[][] getImages() {
 		BufferedImage[][] result = new BufferedImage[board.length][board[0].length];
-		try {
-			for (int row = 0; row < board.length; row++) {
-				for (int col = 0; col < board[row].length; col++) {
-					result[row][col] = board[row][col].findImage();
-				}
+		for (int row = 0; row < board.length; row++) {
+			for (int col = 0; col < board[row].length; col++) {
+				result[row][col] = board[row][col].getImage();
 			}
-		} catch (IOException e) {
-			System.out.println("Image not loaded, is /resources/ at root?");
-			e.printStackTrace();
 		}
 		return result;
 	}
@@ -341,13 +336,7 @@ public class Maze {
 	 * @return immutable inventory list
 	 */
 	public List<BufferedImage> getInventory() {
-		return inventory.stream().map(tile -> {
-			try {
-				return tile.findImage();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}).collect(Collectors.toUnmodifiableList());
+		return inventory.stream().map(Tile::getImage).collect(Collectors.toUnmodifiableList());
 	}
 
 	/**

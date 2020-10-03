@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import java.awt.image.BufferedImage;
+
 /**
  * From handout: Behaves like a wall time for Chap as long as there are still
  * uncollected treasures. Once the treasure chest is full (all treasures have
@@ -15,6 +17,10 @@ public class ExitLockTile extends Tile {
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a ExitLockTile
@@ -24,6 +30,7 @@ public class ExitLockTile extends Tile {
 	public ExitLockTile(int row, int col) {
 		position = new Position(col, row);
 		isLocked = true;
+		image = Tile.loadImage("exit_lock.png");
 	}
 
 	@Override
@@ -54,8 +61,8 @@ public class ExitLockTile extends Tile {
 	}
 
 	@Override
-	public String getImageName() {
-		return "exit_lock.png";
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	@Override

@@ -1,14 +1,19 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import java.awt.image.BufferedImage;
+
 /**
  * From handout: Actors can freely move onto those tiles.
  */
 public class FreeTile extends Tile {
-
 	/**
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a FreeTile
@@ -17,6 +22,7 @@ public class FreeTile extends Tile {
 	 */
 	public FreeTile(int row, int col) {
 		position = new Position(col, row);
+		image = loadImage("free.png");
 	}
 
 	@Override
@@ -40,8 +46,8 @@ public class FreeTile extends Tile {
 	}
 
 	@Override
-	public String getImageName() {
-		return "free.png";
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	@Override

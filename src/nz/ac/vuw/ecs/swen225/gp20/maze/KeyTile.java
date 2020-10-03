@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 
+import java.awt.image.BufferedImage;
+
 /**
  * From handout: Actors can move onto those tiles. If Chap moves onto
  * such a tile, he picks up the key with this colour, once this is done,
@@ -17,6 +19,10 @@ public class KeyTile extends Tile {
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a KeyTile with a colour represented by a character
@@ -30,6 +36,7 @@ public class KeyTile extends Tile {
 		Preconditions.checkArgument(i < Colour.values().length, "Non-existent index given for door colour");
 		colour = Colour.values()[i];
 		position = new Position(col, row);
+		image = loadImage("key_" + colour.name().toLowerCase() + ".png");
 	}
 
 	@Override
@@ -45,6 +52,11 @@ public class KeyTile extends Tile {
 	@Override
 	public boolean isInventoried() {
 		return true;
+	}
+
+	@Override
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	/**
@@ -64,12 +76,6 @@ public class KeyTile extends Tile {
 	 */
 	public Colour getColour() {
 		return colour;
-	}
-
-
-	@Override
-	public String getImageName() {
-		return "key_" + colour.name().toLowerCase() + ".png";
 	}
 
 	@Override

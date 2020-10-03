@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import java.awt.image.BufferedImage;
+
 /**
  * From handout: Once Chap reaches this tile, the game level is finished.
  */
@@ -8,6 +10,10 @@ public class ExitTile extends Tile {
 	 * Stores tile's Position on Maze board
 	 */
 	private final Position position;
+	/**
+	 * Stores image representing tile
+	 */
+	private final BufferedImage image;
 
 	/**
 	 * Make a ExitTile
@@ -16,6 +22,7 @@ public class ExitTile extends Tile {
 	 */
 	public ExitTile(int row, int col) {
 		position = new Position(col, row);
+		image = loadImage("exit.png");
 	}
 
 	@Override
@@ -39,8 +46,8 @@ public class ExitTile extends Tile {
 	}
 
 	@Override
-	public String getImageName() {
-		return "exit.png";
+	public BufferedImage getImage() {
+		return image;
 	}
 
 	@Override

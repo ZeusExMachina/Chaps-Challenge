@@ -1,7 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -31,24 +30,28 @@ public abstract class Tile {
 	abstract boolean isInventoried();
 
 	/**
-	 * Retrieves file name of Tile's image
-	 * @return filename of tile image
-	 */
-	abstract String getImageName();
-
-	/**
-	 * Get the image representing tile
+	 * Load the image representing tile
+	 * @param file name of file to load
 	 * @return buffered image to display
-	 * @throws IOException when the file name isn't found
 	 */
-	public final BufferedImage findImage() throws IOException {
-		String path = "resources/" + getImageName();
+	protected static BufferedImage loadImage(String file) {
+		String path = "resources/" + file;
 		URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
 		if (resource != null) {
-			return ImageIO.read(resource);
+			try {
+				return ImageIO.read(resource);
+			} catch (IOException e) {
+				// Go to runtime exception
+			}
 		}
-		throw new IOException(getImageName()+" not found");
+		throw new RuntimeException(file+" not found");
 	}
+
+	/**
+	 * Get the BufferedImage representing the tile
+	 * @return loaded BufferedImage
+	 */
+	abstract BufferedImage getImage();
 
 	/**
 	 * Get tile's Position on Maze board
