@@ -1,14 +1,9 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * From handout: Actors can freely move onto those tiles.
  */
-public class FreeTile implements Tile {
+public class FreeTile extends Tile {
 
 	/**
 	 * Stores tile's Position on Maze board
@@ -45,8 +40,8 @@ public class FreeTile implements Tile {
 	}
 
 	@Override
-	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("resources/free.png"));
+	public String getImageName() {
+		return "free.png";
 	}
 
 	@Override

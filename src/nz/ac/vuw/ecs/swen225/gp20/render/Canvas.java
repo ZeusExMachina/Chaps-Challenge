@@ -1,6 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp20.render;
 
-import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 import nz.ac.vuw.ecs.swen225.gp20.maze.WallTile;
@@ -123,7 +122,7 @@ public class Canvas extends JPanel {
 		isGameStarted = true;
 		maze = m;
 		try {
-			defaultImage = new WallTile(0, 0).getImage();
+			defaultImage = new WallTile(0, 0).findImage();
 			chapImage = maze.getChapImage();
 		} catch (IOException e) {
 			e.printStackTrace();

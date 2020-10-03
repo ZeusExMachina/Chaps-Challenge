@@ -2,17 +2,12 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * From handout: Actors can move onto those tiles. If Chap moves onto
  * such a tile, he picks up the key with this colour, once this is done,
  * the tile turns into a free tile.
  */
-public class KeyTile implements Tile {
+public class KeyTile extends Tile {
 
 	/**
 	 * Colour of this key
@@ -71,11 +66,10 @@ public class KeyTile implements Tile {
 		return colour;
 	}
 
+
 	@Override
-	public BufferedImage getImage() throws IOException {
-		String file = "resources/key_" + colour.name().toLowerCase() + ".png";
-		return ImageIO.read(new File(file));
-//		return ImageIO.read(new File("resources/key.png"));
+	public String getImageName() {
+		return "key_" + colour.name().toLowerCase() + ".png";
 	}
 
 	@Override

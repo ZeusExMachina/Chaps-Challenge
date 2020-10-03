@@ -3,8 +3,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 import com.google.common.base.Preconditions;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import javax.imageio.ImageIO;
 
 /**
@@ -79,8 +79,12 @@ public class Actor {
 	 * @throws IOException when the file name isn't found
 	 */
 	public BufferedImage getImage() throws IOException {
-		String file = "resources/" +name + "_" + direction.toString() + ".png";
-		return ImageIO.read(new File(file));
+		String path = "resources/" +name + "_" + direction.toString() + ".png";
+		URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
+		if (resource != null) {
+			return ImageIO.read(resource);
+		}
+		throw new IOException("Chap image not found");
 	}
 
 	/**

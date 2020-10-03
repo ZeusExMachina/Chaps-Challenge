@@ -1,14 +1,9 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * From handout: Once Chap reaches this tile, the game level is finished.
  */
-public class ExitTile implements Tile {
+public class ExitTile extends Tile {
 	/**
 	 * Stores tile's Position on Maze board
 	 */
@@ -44,8 +39,8 @@ public class ExitTile implements Tile {
 	}
 
 	@Override
-	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("resources/exit.png"));
+	public String getImageName() {
+		return "exit.png";
 	}
 
 	@Override

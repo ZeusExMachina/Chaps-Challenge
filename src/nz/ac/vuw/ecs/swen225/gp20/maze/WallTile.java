@@ -1,14 +1,9 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * From handout: Part of a wall, actors cannot move onto those tiles.
  */
-public class WallTile implements Tile {
+public class WallTile extends Tile {
 	/**
 	 * Stores tile's Position on Maze board
 	 */
@@ -44,8 +39,8 @@ public class WallTile implements Tile {
 	}
 
 	@Override
-	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("resources/wall.png"));
+	public String getImageName() {
+		return "wall.png";
 	}
 
 	@Override

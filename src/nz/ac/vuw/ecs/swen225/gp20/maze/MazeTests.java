@@ -334,22 +334,26 @@ public class MazeTests {
 		try {
 			Actor chap = new Actor(new Position(0,0), "chap");
 			assertNotNull(chap.getImage());
-			DoorTile d = new DoorTile('A', 0, 0);
-			assertNotNull(d.getImage());
+			for (KeyTile.Colour c : KeyTile.Colour.values()) {
+				DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
+				assertNotNull(d.findImage());
+			}
 			ExitLockTile l = new ExitLockTile( 0, 0);
-			assertNotNull(l.getImage());
+			assertNotNull(l.findImage());
 			ExitTile e = new ExitTile( 0, 0);
-			assertNotNull(e.getImage());
+			assertNotNull(e.findImage());
 			FreeTile f = new FreeTile(0,0);
-			assertNotNull(f.getImage());
+			assertNotNull(f.findImage());
 			HelpTile h = new HelpTile(0, 0);
-			assertNotNull(h.getImage());
-			KeyTile k = new KeyTile('a', 0, 0);
-			assertNotNull(k.getImage());
+			assertNotNull(h.findImage());
+			for (KeyTile.Colour c : KeyTile.Colour.values()) {
+				KeyTile k = new KeyTile((char) ('a'+c.ordinal()), 0, 0);
+				assertNotNull(k.findImage());
+			}
 			TreasureTile t = new TreasureTile(0, 0);
-			assertNotNull(t.getImage());
+			assertNotNull(t.findImage());
 			WallTile w = new WallTile(0, 0);
-			assertNotNull(w.getImage());
+			assertNotNull(w.findImage());
 		} catch (IOException e) {
 			throw new AssertionError("Images missing.");
 		}

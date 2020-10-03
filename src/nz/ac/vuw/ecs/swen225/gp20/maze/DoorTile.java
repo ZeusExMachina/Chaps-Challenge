@@ -6,13 +6,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 /**
  * From handout: Chap can only move onto those tiles if they have the
  * key with the matching colour -- this unlocks the door. After unlocking
  * the door, the locked door turns into a free tile, and Chap keeps the key.
  */
-public class DoorTile implements Tile {
+public class DoorTile extends Tile {
 	/**
 	 * Stores the kind of key that will unlock the door
 	 */
@@ -56,10 +57,8 @@ public class DoorTile implements Tile {
 	}
 
 	@Override
-	public BufferedImage getImage() throws IOException {
-		String file = "resources/door_" + colour.name().toLowerCase() + ".png";
-		return ImageIO.read(new File(file));
-//		return ImageIO.read(new File("resources/door.png"));
+	public String getImageName() {
+		return "door_" + colour.name().toLowerCase() + ".png";
 	}
 
 	@Override

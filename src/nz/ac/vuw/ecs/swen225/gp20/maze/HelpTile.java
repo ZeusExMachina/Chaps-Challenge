@@ -1,14 +1,9 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 /**
  * From handout: Like a free tile, but when Chap steps on this field, a help text will be displayed.
  */
-public class HelpTile implements Tile {
+public class HelpTile extends Tile {
 	/**
 	 * Stores tile's Position on Maze board
 	 */
@@ -65,8 +60,8 @@ public class HelpTile implements Tile {
 	}
 
 	@Override
-	public BufferedImage getImage() throws IOException {
-		return ImageIO.read(new File("resources/help.png"));
+	public String getImageName() {
+		return "help.png";
 	}
 
 	@Override

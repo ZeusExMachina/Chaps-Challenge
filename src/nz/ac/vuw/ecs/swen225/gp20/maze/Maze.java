@@ -326,7 +326,7 @@ public class Maze {
 		try {
 			for (int row = 0; row < board.length; row++) {
 				for (int col = 0; col < board[row].length; col++) {
-					result[row][col] = board[row][col].getImage();
+					result[row][col] = board[row][col].findImage();
 				}
 			}
 		} catch (IOException e) {
@@ -343,7 +343,7 @@ public class Maze {
 	public List<BufferedImage> getInventory() {
 		return inventory.stream().map(tile -> {
 			try {
-				return tile.getImage();
+				return tile.findImage();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
