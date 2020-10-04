@@ -58,8 +58,8 @@ public final class Position {
 
 	/**
 	 * Determine if position is equal to given integer coordinates
-	 * @param x COLUMN or x-coord or j-index
-	 * @param y ROW or y-coord or i-index
+	 * @param x COLUMN or x-coordinate or j-index
+	 * @param y ROW or y-coordinate or i-index
 	 * @return if this position is equal to given ints
 	 */
 	public boolean equals(int x, int y) {

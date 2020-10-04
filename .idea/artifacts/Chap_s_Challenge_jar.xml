@@ -25,10 +25,10 @@
         <element id="dir-copy" path="$PROJECT_DIR$/src" />
       </element>
       <element id="directory" name="levels">
-        <element id="dir-copy" path="$PROJECT_DIR$/out/production/Chap's Challenge/levels" />
+        <element id="dir-copy" path="$PROJECT_DIR$/levels" />
       </element>
       <element id="directory" name="resources">
-        <element id="dir-copy" path="$PROJECT_DIR$/out/production/Chap's Challenge/resources" />
+        <element id="dir-copy" path="$PROJECT_DIR$/resources" />
       </element>
     </root>
   </artifact>

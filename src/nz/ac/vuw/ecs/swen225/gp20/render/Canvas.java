@@ -7,8 +7,6 @@ import nz.ac.vuw.ecs.swen225.gp20.maze.WallTile;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-
 
 /**
  * Class to display and handle the drawing of the board and actors.
@@ -121,12 +119,8 @@ public class Canvas extends JPanel {
 	public void display(Maze m) {
 		isGameStarted = true;
 		maze = m;
-		try {
-			defaultImage = new WallTile(0, 0).getImage();
-			chapImage = maze.getChapImage();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		defaultImage = new WallTile(0, 0).getImage();
+		chapImage = maze.getChapImage();
 		origin = maze.getChapPosition();
 		this.repaint();
 	}
