@@ -9,7 +9,7 @@ import java.util.TimerTask;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import com.google.gson.Gson;
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
@@ -61,7 +61,7 @@ public class Replayer {
 	/**
 	 * The period between two distinct timestamps in a game being replayed when the replay speed is 1.0x (only relevant while in auto-replay mode).
 	 */
-	private final long DEFAULT_DELAY_MILLIS = 100l;
+	private final long DEFAULT_DELAY_MILLIS = 100L;
 	
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
@@ -189,7 +189,7 @@ public class Replayer {
 		if (autoReplaying) {
 			// Switched to Auto-Replay mode - Replay actions from a loaded game in real time.
 			timer.schedule(replayedAction, 
-				gameRecordHistory != null && gameRecordHistory.isEmpty() ? (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : 0l, 
+				gameRecordHistory != null && gameRecordHistory.isEmpty() ? (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : 0L,
 				(long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 		} else {
 			// Switched to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
@@ -236,7 +236,7 @@ public class Replayer {
 	 */
 	public void loadGameReplay(File file) throws IOException, NullPointerException, com.google.gson.JsonSyntaxException {
 		try (Reader reader = Files.newBufferedReader(file.toPath())) {
-			gameRecordHistory = new ArrayDeque<ActionRecord>(
+			gameRecordHistory = new ArrayDeque<>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
 		}
 		// Reset fields

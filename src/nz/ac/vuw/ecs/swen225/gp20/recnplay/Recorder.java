@@ -45,7 +45,7 @@ public class Recorder {
 	 * 			level for the game being recorded
 	 */
 	public Recorder(int lvlNum, double startTime) {
-		this.actionHistory = new ArrayDeque<ActionRecord>();
+		this.actionHistory = new ArrayDeque<>();
 		this.levelNum = lvlNum;
 		this.startingTime = startTime;
 	}

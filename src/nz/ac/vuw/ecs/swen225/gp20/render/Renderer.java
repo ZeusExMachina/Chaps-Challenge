@@ -2,9 +2,6 @@ package nz.ac.vuw.ecs.swen225.gp20.render;
 
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-
 /**
  * Class the controls the display and information sent to
  * the Canvas and Inventory classes.

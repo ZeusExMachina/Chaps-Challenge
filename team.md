@@ -1,4 +1,4 @@
-# Team Responsbilities
+# Team Responsibilities
 
 | Module | Team Member Name | Team Member Gitlab Account |
 | --- | --- | --- |
