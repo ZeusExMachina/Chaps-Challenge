@@ -63,9 +63,21 @@ public class KeyTile extends Tile {
 	 * Enumerates colours available in assets
 	 */
 	public enum Colour {
+		/**
+		 * Red - colour 0
+		 */
 		RED,
+		/**
+		 * Green - colour 1
+		 */
 		GREEN,
+		/**
+		 * Blue - colour 2
+		 */
 		BLUE,
+		/**
+		 * Yellow - colour 3
+		 */
 		YELLOW
 	}
 

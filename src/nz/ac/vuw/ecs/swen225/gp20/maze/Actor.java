@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 import com.google.common.base.Preconditions;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
@@ -54,37 +55,37 @@ public class Actor {
 		return position;
 	}
 
-	/**
-	 * Get direction actor is facing
-	 *
-	 * @return direction actor is facing
-	 */
-	public Direction getDirection() {
-		return direction;
-	}
-
-	/**
-	 * Set direction actor is facing
-	 *
-	 * @param d new direction to face
-	 */
-	public void setDirection(Direction d) {
-		direction = d;
-	}
+//	/**
+//	 * Get direction actor is facing
+//	 *
+//	 * @return direction actor is facing
+//	 */
+//	public Direction getDirection() {
+//		return direction;
+//	}
+//
+//	/**
+//	 * Set direction actor is facing
+//	 *
+//	 * @param d new direction to face
+//	 */
+//	public void setDirection(Direction d) {
+//		direction = d;
+//	}
 
 	/**
 	 * Get the image representing actor, e.g. "chap-south.png".
 	 *
 	 * @return buffered image to display
-	 * @throws IOException when the file name isn't found
 	 */
-	public BufferedImage getImage() throws IOException {
+	public BufferedImage getImage() {
 		String path = "resources/" +name + "_" + direction.toString() + ".png";
-		URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
-		if (resource != null) {
-			return ImageIO.read(resource);
+		try {
+			return ImageIO.read(new File(path));
+		} catch (IOException e) {
+			// Go to runtime exception
 		}
-		throw new IOException("Chap image not found");
+		throw new RuntimeException("Chap image not found");
 	}
 
 	/**

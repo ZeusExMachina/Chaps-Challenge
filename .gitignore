@@ -1,4 +1,3 @@
 # Don't upload compiled code
-/out/artifacts/
-/out/production/Chap's Challenge/nz/
+/out/
 *.class

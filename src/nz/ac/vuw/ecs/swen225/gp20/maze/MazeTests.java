@@ -331,31 +331,27 @@ public class MazeTests {
 	 */
 	@Test
 	public void test15_checkImages() {
-		try {
-			Actor chap = new Actor(new Position(0,0), "chap");
-			assertNotNull(chap.getImage());
-			for (KeyTile.Colour c : KeyTile.Colour.values()) {
-				DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
-				assertNotNull(d.getImage());
-			}
-			ExitLockTile l = new ExitLockTile( 0, 0);
-			assertNotNull(l.getImage());
-			ExitTile e = new ExitTile( 0, 0);
-			assertNotNull(e.getImage());
-			FreeTile f = new FreeTile(0,0);
-			assertNotNull(f.getImage());
-			HelpTile h = new HelpTile(0, 0);
-			assertNotNull(h.getImage());
-			for (KeyTile.Colour c : KeyTile.Colour.values()) {
-				KeyTile k = new KeyTile((char) ('a'+c.ordinal()), 0, 0);
-				assertNotNull(k.getImage());
-			}
-			TreasureTile t = new TreasureTile(0, 0);
-			assertNotNull(t.getImage());
-			WallTile w = new WallTile(0, 0);
-			assertNotNull(w.getImage());
-		} catch (IOException e) {
-			throw new AssertionError("Images missing.");
+		Actor chap = new Actor(new Position(0,0), "chap");
+		assertNotNull(chap.getImage());
+		for (KeyTile.Colour c : KeyTile.Colour.values()) {
+			DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
+			assertNotNull(d.getImage());
 		}
+		ExitLockTile l = new ExitLockTile( 0, 0);
+		assertNotNull(l.getImage());
+		ExitTile e = new ExitTile( 0, 0);
+		assertNotNull(e.getImage());
+		FreeTile f = new FreeTile(0,0);
+		assertNotNull(f.getImage());
+		HelpTile h = new HelpTile(0, 0);
+		assertNotNull(h.getImage());
+		for (KeyTile.Colour c : KeyTile.Colour.values()) {
+			KeyTile k = new KeyTile((char) ('a'+c.ordinal()), 0, 0);
+			assertNotNull(k.getImage());
+		}
+		TreasureTile t = new TreasureTile(0, 0);
+		assertNotNull(t.getImage());
+		WallTile w = new WallTile(0, 0);
+		assertNotNull(w.getImage());
 	}
 }

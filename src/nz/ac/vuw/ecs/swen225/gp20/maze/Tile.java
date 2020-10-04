@@ -1,8 +1,8 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Tiles make up the maze.
@@ -36,13 +36,10 @@ public abstract class Tile {
 	 */
 	protected static BufferedImage loadImage(String file) {
 		String path = "resources/" + file;
-		URL resource = Thread.currentThread().getContextClassLoader().getResource(path);
-		if (resource != null) {
-			try {
-				return ImageIO.read(resource);
-			} catch (IOException e) {
-				// Go to runtime exception
-			}
+		try {
+			return ImageIO.read(new File(path));
+		} catch (IOException e) {
+			// Go to runtime exception
 		}
 		throw new RuntimeException(file+" not found");
 	}

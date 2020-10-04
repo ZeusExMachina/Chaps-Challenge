@@ -3,7 +3,6 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 import com.google.common.base.Preconditions;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -350,9 +349,8 @@ public class Maze {
 	/**
 	 * Retrieve image representing Chap
 	 * @return chap's image
-	 * @throws IOException if image isn't found
 	 */
-	public BufferedImage getChapImage() throws IOException {
+	public BufferedImage getChapImage() {
 		return chap.getImage();
 	}
 }
