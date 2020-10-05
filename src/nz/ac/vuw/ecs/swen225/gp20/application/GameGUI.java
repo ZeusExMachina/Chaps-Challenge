@@ -362,7 +362,7 @@ public class GameGUI {
         topHalf.add(speedPanel);
         JLabel speedTitle = new JLabel("Replay Speed:");
         speedPanel.add(speedTitle);
-        List<Double> speedValues = Arrays.asList(Replayer.REPLAY_SPEEDS);
+        List<Double> speedValues = Replayer.REPLAY_SPEEDS;
         String[] speedStrings = speedValues.stream().map(Object::toString).toArray(String[]::new);
 
         JComboBox<String> speedSelectBox = new JComboBox<>(speedStrings);

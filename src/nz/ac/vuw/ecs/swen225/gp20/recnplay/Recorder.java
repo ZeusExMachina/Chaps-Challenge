@@ -81,10 +81,11 @@ public class Recorder {
 	
 	/**
 	 * Save the game history as a JSON file.
-	 * @return the name of the saved file, or null if the file saving failed 
+	 * @return the name of the saved file, or null if the file saving failed
 	 */
 	public String saveGame() {
 		String fileName = null;
+		// TODO: Should we let player enter a save file name, rather than generating a save file name?
 		try {
 			fileName = generateSaveFileName();
 			Writer writer = Files.newBufferedWriter(Paths.get(fileName));

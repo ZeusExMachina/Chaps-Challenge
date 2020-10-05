@@ -1,18 +1,21 @@
 package nz.ac.vuw.ecs.swen225.gp20.recnplay;
 
-import java.io.File;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Queue;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
-import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -31,7 +34,7 @@ public class Replayer {
 	/**
 	 * The GUI associated with the game.
 	 */
-	private GameGUI gui;
+	private final GameGUI gui;
 	/**
 	 * Keeps track of whether the program is auto-replaying through a recorded 
 	 * game, or is going through it step-by-step.
@@ -61,12 +64,12 @@ public class Replayer {
 	/**
 	 * The period between two distinct timestamps in a game being replayed when the replay speed is 1.0x (only relevant while in auto-replay mode).
 	 */
-	private final long DEFAULT_DELAY_MILLIS = 100L;
+	private final static long DEFAULT_DELAY_MILLIS = 100L;
 	
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
 	 */
-	public static final Double[] REPLAY_SPEEDS = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0 };
+	public static final List<Double> REPLAY_SPEEDS = Collections.unmodifiableList(Arrays.asList(0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0));
 	
 	// ------------------------------------------------
 	// ---------------- CONSTRUCTOR -------------------
@@ -116,7 +119,7 @@ public class Replayer {
 	public void setReplaySpeed(double speed) throws IllegalArgumentException {
 		// First check if the entered replay speed is valid, if so set it.
 		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
-		if (speed < 0.0 || speed > 2.0 || speed%0.25 != 0) { 
+		if (!REPLAY_SPEEDS.contains(speed)) { 
 			throw new IllegalArgumentException("Invalid replay speed value of " + speed + " entered.");
 		} else {
 			replaySpeed = speed;
@@ -142,15 +145,13 @@ public class Replayer {
 		 */
 		@Override
 		public void run() {
-			//System.out.println("current time = " + currentTimeInReplay);
 			// Only perform an action if there is a loaded game that has not been finished
 			if (gameRecordHistory != null && !gameRecordHistory.isEmpty()) {
-				// If the next action was performed at this time in the 
-				// recorded game, 
+				// If the next action was performed at this time in the recorded game, replay the action
 				if (gameRecordHistory.peek().getTimeStamp() <= currentTimeInReplay) {
-					replayAction();
+					gui.moveCalled(gameRecordHistory.poll().getMoveDirection(), false);
 				}
-				// After replaying, check if the replay has finished. If so, stop auto-replaying.
+				// Check if the replay has finished. If so, stop auto-replaying.
 				if (gameRecordHistory.isEmpty()) { 
 					autoReplaying = false;
 					resetTimer();
@@ -159,19 +160,6 @@ public class Replayer {
 			}
 			// If in auto-replay mode, increment the replay time.
 			if (autoReplaying) { currentTimeInReplay += DEFAULT_DELAY_MILLIS/1000.0; }
-		}
-		
-		/**
-		 * Perform a move on the GUI based on the values of the ActionRecord 
-		 * of the next recorded action in the queue.
-		 */
-		private void replayAction() {
-			ActionRecord actionToReplay = gameRecordHistory.poll();
-			// TODO: Add the logic for deciding what move to make for which actor
-			gui.moveCalled(actionToReplay.getMoveDirection(), false);
-			
-			// Just a test
-			System.out.println("Replayed action: " + actionToReplay);
 		}
 	}
 	
@@ -189,8 +177,7 @@ public class Replayer {
 		if (autoReplaying) {
 			// Switched to Auto-Replay mode - Replay actions from a loaded game in real time.
 			timer.schedule(replayedAction, 
-				gameRecordHistory != null && gameRecordHistory.isEmpty() ? (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : 0L,
-				(long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+					(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 		} else {
 			// Switched to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
 			resetTimer();
@@ -233,6 +220,7 @@ public class Replayer {
 	 * @param file is the name of the file to load
 	 * @throws IOException
 	 * @throws NullPointerException
+	 * @throws JsonSyntaxException
 	 */
 	public void loadGameReplay(File file) throws IOException, NullPointerException, com.google.gson.JsonSyntaxException {
 		try (Reader reader = Files.newBufferedReader(file.toPath())) {
@@ -245,33 +233,5 @@ public class Replayer {
 		replaySpeed = 1.0;
 		timer = new Timer();
 		replayedAction = new ActionPlayer();
-	}
-	
-	// ----------------------------------------------
-	//  TESTING (WON'T BE INCLUDED IN FINAL PRODUCT) 
-	// ----------------------------------------------
-	
-	/**
-	 * Main method for testing
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Recorder recorder = new Recorder(1, 100.0);
-		Replayer replayer = new Replayer(null);
-		
-		recorder.recordNewAction(Direction.WEST, 0.04);
-		recorder.recordNewAction(Direction.EAST, 3.69);
-		recorder.recordNewAction(Direction.EAST, 6.69);
-		recorder.recordNewAction(Direction.NORTH, 9.69); 
-		recorder.recordNewAction(Direction.SOUTH, 12.69);
-		recorder.recordNewAction(Direction.WEST, 15.69);
-		
-		/*TODO fix this String filename = recorder.saveGame();
-		try { replayer.loadGameReplay(filename); }
-		catch (Exception e) { }
-		replayer.replayNextAction();
-		replayer.toggleReplayType();
-		replayer.setReplaySpeed(1.0);*/
-		//loadGameReplay(filename);
 	}
 }
