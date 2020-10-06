@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -53,10 +54,10 @@ public class LevelLoader {
         Gson gson = new Gson();
         for(File levelFile : levelFiles){
             try {
-                JsonReader reader = new JsonReader(new FileReader(levelFile));
+                JsonReader reader = new JsonReader(new FileReader(levelFile, StandardCharsets.UTF_8));
                 Level currentLevel = gson.fromJson(reader, Level.class);
                 allLevels.put(currentLevel.getLevelNumber(), currentLevel);
-            } catch(FileNotFoundException ignored) {}
+            } catch(IOException ignored) {}
         }
         return allLevels;
     }
@@ -116,17 +117,5 @@ public class LevelLoader {
      */
     public List<Integer> getAllLevelNumbers(){
         return new ArrayList<>(levels.keySet());
-    }
-
-    /**
-     * Just for testing this class before I write the JUnit tests
-     *
-     * @param args String args
-     */
-    public static void main(String[] args){
-        LevelLoader test = new LevelLoader();
-        System.out.println(test.getAllLevelNumbers());
-        String[] test2 = test.getLevelHelpText(1);
-        System.out.println("test");
     }
 }

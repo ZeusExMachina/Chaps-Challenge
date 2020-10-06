@@ -23,7 +23,7 @@ class Level {
     /**
      * The help information to be displayed
      */
-    private String[] helpText;
+    private final String[] helpText;
 
     /**
      * Constructor for a Level
