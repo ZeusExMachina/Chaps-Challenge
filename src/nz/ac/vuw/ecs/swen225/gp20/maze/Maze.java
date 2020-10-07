@@ -5,6 +5,7 @@ import com.google.common.base.Preconditions;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +39,11 @@ public class Maze {
 	 * Stores information on current player
 	 */
 	private Actor chap;
+
+	/**
+	 * Stores secondary actors to move around
+	 */
+	private Set<Actor> secondaries;
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -194,7 +200,7 @@ public class Maze {
 	 * @param d direction to move to
 	 * @return position of new tile
 	 */
-	private Tile getNeighbouringTile(Position p, Direction d) {
+	protected Tile getNeighbouringTile(Position p, Direction d) {
 		// Preconditions will be handled in getTile() and Position constructor
 
 		Position newPos = d.movePosition(p);
@@ -352,5 +358,14 @@ public class Maze {
 	 */
 	public BufferedImage getChapImage() {
 		return chap.getImage();
+	}
+
+	/**
+	 * Move all the secondary actors to their next location
+	 */
+	public void moveSecondaryActors() {
+		for (Actor a : secondaries) {
+			a.moveSecondaryActor(this);
+		}
 	}
 }

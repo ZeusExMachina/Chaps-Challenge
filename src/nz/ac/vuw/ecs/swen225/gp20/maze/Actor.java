@@ -5,6 +5,9 @@ import com.google.common.base.Preconditions;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import javax.imageio.ImageIO;
 
 /**
@@ -32,6 +35,15 @@ public class Actor {
 	 * Stores name of actor for accessing image, e.g. "chap".
 	 */
 	private final String name;
+	/**
+	 * Provides a list of directions that a secondary actor uses
+	 * to simulate automatic movement.
+	 */
+	private final List<Direction> path;
+	/**
+	 * Points to which direction a secondary actor should move to next
+	 */
+	private int pathPtr;
 
 	/**
 	 * Make a new actor, starting by facing south towards camera.
@@ -43,6 +55,30 @@ public class Actor {
 		position = p;
 		direction = Direction.SOUTH;
 		name = n;
+		if (n.equals("roach")) {
+			path = Arrays.asList(Direction.EAST,
+					Direction.EAST,
+					Direction.WEST,
+					Direction.WEST);
+		} else {
+			path = null;
+		}
+		pathPtr = -1;
+	}
+
+	/**
+	 * Make a new actor, starting by facing south towards camera.
+	 *
+	 * @param p starting position
+	 * @param n name of actor
+	 * @param d list of directions actor moves to
+	 */
+	public Actor(Position p, String n, List<Direction> d) {
+		position = p;
+		direction = d.get(d.size()-1);
+		name = n;
+		path = Collections.unmodifiableList(d);
+		pathPtr = -1;
 	}
 
 	/**
@@ -53,24 +89,6 @@ public class Actor {
 	public Position getPosition() {
 		return position;
 	}
-
-//	/**
-//	 * Get direction actor is facing
-//	 *
-//	 * @return direction actor is facing
-//	 */
-//	public Direction getDirection() {
-//		return direction;
-//	}
-//
-//	/**
-//	 * Set direction actor is facing
-//	 *
-//	 * @param d new direction to face
-//	 */
-//	public void setDirection(Direction d) {
-//		direction = d;
-//	}
 
 	/**
 	 * Get the image representing actor, e.g. "chap-south.png".
@@ -85,6 +103,29 @@ public class Actor {
 			// Go to runtime exception
 		}
 		throw new RuntimeException("Chap image not found");
+	}
+
+	/**
+	 * Move the actor if it's secondary
+	 *
+	 * @param m maze instance
+	 */
+	public void moveSecondaryActor(Maze m) {
+		if (name.equals("chap"))
+			throw new AssertionError("Cannot move Chap as a secondary actor.");
+		if (path == null)
+			throw new AssertionError("Secondary actor not set up.");
+
+		pathPtr++;
+		if (pathPtr >= path.size()) pathPtr = 0;
+		try {
+			Direction d = path.get(pathPtr);
+			if (m.getNeighbouringTile(position, d) instanceof FreeTile) {
+				move(position, d);
+			}
+		} catch (IllegalArgumentException ignored) {
+			throw new RuntimeException("Secondary actor making illegal moves");
+		}
 	}
 
 	/**
