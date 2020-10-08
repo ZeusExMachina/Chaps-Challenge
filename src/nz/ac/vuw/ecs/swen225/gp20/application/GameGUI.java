@@ -112,11 +112,16 @@ public class GameGUI {
         mb.add(load);
 
         JMenuItem loadReplay = new JMenuItem("Load Replay");
+        JMenuItem restartLast = new JMenuItem("Continue Game");
         JMenuItem gameMenu = new JMenuItem("Main Menu");
 
         loadReplay.addActionListener(e -> {
             clearControlFrame();
             replayControls();
+        });
+
+        restartLast.addActionListener(e ->{
+
         });
 
         gameMenu.addActionListener(e -> {
@@ -390,6 +395,7 @@ public class GameGUI {
 
 
     }
+
 
     /**
      * reset the control frame for (clear all components)
@@ -667,6 +673,29 @@ public class GameGUI {
         levelComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
+    }
+
+    /**
+     * get the current remaining time
+     * @return timeVal
+     */
+    public double getTime(){
+        return timeVal;
+    }
+
+    /**
+     * get the current recorded moves for current level
+     */
+    public Recorder getRecorder(){
+        return this.recorder;
+    }
+
+    /**
+     * set time to specific value
+     * @param t - time left
+     */
+    public void setTime(double t){
+        this.timeVal = t; //TODO: this does NOT create associated timer task
     }
 
 }
