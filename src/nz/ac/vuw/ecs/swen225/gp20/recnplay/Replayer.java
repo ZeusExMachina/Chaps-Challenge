@@ -243,7 +243,6 @@ public class Replayer {
 			lvl = Integer.parseInt(reader.readLine());
 			gameRecordHistory = new ArrayDeque<ActionRecord>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
-			System.out.println(gameRecordHistory);
 		}
 		// Reset fields
 		level = lvl;
