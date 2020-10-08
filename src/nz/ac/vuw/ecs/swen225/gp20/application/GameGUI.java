@@ -113,10 +113,15 @@ public class GameGUI {
 
         JMenuItem loadReplay = new JMenuItem("Load Replay");
         JMenuItem gameMenu = new JMenuItem("Main Menu");
+        JMenuItem saveGame = new JMenuItem("Save and Exit");
 
         loadReplay.addActionListener(e -> {
             clearControlFrame();
             replayControls();
+        });
+
+        saveGame.addActionListener(e ->{
+            saveGameState();
         });
 
         gameMenu.addActionListener(e -> {
@@ -201,7 +206,15 @@ public class GameGUI {
                 if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
             }
         });
+
+        //TODO: IF previous save file exists - don;t load from start
         controlsStart();
+        //LOAD SAVE:
+        //set time, level info etc
+        //create timer task
+        //game potential starts as paused
+        //delete save
+
     }
 
     /**
@@ -254,6 +267,7 @@ public class GameGUI {
         controls.repaint();
 
     }
+
 
     /**
      * construct display of control panels for in game play
@@ -392,6 +406,15 @@ public class GameGUI {
     }
 
     /**
+     * save the current game state and exit the program
+     */
+    public void saveGameState(){
+        System.out.println("Saving Game state...");
+        System.exit(0);
+    }
+
+
+    /**
      * reset the control frame for (clear all components)
      */
     public void clearControlFrame(){
@@ -445,7 +468,7 @@ public class GameGUI {
                 System.exit(0);
                 break;
             case KeyEvent.VK_S:
-                System.out.println("Save Game");
+                saveGameState();
                 break;
             case KeyEvent.VK_R:
                 System.out.println("Resume saved game");
@@ -667,6 +690,30 @@ public class GameGUI {
         levelComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
+    }
+
+    /**
+     * get the current remaining time
+     * @return timeVal
+     */
+    public double getTime(){
+        return timeVal;
+    }
+
+    /**
+     * get the current recorded moves for current level
+     * @return current recorder object
+     */
+    public Recorder getRecorder(){
+        return this.recorder;
+    }
+
+    /**
+     * set time to specific value
+     * @param t - time left
+     */
+    public void setTime(double t){
+        this.timeVal = t; //TODO: this does NOT create associated timer task
     }
 
 }
