@@ -8,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import com.google.gson.Gson;
+
+import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
@@ -89,6 +91,7 @@ public class Recorder {
 		try {
 			fileName = generateSaveFileName();
 			Writer writer = Files.newBufferedWriter(Paths.get(fileName));
+			writer.write(levelNum + "\n");
 			new Gson().toJson(actionHistory, writer);
 			writer.flush();
 			writer.close();

@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.ArrayDeque;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
@@ -16,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -35,6 +37,10 @@ public class Replayer {
 	 * The GUI associated with the game.
 	 */
 	private final GameGUI gui;
+	/**
+	 * The level of the currently loaded game record.
+	 */
+	private int level;
 	/**
 	 * Keeps track of whether the program is auto-replaying through a recorded 
 	 * game, or is going through it step-by-step.
@@ -82,6 +88,7 @@ public class Replayer {
 	 */
 	public Replayer(GameGUI ui) {
 		this.gui = ui;
+		this.level = -1;
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
 		this.currentTimeInReplay = 0.0;
@@ -90,6 +97,14 @@ public class Replayer {
 	// ------------------------------------------------
 	// ------------- GETTERS & SETTERS ----------------
 	// ------------------------------------------------
+	
+	/**
+	 * Get the level of the loaded game record.
+	 * @return the level of the loaded game record, or -1 if no game is loaded
+	 */
+	public int getRecordingLevel() {
+		return level;
+	}
 	
 	/**
 	 * Check whether or not a replayed game is currently being 
@@ -222,12 +237,16 @@ public class Replayer {
 	 * @throws NullPointerException
 	 * @throws JsonSyntaxException
 	 */
-	public void loadGameReplay(File file) throws IOException, NullPointerException, com.google.gson.JsonSyntaxException {
-		try (Reader reader = Files.newBufferedReader(file.toPath())) {
-			gameRecordHistory = new ArrayDeque<>(
+	public void loadGameReplay(File file) throws IOException, NullPointerException, JsonSyntaxException {
+		int lvl;
+		try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
+			lvl = Integer.parseInt(reader.readLine());
+			gameRecordHistory = new ArrayDeque<ActionRecord>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
+			System.out.println(gameRecordHistory);
 		}
 		// Reset fields
+		level = lvl;
 		autoReplaying = false;
 		currentTimeInReplay = 0.0;
 		replaySpeed = 1.0;
