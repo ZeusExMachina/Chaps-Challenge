@@ -34,7 +34,8 @@ class Level {
      * @param clock the number of seconds allowed to play the level
      * @param helpText the instructions given by HelpTiles
      */
-    protected Level(int levelNumber, String[] levelLayout, int clock, String[] helpText){
+    protected Level(int levelNumber, String[] levelLayout,
+                    int clock, String[] helpText){
         this.layout = levelLayout;
         this.levelNumber = levelNumber;
         this.clock = clock;
