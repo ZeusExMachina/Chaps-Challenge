@@ -54,24 +54,6 @@ public class Actor {
 		return position;
 	}
 
-//	/**
-//	 * Get direction actor is facing
-//	 *
-//	 * @return direction actor is facing
-//	 */
-//	public Direction getDirection() {
-//		return direction;
-//	}
-//
-//	/**
-//	 * Set direction actor is facing
-//	 *
-//	 * @param d new direction to face
-//	 */
-//	public void setDirection(Direction d) {
-//		direction = d;
-//	}
-
 	/**
 	 * Get the image representing actor, e.g. "chap-south.png".
 	 *

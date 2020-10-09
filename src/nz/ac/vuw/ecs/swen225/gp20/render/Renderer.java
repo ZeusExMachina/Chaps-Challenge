@@ -71,7 +71,7 @@ public class Renderer {
    * the correct images and information.
    */
   public void update(){
-    inventory.setInventoryImages(maze.getInventory());
+    inventory.setInventoryImages(maze.getInventoryImages());
     display();
   }
   

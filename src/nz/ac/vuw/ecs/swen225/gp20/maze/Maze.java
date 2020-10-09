@@ -19,6 +19,7 @@ public class Maze {
 	 * The current instance of Maze.
 	 */
 	private static final Maze instance = new Maze();
+
 	/**
 	 * Stores tiles currently on
 	 */
@@ -97,6 +98,22 @@ public class Maze {
 	}
 
 	/**
+	 * Load level from serialised objects as a result of loading game.
+	 *
+	 * @param newBoard new array of tiles forming board
+	 * @param newChap new Chap object
+	 * @param inventoryToAdd new inventory
+	 * @param treasures new treasures left count
+	 */
+	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
+		inventory.clear();
+		inventory.addAll(inventoryToAdd);
+		treasuresLeft = treasures;
+		chap = newChap;
+		board = newBoard;
+	}
+
+	/**
 	 * Set the tooltip text of a given HelpTile, specified by giving
 	 * its index (e.g. 1st HelpTile in array order, index = 0).
 	 *
@@ -161,11 +178,9 @@ public class Maze {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < board.length; i++) {
-			sb.append('|');
 			for (int j = 0; j < board[i].length; j++) {
 				if (chap.getPosition().equals(j, i)) sb.append('!');
 				else sb.append(board[i][j].code());
-				sb.append('|');
 			}
 			sb.append('\n');
 		}
@@ -299,6 +314,30 @@ public class Maze {
 	}
 
 	/**
+	 * Retrieve the game board ONLY for saving game state.
+	 * @return tile array forming game board
+	 */
+	public Tile[][] getBoard() {
+		return board;
+	}
+
+	/**
+	 * Retrieve the Chap actor ONLY for saving game state.
+	 * @return Chap object
+	 */
+	public Actor getChap() {
+		return chap;
+	}
+
+	/**
+	 * Retrieve the contents of the inventory  ONLY for saving game state.
+	 * @return inventory list
+	 */
+	public List<Tile> getInventory() {
+		return inventory;
+	}
+
+	/**
 	 * Figure out if player is at the end of level
 	 *
 	 * @return true if player is done
@@ -334,7 +373,7 @@ public class Maze {
 	 * Get an unmodifiable list of what the player has in inventory
 	 * @return immutable inventory list
 	 */
-	public List<BufferedImage> getInventory() {
+	public List<BufferedImage> getInventoryImages() {
 		return inventory.stream().map(Tile::getImage).collect(Collectors.toUnmodifiableList());
 	}
 

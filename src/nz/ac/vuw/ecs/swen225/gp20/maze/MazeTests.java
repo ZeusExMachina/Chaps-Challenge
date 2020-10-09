@@ -34,12 +34,12 @@ public class MazeTests {
 	@Test
 	public void test01_setUpMaze() {
 		Maze m = getMaze();
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|!|_|_|D|_|\n" +
-						  "|#|/|b|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C__!__D_\n" +
+						  "#/b_?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -50,12 +50,12 @@ public class MazeTests {
 	public void test02_moveChapSouth() {
 		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.SOUTH));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|_|_|_|D|_|\n" +
-						  "|#|/|b|_|!|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C_____D_\n" +
+						  "#/b_!_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -67,12 +67,12 @@ public class MazeTests {
 		Maze m = getMaze();
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.NORTH));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|!|_|_|D|_|\n" +
-						  "|#|/|b|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C__!__D_\n" +
+						  "#/b_?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -83,12 +83,12 @@ public class MazeTests {
 	public void test04_moveChapNorth() {
 		Maze m = getMaze();
 		assertFalse(m.moveChap(Direction.NORTH));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|!|_|_|D|_|\n" +
-						  "|#|/|b|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C__!__D_\n" +
+						  "#/b_?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -103,12 +103,12 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.SOUTH));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|_|_|_|D|_|\n" +
-						  "|#|/|_|!|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C_____D_\n" +
+						  "#/_!?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -128,12 +128,12 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|!|/|/|\n" +
-						  "|_|C|_|_|_|_|_|D|_|\n" +
-						  "|#|/|_|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/!//\n" +
+						  "_C_____D_\n" +
+						  "#/__?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -146,12 +146,12 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertFalse(m.moveChap(Direction.NORTH));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|#|c|/|\n" +
-						  "|/|/|A|/|X|/|B|/|/|\n" +
-						  "|_|C|_|_|_|_|!|D|_|\n" +
-						  "|#|/|b|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/#c/\n" +
+						  "//A/X/B//\n" +
+						  "_C____!D_\n" +
+						  "#/b_?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -174,12 +174,12 @@ public class MazeTests {
 		assertEquals(m.getTreasuresLeft(), 4);
 		assertTrue(m.moveChap(Direction.NORTH));
 		assertEquals(m.getTreasuresLeft(), 3);
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|d|#|/|@|/|!|c|/|\n" +
-						  "|/|/|A|/|X|/|_|/|/|\n" +
-						  "|_|C|_|_|_|_|_|D|_|\n" +
-						  "|#|/|_|_|?|_|a|/|#|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/d#/@/!c/\n" +
+						  "//A/X/_//\n" +
+						  "_C_____D_\n" +
+						  "#/__?_a/#\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
@@ -240,12 +240,12 @@ public class MazeTests {
 		assertEquals(0, m.countTypesInInventory(ExitLockTile.class));
 		assertEquals(4, m.countTypesInInventory(KeyTile.class));
 		assertEquals(0, m.countTypesInInventory(TreasureTile.class));
-		String expected = "|/|/|/|/|/|/|/|/|/|\n" +
-						  "|/|_|_|/|!|/|_|_|/|\n" +
-						  "|/|/|_|/|_|/|_|/|/|\n" +
-						  "|_|_|_|_|_|_|_|_|_|\n" +
-						  "|_|/|_|_|?|_|_|/|_|\n" +
-						  "|/|/|/|/|/|/|/|/|/|\n";
+		String expected = "/////////\n" +
+						  "/__/!/__/\n" +
+						  "//_/_/_//\n" +
+						  "_________\n" +
+						  "_/__?__/_\n" +
+						  "/////////\n";
 		assertEquals(expected, m.toString());
 	}
 
