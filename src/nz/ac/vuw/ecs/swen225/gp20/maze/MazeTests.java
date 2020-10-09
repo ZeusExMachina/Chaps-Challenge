@@ -126,8 +126,9 @@ public class MazeTests {
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
 		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
+		assertTrue(m.moveChap(Direction.NORTH));
+		assertFalse(m.containsKey(KeyTile.Colour.GREEN));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
 						  "//A/X/!//\n" +
@@ -238,7 +239,7 @@ public class MazeTests {
 		assertTrue(m.isLevelDone());
 		assertEquals(0, m.countTypesInInventory(DoorTile.class));
 		assertEquals(0, m.countTypesInInventory(ExitLockTile.class));
-		assertEquals(4, m.countTypesInInventory(KeyTile.class));
+		assertEquals(0, m.countTypesInInventory(KeyTile.class));
 		assertEquals(0, m.countTypesInInventory(TreasureTile.class));
 		String expected = "/////////\n" +
 						  "/__/!/__/\n" +

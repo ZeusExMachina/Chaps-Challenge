@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 /**
  * From handout: Chap can only move onto those tiles if they have the
  * key with the matching colour -- this unlocks the door. After unlocking
- * the door, the locked door turns into a free tile, and Chap keeps the key.
+ * the door, the locked door turns into a free tile.
  */
 public class DoorTile extends Tile {
 	/**
@@ -36,6 +36,14 @@ public class DoorTile extends Tile {
 		colour = KeyTile.Colour.values()[i];
 		position = new Position(col, row);
 		image = Tile.loadImage("door_" + colour.name().toLowerCase() + ".png");
+	}
+
+	/**
+	 * Retrieve door's colour
+	 * @return door's colour
+	 */
+	public KeyTile.Colour getColour() {
+		return colour;
 	}
 
 	/**

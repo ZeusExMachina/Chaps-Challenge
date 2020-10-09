@@ -251,10 +251,30 @@ public class Maze {
 		for (Tile t : inventory) {
 			if (t instanceof KeyTile) {
 				KeyTile k = (KeyTile) t;
-				if (k.getColour().equals(c)) return true;
+				if (k.getColour().equals(c)) {
+					return true;
+				}
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Remove key of certain colour from inventory
+	 *
+	 * @param c colour to query
+	 */
+	protected void removeKey(KeyTile.Colour c) {
+		for (Tile t : inventory) {
+			if (t instanceof KeyTile) {
+				KeyTile k = (KeyTile) t;
+				if (k.getColour().equals(c)) {
+					inventory.remove(t);
+					return;
+				}
+			}
+		}
+		throw new AssertionError("Attempt to remove key when none in inventory");
 	}
 
 	/**
@@ -291,6 +311,9 @@ public class Maze {
 						if (treasuresLeft < 0) {
 							throw new AssertionError("Treasures left shouldn't be negative.");
 						}
+					} else if (t instanceof DoorTile) {
+						KeyTile.Colour c = ((DoorTile) t).getColour();
+						removeKey(c);
 					}
 				}
 				if (treasuresLeft == 0) {
