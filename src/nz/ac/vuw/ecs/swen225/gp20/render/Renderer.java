@@ -19,11 +19,11 @@ public class Renderer {
   /**
    * The current instance of the Canvas being used.
    */
-  private Canvas canvas;
+  private final Canvas canvas;
   /**
    * The current instance of the Inventory being used.
    */
-  private Inventory inventory;
+  private final Inventory inventory;
   
   /**
    * Private constructor, creates the Canvas and Inventory instances to

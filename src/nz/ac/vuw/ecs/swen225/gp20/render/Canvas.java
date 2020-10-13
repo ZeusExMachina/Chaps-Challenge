@@ -13,23 +13,6 @@ import java.awt.image.BufferedImage;
  */
 public class Canvas extends JPanel {
 	/**
-	 * number of columns to be displayed on the screen
-	 * at one time.
-	 */
-	private final int NUM_COLS = 9;
-	/**
-	 * number of rows to be displayed on the screen at one time.
-	 */
-	private final int NUM_ROWS = 9;
-	/**
-	 * The width and height of each tile.
-	 */
-	private final int TILE_SIZE = 64;
-	/**
-	 * TODO
-	 */
-	private int maxXY;
-	/**
 	 * TODO
 	 */
 	private Maze maze;
@@ -37,10 +20,6 @@ public class Canvas extends JPanel {
 	 * The position the display should be centered around the board.
 	 */
 	private Position origin;
-	/**
-	 * the X and Y offset for where the center of the screen is.
-	 */
-	private final int centerOffset = 4;
 	/**
 	 * Whether the game has started or not. Stops class trying
 	 * to display when things haven't been initialised yet.
@@ -67,10 +46,13 @@ public class Canvas extends JPanel {
 		if (!isGameStarted) return;
 
 		BufferedImage[][] board = maze.getImages();
-		maxXY = board.length;
+		int centerOffset = 4;
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
+		int NUM_COLS = 9;
+		int TILE_SIZE = 64;
 		for (int xPlace = 0; xPlace < NUM_COLS * TILE_SIZE; xPlace += TILE_SIZE) {
+			int NUM_ROWS = 9;
 			for (int yPlace = 0; yPlace < NUM_ROWS * TILE_SIZE; yPlace += TILE_SIZE) {
 				try {
 					g.drawImage(board[yIndex][xIndex], xPlace, yPlace, this);
@@ -82,7 +64,7 @@ public class Canvas extends JPanel {
 			xIndex++;
 			yIndex = origin.getY() - centerOffset;
 		}
-		g.drawImage(chapImage, centerOffset*TILE_SIZE, centerOffset*TILE_SIZE, this);
+		g.drawImage(chapImage, centerOffset * TILE_SIZE, centerOffset * TILE_SIZE, this);
 		drawHelpText(g);
 	}
 
