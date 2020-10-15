@@ -97,8 +97,7 @@ public class GameGUI {
 
 
         maze = Maze.getInstance();
-        setLevel(0); // start at level zero
-        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
+        setGameLevel(level); //start loader on game start
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
@@ -274,6 +273,7 @@ public class GameGUI {
      */
     public void controlsGamePlay(){
         inGame = true;
+        setGameLevel(level);
         controls.setLayout(new GridLayout(4,1,10,0));
 
         setTime();
@@ -390,8 +390,12 @@ public class GameGUI {
         ActionListener startAL = e -> {
             try {
                 replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
+                setGameLevel(replayObject.getRecordingLevel());
                 resetMaze();
+                controlsGamePlay();
                 replayObject.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
+
+
             } catch (IllegalArgumentException | NullPointerException exp) {
                 System.out.println("Error loading replay");
             }
@@ -402,6 +406,17 @@ public class GameGUI {
         controls.revalidate();
         controls.repaint();
 
+
+    }
+
+    /**
+     * lall level information and update display information based on given int
+     * @param levelNum: level number to be played
+     */
+    public void setGameLevel(int levelNum){
+        this.level = loader.getAllLevelNumbers().get(levelNum-1);
+        levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
 
     }
 
@@ -426,7 +441,7 @@ public class GameGUI {
     }
 
     /**
-     * reset the mae display
+     * reset the maze display
      */
     public void resetMaze(){
         try {
@@ -582,15 +597,6 @@ public class GameGUI {
     }
 
     /**
-     * set the current level to passed int
-     * @param levelInt - level to set game to
-     */
-    public void setLevel(int levelInt){
-        this.level = loader.getAllLevelNumbers().get(levelInt);
-        levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
-    }
-
-    /**
      * set level clock at start of level
      */
     public void setTime(){
@@ -671,7 +677,7 @@ public class GameGUI {
 
         JButton nextLevelButton = new JButton("Next Level");
         nextLevelButton.addActionListener(e -> {
-            setLevel(level + 1);
+            setGameLevel(level + 1);
             levelComplete.dispose();
             clearControlFrame();
             controlsStart();
