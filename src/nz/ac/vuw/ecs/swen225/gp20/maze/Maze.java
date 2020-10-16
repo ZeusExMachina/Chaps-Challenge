@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +44,7 @@ public class Maze {
 	/**
 	 * Stores secondary actors to move around
 	 */
-	private Set<Actor> secondaries;
+	private Set<Actor> secondaries = new HashSet<>();
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -367,5 +368,25 @@ public class Maze {
 		for (Actor a : secondaries) {
 			a.moveSecondaryActor(this);
 		}
+	}
+
+	/**
+	 * Add a new secondary actor to board
+	 * @param a new secondary actor to add
+	 */
+	public void addSecondaryActor(Actor a) {
+		Preconditions.checkArgument(!a.getName().equals("chap"), "Chap cannot be secondary actor");
+		secondaries.add(a);
+	}
+
+	/**
+	 * Determine if Chap is alive if they overlap with a secondary actor
+	 * @return true if chap is alive
+	 */
+	public boolean isChapAlive() {
+		for (Actor a : secondaries) {
+			if (a.getPosition().equals(chap.getPosition())) return false;
+		}
+		return true;
 	}
 }

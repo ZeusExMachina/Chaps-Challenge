@@ -60,6 +60,7 @@ public class Actor {
 					Direction.EAST,
 					Direction.WEST,
 					Direction.WEST);
+			direction = Direction.EAST;
 		} else {
 			path = null;
 		}
@@ -79,6 +80,14 @@ public class Actor {
 		name = n;
 		path = Collections.unmodifiableList(d);
 		pathPtr = -1;
+	}
+
+	/**
+	 * Get actor's name
+	 * @return name of actor
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -120,8 +129,9 @@ public class Actor {
 		if (pathPtr >= path.size()) pathPtr = 0;
 		try {
 			Direction d = path.get(pathPtr);
-			if (m.getNeighbouringTile(position, d) instanceof FreeTile) {
-				move(position, d);
+			Tile newTile = m.getNeighbouringTile(position, d);
+			if (newTile instanceof FreeTile) {
+				move(newTile.getPosition(), d);
 			}
 		} catch (IllegalArgumentException ignored) {
 			throw new RuntimeException("Secondary actor making illegal moves");
