@@ -164,7 +164,7 @@ public class Replayer {
 			if (gameRecordHistory != null && !gameRecordHistory.isEmpty()) {
 				// If the next action was performed at this time in the recorded game, replay the action
 				if (gameRecordHistory.peek().getTimeStamp() <= currentTimeInReplay) {
-					gui.moveCalled(gameRecordHistory.poll().getMoveDirection(), false);
+					gui.moveCalled(gameRecordHistory.poll().getMoveDirection());
 				}
 				// Check if the replay has finished. If so, stop auto-replaying.
 				if (gameRecordHistory.isEmpty()) { 

@@ -2,6 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp20.application;
 
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.GameStateController;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 import nz.ac.vuw.ecs.swen225.gp20.recnplay.Recorder;
 import nz.ac.vuw.ecs.swen225.gp20.recnplay.Replayer;
@@ -51,6 +52,11 @@ public class GameGUI {
     private final LevelLoader loader = new LevelLoader();
 
     /**
+     * define GameStateController used for game saving and loading
+     */
+    private final GameStateController gameState = new GameStateController(this);
+
+    /**
      * responsible for level number display
      */
     private final JLabel levelLabel = new JLabel();
@@ -71,6 +77,10 @@ public class GameGUI {
      * true if currently inside a level, game is active
      */
     private boolean inGame = false;
+    /**
+     * true if currently replaying game
+     */
+    private boolean currentReplay = false;
     /**
      * dialog to display in paused state
      */
@@ -179,7 +189,7 @@ public class GameGUI {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                super.keyPressed(e);
+                //super.keyPressed(e);
                 if(!pauseState) {
                     if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                         control = true;
@@ -205,7 +215,13 @@ public class GameGUI {
         });
 
         //TODO: IF previous save file exists - don;t load from start
-        controlsStart();
+        if(gameState.previousStateFound()){
+            System.out.println("load previous save");
+            gameState.loadState();
+        }else{
+            controlsStart();
+        }
+
         //LOAD SAVE:
         //set time, level info etc
         //create timer task
@@ -219,6 +235,8 @@ public class GameGUI {
      * (before level start)
      */
     public void controlsStart(){
+        currentReplay = false;
+        inGame = false;
         stopTime();
         controls.setLayout(new GridLayout(2,1,0,0));
 
@@ -315,6 +333,8 @@ public class GameGUI {
      * controls for selecting type and file for game replay
      */
     public void replayControls(){
+        currentReplay = true;
+        inGame = false;
         stopTime();
         Replayer replayObject = new Replayer(this);
         controls.setLayout(new GridLayout(2,1,10,0));
@@ -392,6 +412,7 @@ public class GameGUI {
                 replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
                 setGameLevel(replayObject.getRecordingLevel());
                 resetMaze();
+                clearControlFrame();
                 controlsGamePlay();
                 replayObject.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
 
@@ -425,6 +446,7 @@ public class GameGUI {
      */
     public void saveGameState(){
         System.out.println("Saving Game state...");
+        gameState.saveState();
         System.exit(0);
     }
 
@@ -509,20 +531,20 @@ public class GameGUI {
      */
     public void singleKeyUse(KeyEvent e){
         int keyPressed = e.getKeyCode();
-        if(inGame) {
+        if(inGame && !currentReplay) {
             switch (keyPressed) {
 
 	            case KeyEvent.VK_UP:
-	                moveCalled(Direction.NORTH, true);
+	                moveCalled(Direction.NORTH);
 	                break;
 	            case KeyEvent.VK_RIGHT:
-	                moveCalled(Direction.EAST, true);
+	                moveCalled(Direction.EAST);
 	                break;
 	            case KeyEvent.VK_DOWN:
-	                moveCalled(Direction.SOUTH, true);
+	                moveCalled(Direction.SOUTH);
 	                break;
 	            case KeyEvent.VK_LEFT:
-	                moveCalled(Direction.WEST, true);
+	                moveCalled(Direction.WEST);
 	                break;
                 case KeyEvent.VK_SPACE:
                     if (!pauseState) {
@@ -545,16 +567,14 @@ public class GameGUI {
      * checks updates for chips and completion conditions
      *
      * @param d value of direction enum
-     * @param recording determines whether or not to record this 
-     * 			move action
      */
-    public void moveCalled(Direction d, boolean recording){
+    public void moveCalled(Direction d){
         setChipsRemaining();
         if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
-        if (recording) recorder.recordNewAction(d, timeVal);
+        if (currentReplay) recorder.recordNewAction(d, timeVal);
     }
 
     /**
@@ -569,7 +589,7 @@ public class GameGUI {
     }
 
     /**
-     * stop the current timer, prevent time out from occuring
+     * stop the current timer, prevent time out from occurring
      */
     public void stopTime(){
         try{
