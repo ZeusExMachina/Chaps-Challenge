@@ -10,7 +10,7 @@ public class Main {
      * @param args - ignored
      */
     public static void main(String[] args){
-        SwingUtilities.invokeLater(() -> new GameGUI());
+        SwingUtilities.invokeLater(GameGUI::new);
     }
 
 }

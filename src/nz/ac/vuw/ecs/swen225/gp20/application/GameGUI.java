@@ -119,9 +119,7 @@ public class GameGUI {
             replayControls();
         });
 
-        saveGame.addActionListener(e ->{
-            saveGameState();
-        });
+        saveGame.addActionListener(e -> saveGameState());
 
         gameMenu.addActionListener(e -> {
             clearControlFrame();
@@ -412,7 +410,7 @@ public class GameGUI {
     }
 
     /**
-     * lall level information and update display information based on given int
+     * get all level information and update display information based on given int
      * @param levelNum: level number to be played
      */
     public void setGameLevel(int levelNum){
