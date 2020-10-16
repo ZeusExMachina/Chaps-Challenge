@@ -221,6 +221,7 @@ public class GameGUI {
      * (before level start)
      */
     public void controlsStart(){
+        stopTime();
         controls.setLayout(new GridLayout(2,1,0,0));
 
         JPanel topHalf = new JPanel();
@@ -316,6 +317,7 @@ public class GameGUI {
      * controls for selecting type and file for game replay
      */
     public void replayControls(){
+        stopTime();
         Replayer replayObject = new Replayer(this);
         controls.setLayout(new GridLayout(2,1,10,0));
 
@@ -562,15 +564,22 @@ public class GameGUI {
      */
     public void startTime(){
         timeLabel.setForeground(Color.black);
-        try{
-            timer.cancel();
-            timer.purge();
-        }catch (Exception e){
-            return;
-        }
+        stopTime();
         timer = new Timer();
         timer.schedule(createTask(), 500,100);
 
+    }
+
+    /**
+     * stop the current timer, prevent time out from occuring
+     */
+    public void stopTime(){
+        try{
+            timer.cancel();
+            timer.purge();
+        }catch (Exception ignored){
+
+        }
     }
 
     /**
