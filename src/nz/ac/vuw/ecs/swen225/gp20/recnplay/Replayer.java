@@ -7,17 +7,16 @@ import java.util.Queue;
 import java.util.ArrayDeque;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
-import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
@@ -92,6 +91,7 @@ public class Replayer {
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
 		this.currentTimeInReplay = 0.0;
+		this.replayedAction = new ActionPlayer();
 	}
 	
 	// ------------------------------------------------
@@ -129,7 +129,7 @@ public class Replayer {
 	 * Set the replay speed for the recorded game to be replayed at.
 	 * Only accepts speeds from replaySpeeds.
 	 * @param speed is the new replay speed to set
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException when an invalid speed value is given
 	 */
 	public void setReplaySpeed(double speed) throws IllegalArgumentException {
 		// First check if the entered replay speed is valid, if so set it.
@@ -139,8 +139,8 @@ public class Replayer {
 		} else {
 			replaySpeed = speed;
 			if (autoReplaying || gameRecordHistory == null || gameRecordHistory.isEmpty()) {
-				resetTimer();
-				timer.schedule(replayedAction, (long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+				stopTimer();
+				playTimer();
 			}
 		}
 	}
@@ -167,9 +167,8 @@ public class Replayer {
 					gui.moveCalled(gameRecordHistory.poll().getMoveDirection());
 				}
 				// Check if the replay has finished. If so, stop auto-replaying.
-				if (gameRecordHistory.isEmpty()) { 
-					autoReplaying = false;
-					resetTimer();
+				if (gameRecordHistory.isEmpty()) {
+					endCurrentReplay();
 					return;
 				}
 			}
@@ -191,11 +190,11 @@ public class Replayer {
 		if (gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
 		if (autoReplaying) {
 			// Switched to Auto-Replay mode - Replay actions from a loaded game in real time.
-			timer.schedule(replayedAction, 
-					(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+			playTimer();
 		} else {
 			// Switched to Step-By-Step Relay mode - Replay actions in a stepwise fashion.
-			resetTimer();
+			stopTimer();
+			// TODO: Need to also stop timer of Application
 		}
 	}
 	
@@ -214,15 +213,32 @@ public class Replayer {
 	}
 	
 	/**
-	 * Remove the previously scheduled actions to be automatically 
-	 * replayed, and create a new Timer and ActionPlayer. This does 
-	 * not affect the time that the replay has been playing for.
+	 * Clear the queue of any loaded game record and stop replaying.
 	 */
-	private void resetTimer() {
-		timer.cancel();
-		timer.purge();
+	public void endCurrentReplay() {
+		stopTimer();
+		if (gameRecordHistory != null) { gameRecordHistory.clear(); }
+		currentTimeInReplay = 0.0;
+	}
+	
+	/**
+	 * Stop the current timer from automatically replaying actions from a game recording.
+	 */
+	private void stopTimer() {
+		if (timer != null) {
+			timer.cancel();
+			timer.purge();
+		}
+	}
+	
+	/**
+	 * Start/Resume the timer to automatically replay actions from a game recording.
+	 */
+	private void playTimer() {
 		timer = new Timer();
 		replayedAction = new ActionPlayer();
+		timer.schedule(replayedAction, 
+				(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 	}
 	
 	// ----------------------------------------------
@@ -233,23 +249,23 @@ public class Replayer {
 	 * Load a JSON file of a game replay and store it in the 
 	 * gameHistory queue.
 	 * @param file is the name of the file to load
-	 * @throws IOException
-	 * @throws NullPointerException
-	 * @throws JsonSyntaxException
+	 * @throws IOException when an error occurs when reading the file
+	 * @throws IllegalArgumentException when a file with an invalid filename is passed
+	 * @throws NullPointerException when there is no file passed
+	 * @throws JsonSyntaxException when there is an error parsing the JSON into ActionRecords
 	 */
-	public void loadGameReplay(File file) throws IOException, NullPointerException, JsonSyntaxException {
-		int lvl;
+	public void loadGameReplay(File file) throws IOException, IllegalArgumentException, NullPointerException, JsonSyntaxException {
+		endCurrentReplay();
+		// Check for a valid file name
+		if (!Pattern.matches(Recorder.VALID_FILE_FORMAT_PAT, file.getName())) {
+			throw new IllegalArgumentException("Invalid file name " + file.getName());
+		}
+		// Parse the file, create the game history, and set the level
+		int lvl = Integer.parseInt(String.valueOf(file.getName().charAt(17)));
 		try (BufferedReader reader = Files.newBufferedReader(file.toPath())) {
-			lvl = Integer.parseInt(reader.readLine());
-			gameRecordHistory = new ArrayDeque<ActionRecord>(
+			gameRecordHistory = new ArrayDeque<>(
 					Arrays.asList(new Gson().fromJson(reader, ActionRecord[].class)));
 		}
-		// Reset fields
 		level = lvl;
-		autoReplaying = false;
-		currentTimeInReplay = 0.0;
-		replaySpeed = 1.0;
-		timer = new Timer();
-		replayedAction = new ActionPlayer();
 	}
 }

@@ -9,7 +9,6 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import com.google.gson.Gson;
 
-import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
@@ -35,6 +34,10 @@ public class Recorder {
 	 * The starting time amount of the level for the game being recorded.
 	 */
 	private final double startingTime;
+	/**
+	 * A string for the regex for a valid file name.
+	 */
+	public static final String VALID_FILE_FORMAT_PAT = "chap-record_level\\d_\\d{1,2}\\-\\d{1,2}\\-\\d{4}_\\d{1,2}\\-\\d{1,2}.json";
 	
 	// ----------------------------------------
 	// ------------ CONSTRUCTOR ---------------
@@ -87,11 +90,9 @@ public class Recorder {
 	 */
 	public String saveGame() {
 		String fileName = null;
-		// TODO: Should we let player enter a save file name, rather than generating a save file name?
 		try {
 			fileName = generateSaveFileName();
 			Writer writer = Files.newBufferedWriter(Paths.get(fileName));
-			writer.write(levelNum + "\n");
 			new Gson().toJson(actionHistory, writer);
 			writer.flush();
 			writer.close();

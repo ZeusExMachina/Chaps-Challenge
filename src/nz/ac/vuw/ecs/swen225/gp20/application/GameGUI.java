@@ -98,6 +98,10 @@ public class GameGUI {
      * Record moves made by the player.
      */
     private Recorder recorder;
+    /**
+     * Replay moves from recorded games.
+     */
+    private Replayer replayer;
 
     /**
      * Constructor for the gui
@@ -272,6 +276,7 @@ public class GameGUI {
             clearControlFrame();
             controlsGamePlay();
             resetMaze();
+            if (replayer != null) { replayer.endCurrentReplay(); }
         };
 
         startGame.addActionListener(aL);
@@ -336,7 +341,8 @@ public class GameGUI {
         currentReplay = true;
         inGame = false;
         stopTime();
-        Replayer replayObject = new Replayer(this);
+        if (replayer != null) { replayer.endCurrentReplay(); }
+        replayer = new Replayer(this);
         controls.setLayout(new GridLayout(2,1,10,0));
 
         //start button - enabled to toggle
@@ -370,7 +376,7 @@ public class GameGUI {
             JFileChooser j = new JFileChooser();
             j.showOpenDialog(mainFrame);
             try { //TODO: test for valid file format
-                replayObject.loadGameReplay(j.getSelectedFile());
+                replayer.loadGameReplay(j.getSelectedFile());
                 fileNameDisplay.setForeground(Color.black);
                 fileNameDisplay.setText(j.getSelectedFile().getName());
                 startReplay.setEnabled(true);
@@ -379,7 +385,7 @@ public class GameGUI {
                 fileNameDisplay.setText("Invalid File");
                 startReplay.setEnabled(false);
                 //exp.printStackTrace();
-            }catch(NullPointerException exp){
+            } catch(NullPointerException exp){
                 fileNameDisplay.setForeground(Color.black);
                 fileNameDisplay.setText("No File");
                 startReplay.setEnabled(false);
@@ -409,12 +415,12 @@ public class GameGUI {
 
         ActionListener startAL = e -> {
             try {
-                replayObject.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
-                setGameLevel(replayObject.getRecordingLevel());
+                replayer.setReplaySpeed(Double.parseDouble(Objects.requireNonNull(speedSelectBox.getSelectedItem()).toString()));
+                setGameLevel(replayer.getRecordingLevel());
                 resetMaze();
                 clearControlFrame();
                 controlsGamePlay();
-                replayObject.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
+                replayer.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
 
 
             } catch (IllegalArgumentException | NullPointerException exp) {
@@ -432,7 +438,7 @@ public class GameGUI {
 
     /**
      * get all level information and update display information based on given int
-     * @param levelNum: level number to be played
+     * @param levelNum level number to be played
      */
     public void setGameLevel(int levelNum){
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
