@@ -331,7 +331,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test15_checkImages() {
-		Actor chap = new Actor(new Position(0,0), "chap");
+		Actor chap = new Chap(new Position(0,0), "chap");
 		assertNotNull(chap.getImage());
 		for (KeyTile.Colour c : KeyTile.Colour.values()) {
 			DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
@@ -373,8 +373,8 @@ public class MazeTests {
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
 		m.loadLevel(in, help);
-		Actor roach1 = new Actor(new Position(3,3), "roach");
-		Actor roach2 = new Actor(new Position(3,5), "roach");
+		Actor roach1 = new Monster(new Position(3,3), "roach");
+		Actor roach2 = new Monster(new Position(3,5), "roach");
 		m.addSecondaryActor(roach1);
 		m.addSecondaryActor(roach2);
 		m.moveSecondaryActors();

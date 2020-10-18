@@ -82,7 +82,7 @@ public class Maze {
 			for (int col = 0; col < in[row].length(); col++) {
 				char c = in[row].charAt(col);
 				if (c == '!') {
-					chap = new Actor(new Position(col, row), "chap");
+					chap = new Chap(new Position(col, row), "chap");
 					board[row][col] = new FreeTile(row, col);
 				} else {
 					board[row][col] = makeTile(c, row, col);
@@ -366,7 +366,7 @@ public class Maze {
 	 */
 	public void moveSecondaryActors() {
 		for (Actor a : secondaries) {
-			a.moveSecondaryActor(this);
+			a.move(this);
 		}
 	}
 
