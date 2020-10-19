@@ -111,7 +111,9 @@ public class GameGUI {
 
 
         maze = Maze.getInstance();
+        maze.setLevelLoader(loader);
         setGameLevel(level); //start loader on game start
+
 
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);

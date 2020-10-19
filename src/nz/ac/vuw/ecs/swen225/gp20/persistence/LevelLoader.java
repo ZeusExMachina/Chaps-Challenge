@@ -31,6 +31,8 @@ public class LevelLoader {
      */
     private final TreeMap<String, Actor> secondaryActor = null;
 
+    private int currentLevel = 0;
+
     private ActorLoader actorLoader;
 
     /**
@@ -39,7 +41,7 @@ public class LevelLoader {
     public LevelLoader(){
         levelFiles = detectLevelFiles();
         levels = createLevels();
-
+        actorLoader = new ActorLoader(getAllLevelNumbers());
     }
 
     /**
@@ -89,6 +91,9 @@ public class LevelLoader {
      * @return A String representation of the level layout.
      */
     public String[] getLevelLayout(int levelNumber){
+        if (currentLevel != levelNumber){
+            currentLevel = levelNumber;
+        }
         if(!isValidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
@@ -102,6 +107,9 @@ public class LevelLoader {
      * @return The amount of time in seconds to complete the level
      */
     public int getLevelClock(int levelNumber){
+        if (currentLevel != levelNumber){
+            currentLevel = levelNumber;
+        }
         if(!isValidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
@@ -115,10 +123,21 @@ public class LevelLoader {
      * @return The help text in an array
      */
     public String[] getLevelHelpText(int levelNumber){
+        if (currentLevel != levelNumber){
+            currentLevel = levelNumber;
+        }
         if(!isValidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getHelpText();
+    }
+
+    /***
+     * Get current level
+     * @return the current level number.
+     */
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 
     /**
@@ -127,5 +146,13 @@ public class LevelLoader {
      */
     public List<Integer> getAllLevelNumbers(){
         return new ArrayList<>(levels.keySet());
+    }
+
+    /**
+     *
+     * @return
+     */
+    public ActorLoader getActorLoader() {
+        return actorLoader;
     }
 }

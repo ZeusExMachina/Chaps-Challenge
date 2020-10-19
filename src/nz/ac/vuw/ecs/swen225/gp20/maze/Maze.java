@@ -2,6 +2,7 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -49,9 +50,9 @@ public class Maze {
 	private Set<Actor> secondaries = new HashSet<>();
 
 	/**
-	 * Stores the secondary actor loader
+	 * Stores the LevelLoader
 	 */
-	private ActorLoader actorLoader;
+	private LevelLoader levelLoader;
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -108,6 +109,8 @@ public class Maze {
 		if (!isExitSet) {
 			throw new AssertionError("Board should have an exit '@'");
 		}
+
+		addAnySecondaryActors(levelLoader.getCurrentLevel());
 	}
 
 	/**
@@ -349,14 +352,6 @@ public class Maze {
 		return treasuresLeft;
 	}
 
-	/***
-	 * Set the ActorLoader object
-	 * @param actorLoader
-	 */
-	public void setActorLoader(ActorLoader actorLoader) {
-		this.actorLoader = actorLoader;
-	}
-
 	/**
 	 * Retrieve the game board ONLY for saving game state.
 	 * @return tile array forming game board
@@ -455,6 +450,12 @@ public class Maze {
 		secondaries.add(a);
 	}
 
+	public void addAnySecondaryActors(int levelNumber){
+		if(levelLoader.getActorLoader().isRequiredForThisLevel(levelNumber)){
+			secondaries = levelLoader.getActorLoader().getSetOfSecondaryActors(levelNumber);
+		}
+	}
+
 	/**
 	 * Determine if Chap is alive if they overlap with a secondary actor
 	 * @return true if chap is alive
@@ -466,4 +467,7 @@ public class Maze {
 		return true;
 	}
 
+	public void setLevelLoader(LevelLoader levelLoader) {
+		this.levelLoader = levelLoader;
+	}
 }

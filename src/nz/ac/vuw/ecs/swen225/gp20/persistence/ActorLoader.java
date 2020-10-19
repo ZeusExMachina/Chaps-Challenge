@@ -20,7 +20,6 @@ public class ActorLoader {
 
     private Map<Integer, List<Class<?>>> unknownClasses = new HashMap<>();
     private Map<Integer, Map<String, Class<?>>> verifiedClasses = new HashMap<>();
-    private boolean requiredForThisLevel = false;
 
     /**
      * Constructor for the secondary actor loader
@@ -29,6 +28,10 @@ public class ActorLoader {
         initialise(allLoadedLevelNumbers);
     }
 
+    /**
+     *
+     * @param levelNumbers
+     */
     private void initialise(List<Integer> levelNumbers){
         for(int num : levelNumbers){
             for(File jar : detectMatchingJarFile(num)){
@@ -40,8 +43,11 @@ public class ActorLoader {
         }
     }
 
-    /***
+
+    /**
      *
+     * @param levelNumber
+     * @return
      */
     private File[] detectMatchingJarFile(int levelNumber){
         File jarFolder = new File("levels");
@@ -74,6 +80,9 @@ public class ActorLoader {
         }
     }
 
+    /**
+     *
+     */
     private void verifyClasses(){
         for (Integer levelNumber : unknownClasses.keySet()){
             for(Class<?> unverifiedClass : unknownClasses.get(levelNumber)) {
@@ -88,10 +97,19 @@ public class ActorLoader {
                         verifiedClasses.put(levelNumber, new HashMap<>());
                     }
                     verifiedClasses.get(levelNumber).put(((Actor) o).getCode(), unverifiedClass);
-                    requiredForThisLevel = true;
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @param levelNumber
+     * @return
+     */
+    public Set<Actor> getSetOfSecondaryActors(int levelNumber){
+        Set<Actor> actors = new HashSet<>();
+        return actors;
     }
 
     /**
@@ -112,7 +130,7 @@ public class ActorLoader {
         return (Actor) o;
     }
 
-    public boolean isRequiredForThisLevel(){
-        return requiredForThisLevel;
+    public boolean isRequiredForThisLevel(int levelNumber){
+        return verifiedClasses.containsKey(levelNumber) && !verifiedClasses.get(levelNumber).isEmpty();
     }
 }
