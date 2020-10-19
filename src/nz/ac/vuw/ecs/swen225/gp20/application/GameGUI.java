@@ -128,11 +128,19 @@ public class GameGUI {
 
         JMenuItem loadReplay = new JMenuItem("Load Replay");
         JMenuItem gameMenu = new JMenuItem("Main Menu");
+        JMenuItem restartLevel = new JMenuItem("Restart Level");
         JMenuItem saveGame = new JMenuItem("Save and Exit");
 
         loadReplay.addActionListener(e -> {
             clearControlFrame();
             replayControls();
+        });
+
+        restartLevel.addActionListener(e -> {
+            //restart the game - from current level
+            resetMaze();
+            clearControlFrame();
+            controlsGamePlay();
         });
 
         saveGame.addActionListener(e -> saveGameState());
@@ -143,6 +151,8 @@ public class GameGUI {
         });
         load.add(loadReplay);
         load.add(gameMenu);
+        load.add(restartLevel);
+        load.add(saveGame);
 
         mainFrame.setJMenuBar(mb);
 
