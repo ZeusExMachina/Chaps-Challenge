@@ -1,5 +1,10 @@
 package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
+import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * This class represents a level of the game. Each Level consists of a
  * level number, a clock value, and a layout of tiles. Each of these classes
@@ -26,7 +31,21 @@ class Level {
     private final String[] helpText;
 
     /**
-     * Constructor for a Level
+     * The Map object here contains each numeric string code in the Level layout
+     * can have 1 or more secondary actors, and each of those actors takes a list
+     * of Directions in its constructor.
+     */
+    private final Map<String, List<List<Direction>>> secondaryActorPaths;
+
+    /**
+     * The Map object here contains each numeric string code in the Level layout
+     * can have 1 or more secondary actors, and each of those actors take a String as
+     * a name in its constructor.
+     */
+    private final Map<String, List<String>> secondaryActorNames;
+
+    /**
+     * Constructor for a Level without secondary actors
      *
      * @param levelNumber the level number displayed on the GUI
      * @param levelLayout the arrangement of Tiles represented as a 2D array
@@ -39,6 +58,27 @@ class Level {
         this.levelNumber = levelNumber;
         this.clock = clock;
         this.helpText = helpText;
+        this.secondaryActorPaths = null;
+        this.secondaryActorNames = null;
+    }
+
+    /**
+     * Constructor for a Level including secondary actors
+     * @param levelNumber
+     * @param levelLayout
+     * @param clock
+     * @param helpText
+     * @param secondaryActorPaths
+     * @param secondaryActorNames
+     */
+    protected Level(int levelNumber, String[] levelLayout, int clock, String[] helpText, Map<String,
+            List<List<Direction>>> secondaryActorPaths, Map<String, List<String>> secondaryActorNames){
+        this.layout = levelLayout;
+        this.levelNumber = levelNumber;
+        this.clock = clock;
+        this.helpText = helpText;
+        this.secondaryActorPaths = secondaryActorPaths;
+        this.secondaryActorNames = secondaryActorNames;
     }
 
     /**
