@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="level2">
+    <output-path>$PROJECT_DIR$/levels</output-path>
+    <root id="archive" name="level2.jar">
+      <element id="file-copy" path="$PROJECT_DIR$/out/production/Chap's Challenge/nz/ac/vuw/ecs/swen225/gp20/maze/Monster.class" />
+    </root>
+  </artifact>
+</component>
