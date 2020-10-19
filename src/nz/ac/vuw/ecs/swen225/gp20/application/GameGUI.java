@@ -102,6 +102,10 @@ public class GameGUI {
      * Replay moves from recorded games.
      */
     private Replayer replayer;
+    /**
+     * manages secondary actor movements
+     */
+    private int actorMoveCount = 1;
 
     /**
      * Constructor for the gui
@@ -601,6 +605,7 @@ public class GameGUI {
     public void startTime(){
         timeLabel.setForeground(Color.black);
         stopTime();
+        actorMoveCount = 1;
         timer = new Timer();
         timer.schedule(createTask(), 500,100);
 
@@ -628,6 +633,11 @@ public class GameGUI {
             @Override
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                if(actorMoveCount == 3){
+                    maze.moveSecondaryActors();
+                    actorMoveCount = 0;
+                }
+                actorMoveCount += 1;
                 if(timeVal <= 10) {
                     timeLabel.setForeground(Color.red);
                 }
