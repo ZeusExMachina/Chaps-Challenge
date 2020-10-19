@@ -2,7 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -373,8 +374,12 @@ public class MazeTests {
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
 		m.loadLevel(in, help);
-		Actor roach1 = new Monster(new Position(3,3), "roach");
-		Actor roach2 = new Monster(new Position(3,5), "roach");
+		List<Direction> path = Arrays.asList(Direction.EAST,
+				Direction.EAST,
+				Direction.WEST,
+				Direction.WEST);
+		Actor roach1 = new Monster(new Position(3,3), "roach", path);
+		Actor roach2 = new Monster(new Position(3,5), "roach", path);
 		m.addSecondaryActor(roach1);
 		m.addSecondaryActor(roach2);
 		m.moveSecondaryActors();

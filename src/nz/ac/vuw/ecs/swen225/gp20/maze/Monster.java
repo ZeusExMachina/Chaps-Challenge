@@ -20,32 +20,6 @@ public class Monster extends Actor {
     private int pathPtr;
 
     /**
-     * A no-argument constructor only intended to be used to
-     * check the String code for this class.
-     */
-    public Monster(){
-        super(null, null);
-        path = null;
-        direction = null;
-        pathPtr = 0;
-    }
-
-    /***
-     * Make a new Monster
-     * @param p starting position
-     * @param n name of actor
-     */
-    public Monster(Position p, String n) {
-        super(p, n);
-        path = Arrays.asList(Direction.EAST,
-                Direction.EAST,
-                Direction.WEST,
-                Direction.WEST);
-        direction = Direction.EAST;
-        pathPtr = -1;
-    }
-
-    /**
      * Make a new Monster with a specific path
      *
      * @param p starting position
@@ -57,11 +31,6 @@ public class Monster extends Actor {
         direction = d.get(d.size()-1);
         path = Collections.unmodifiableList(d);
         pathPtr = -1;
-    }
-
-    @Override
-    public void move(Position p, Direction d) {
-        throw new RuntimeException("Secondary actor should only follow its path");
     }
 
     @Override
