@@ -405,6 +405,10 @@ public class Maze {
 				result[row][col] = board[row][col].getImage();
 			}
 		}
+		for (Actor a : secondaries) {
+			Position pos = a.getPosition();
+			result[pos.getY()][pos.getX()] = a.getImage();
+		}
 		return result;
 	}
 
