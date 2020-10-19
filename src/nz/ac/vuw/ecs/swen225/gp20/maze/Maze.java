@@ -1,6 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -45,6 +46,11 @@ public class Maze {
 	 * Stores secondary actors to move around
 	 */
 	private Set<Actor> secondaries = new HashSet<>();
+
+	/**
+	 * Stores the secondary actor loader
+	 */
+	private ActorLoader actorLoader;
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -305,6 +311,14 @@ public class Maze {
 		return treasuresLeft;
 	}
 
+	/***
+	 * Set the ActorLoader object
+	 * @param actorLoader
+	 */
+	public void setActorLoader(ActorLoader actorLoader) {
+		this.actorLoader = actorLoader;
+	}
+
 	/**
 	 * Figure out if player is at the end of level
 	 *
@@ -389,4 +403,5 @@ public class Maze {
 		}
 		return true;
 	}
+
 }

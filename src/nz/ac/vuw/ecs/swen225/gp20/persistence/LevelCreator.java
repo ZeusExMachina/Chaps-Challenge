@@ -3,6 +3,7 @@ package nz.ac.vuw.ecs.swen225.gp20.persistence;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -94,9 +95,13 @@ class LevelCreator {
                             "Don't touch the monsters!\n" + "(Monsters to be added soon)\n"
         };
 
-        Map<String, List<String>> levelTwoActorNames = new HashMap<>();
-        levelTwoActorNames.put("1", new ArrayList<>());
-        levelTwoActorNames.get("1").addAll(Arrays.asList("top_monster", "centre_monster", "bottom_monster"));
+        Map<String, String> levelTwoActorNames = new HashMap<>();
+        levelTwoActorNames.put("1", "monster");
+
+        Map<String, List<Position>> levelTwoActorPositions = new HashMap<>();
+        levelTwoActorPositions.put("1", new ArrayList<>());
+        levelTwoActorPositions.get("1").addAll(Arrays.asList(new Position(1,7),
+                new Position(1, 13), new Position(1, 20)));
 
         Map<String, List<List<Direction>>> levelTwoActorPaths = new HashMap<>();
         levelTwoActorPaths.put("1", new ArrayList<>());
@@ -164,7 +169,7 @@ class LevelCreator {
             Writer writer = Files.newBufferedWriter(Paths.get("levels/level2.json"));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             Level levelTwo = new Level(2, levelTwoLayout, 120,
-                    levelTwoHelpText, levelTwoActorPaths, levelTwoActorNames);
+                    levelTwoHelpText, levelTwoActorPaths, levelTwoActorNames, levelTwoActorPositions);
             gson.toJson(levelTwo, writer);
             writer.flush();
             writer.close();

@@ -1,6 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,9 @@ class Level {
      * can have 1 or more secondary actors, and each of those actors take a String as
      * a name in its constructor.
      */
-    private final Map<String, List<String>> secondaryActorNames;
+    private final Map<String, String> secondaryActorNames;
+
+    private final Map<String, List<Position>> secondaryActorPositions;
 
     /**
      * Constructor for a Level without secondary actors
@@ -60,6 +63,7 @@ class Level {
         this.helpText = helpText;
         this.secondaryActorPaths = null;
         this.secondaryActorNames = null;
+        this.secondaryActorPositions = null;
     }
 
     /**
@@ -70,15 +74,18 @@ class Level {
      * @param helpText
      * @param secondaryActorPaths
      * @param secondaryActorNames
+     * @param secondaryActorPositions
      */
     protected Level(int levelNumber, String[] levelLayout, int clock, String[] helpText, Map<String,
-            List<List<Direction>>> secondaryActorPaths, Map<String, List<String>> secondaryActorNames){
+            List<List<Direction>>> secondaryActorPaths, Map<String, String> secondaryActorNames,
+                    Map<String, List<Position>> secondaryActorPositions){
         this.layout = levelLayout;
         this.levelNumber = levelNumber;
         this.clock = clock;
         this.helpText = helpText;
         this.secondaryActorPaths = secondaryActorPaths;
         this.secondaryActorNames = secondaryActorNames;
+        this.secondaryActorPositions = secondaryActorPositions;
     }
 
     /**
