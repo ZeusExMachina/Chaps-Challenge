@@ -41,7 +41,7 @@ public class Chap extends Actor {
 
     @Override
     public void move(Maze m) {
-        // call an error maybe
+        throw new RuntimeException("Chap should only be directed via user-input");
     }
 
     @Override
