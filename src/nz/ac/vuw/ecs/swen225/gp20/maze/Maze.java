@@ -455,8 +455,9 @@ public class Maze {
 	}
 
 	public void addAnySecondaryActors(int levelNumber){
+
 		if(levelLoader.getActorLoader().isRequiredForThisLevel(levelNumber)){
-			secondaries = levelLoader.getActorLoader().getSetOfSecondaryActors(levelNumber);
+			secondaries = levelLoader.getActorLoader().getSetOfSecondaryActors(levelNumber, levelLoader);
 		}
 	}
 

@@ -89,6 +89,18 @@ class Level {
         this.secondaryActorPositions = secondaryActorPositions;
     }
 
+    public Map<String, List<List<Direction>>> getSecondaryActorPaths() {
+        return secondaryActorPaths;
+    }
+
+    public Map<String, String> getSecondaryActorNames() {
+        return secondaryActorNames;
+    }
+
+    public Map<String, List<Position>> getSecondaryActorPositions() {
+        return secondaryActorPositions;
+    }
+
     /**
      * Get the level's layout
      *
@@ -122,4 +134,6 @@ class Level {
      * @return an array of help instructions
      */
     protected String[] getHelpText(){ return helpText; }
+
+
 }

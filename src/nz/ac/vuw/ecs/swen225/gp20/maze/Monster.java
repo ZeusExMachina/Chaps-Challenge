@@ -33,6 +33,17 @@ public class Monster extends Actor {
         pathPtr = -1;
     }
 
+    /**
+     * No argument constructor for extracting String code upon
+     * extraction from jar file.
+     */
+    public Monster(){
+        super(null, null);
+        direction = null;
+        path = null;
+        pathPtr = 0;
+    }
+
     @Override
     public void move(Maze m) {
         pathPtr++;

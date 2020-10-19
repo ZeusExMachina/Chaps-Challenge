@@ -25,6 +25,7 @@ public class ActorLoader {
      * Constructor for the secondary actor loader
      */
     public ActorLoader(List<Integer> allLoadedLevelNumbers){
+
         initialise(allLoadedLevelNumbers);
     }
 
@@ -34,13 +35,14 @@ public class ActorLoader {
      */
     private void initialise(List<Integer> levelNumbers){
         for(int num : levelNumbers){
-            for(File jar : detectMatchingJarFile(num)){
+            for(File jar : detectMatchingJarFile(num)) {
                 try {
                     storeUnknownClasses(num, jar);
-                } catch (IOException | ClassNotFoundException ignored) {}
+                } catch (IOException | ClassNotFoundException ignored) {
+                }
             }
-            verifyClasses();
         }
+        verifyClasses();
     }
 
 
@@ -52,7 +54,7 @@ public class ActorLoader {
     private File[] detectMatchingJarFile(int levelNumber){
         File jarFolder = new File("levels");
         return jarFolder.listFiles(((dir, name) ->
-                name.matches("level" + String.valueOf(levelNumber) + ".json")));
+                name.matches("level" + String.valueOf(levelNumber) + ".jar")));
     }
 
     /**
@@ -107,8 +109,18 @@ public class ActorLoader {
      * @param levelNumber
      * @return
      */
-    public Set<Actor> getSetOfSecondaryActors(int levelNumber){
+    public Set<Actor> getSetOfSecondaryActors(int levelNumber, LevelLoader levelLoader){
         Set<Actor> actors = new HashSet<>();
+        Map<String, String> actorNames = levelLoader.getLevelActorNames(levelNumber);
+        Map<String, List<Position>> actorPositions = levelLoader.getLevelActorPositions(levelNumber);
+        Map<String, List<List<Direction>>> actorPaths = levelLoader.getLevelActorPaths(levelNumber);
+        for(String code : actorNames.keySet()){
+            for(int i = 0; i < actorPositions.get(code).size(); i++){
+                Actor secondaryActor = createSecondaryActor(levelNumber, code,
+                        actorNames.get(code), actorPositions.get(code).get(i), actorPaths.get(code).get(i));
+                actors.add(secondaryActor);
+            }
+        }
         return actors;
     }
 
@@ -123,13 +135,19 @@ public class ActorLoader {
     public Actor createSecondaryActor(Integer levelNumber, String code, String n, Position p, List<Direction> path){
         Object o = null;
         try{
-            o = verifiedClasses.get(levelNumber).get(code).getDeclaredConstructor(p.getClass(),
-                    n.getClass(), path.getClass()).newInstance(p, n, path);
+            o = verifiedClasses.get(levelNumber).get(code).getDeclaredConstructor(Position.class,
+                    String.class, List.class).newInstance(p, n, path);
         } catch (InstantiationException | InvocationTargetException
-                | NoSuchMethodException | IllegalAccessException ignored) {}
+                | NoSuchMethodException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
         return (Actor) o;
     }
 
+    /**
+     * @param levelNumber
+     * @return
+     */
     public boolean isRequiredForThisLevel(int levelNumber){
         return verifiedClasses.containsKey(levelNumber) && !verifiedClasses.get(levelNumber).isEmpty();
     }
