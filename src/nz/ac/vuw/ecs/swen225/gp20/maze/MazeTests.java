@@ -2,6 +2,9 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -330,7 +333,7 @@ public class MazeTests {
 	 */
 	@Test
 	public void test15_checkImages() {
-		Actor chap = new Actor(new Position(0,0), "chap");
+		Actor chap = new Chap(new Position(0,0), "chap");
 		assertNotNull(chap.getImage());
 		for (KeyTile.Colour c : KeyTile.Colour.values()) {
 			DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
@@ -352,5 +355,37 @@ public class MazeTests {
 		assertNotNull(t.getImage());
 		WallTile w = new WallTile(0, 0);
 		assertNotNull(w.getImage());
+	}
+
+	/**
+	 * Test that loading secondary actors work and collision detection against Chap works
+	 */
+	@Test
+	public void test16_secondaryActors(){
+		String[] in = {
+				"/////////",
+				"/d#/@/#c/",
+				"//A/X/B//",
+				"//_____//",
+				"_C__!__D_",
+				"//_____//",
+				"#/b_?_a/#",
+				"/////////"
+		};
+		Maze m = Maze.getInstance();
+		String[] help = {"Unit tests"};
+		m.loadLevel(in, help);
+		List<Direction> path = Arrays.asList(Direction.EAST,
+				Direction.EAST,
+				Direction.WEST,
+				Direction.WEST);
+		Actor roach1 = new Monster(new Position(3,3), "roach", path);
+		Actor roach2 = new Monster(new Position(3,5), "roach", path);
+		m.addSecondaryActor(roach1);
+		m.addSecondaryActor(roach2);
+		m.moveSecondaryActors();
+		assertTrue(m.isChapAlive());
+		m.moveChap(Direction.SOUTH);
+		assertFalse(m.isChapAlive());
 	}
 }

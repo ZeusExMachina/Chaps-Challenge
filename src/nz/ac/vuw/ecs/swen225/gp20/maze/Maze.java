@@ -1,10 +1,13 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +42,16 @@ public class Maze {
 	 * Stores information on current player
 	 */
 	private Actor chap;
+
+	/**
+	 * Stores secondary actors to move around
+	 */
+	private Set<Actor> secondaries = new HashSet<>();
+
+	/**
+	 * Stores the secondary actor loader
+	 */
+	private ActorLoader actorLoader;
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -76,7 +89,7 @@ public class Maze {
 			for (int col = 0; col < in[row].length(); col++) {
 				char c = in[row].charAt(col);
 				if (c == '!') {
-					chap = new Actor(new Position(col, row), "chap");
+					chap = new Chap(new Position(col, row), "chap");
 					board[row][col] = new FreeTile(row, col);
 				} else {
 					board[row][col] = makeTile(c, row, col);
@@ -209,7 +222,7 @@ public class Maze {
 	 * @param d direction to move to
 	 * @return position of new tile
 	 */
-	private Tile getNeighbouringTile(Position p, Direction d) {
+	protected Tile getNeighbouringTile(Position p, Direction d) {
 		// Preconditions will be handled in getTile() and Position constructor
 
 		Position newPos = d.movePosition(p);
@@ -336,6 +349,14 @@ public class Maze {
 		return treasuresLeft;
 	}
 
+	/***
+	 * Set the ActorLoader object
+	 * @param actorLoader
+	 */
+	public void setActorLoader(ActorLoader actorLoader) {
+		this.actorLoader = actorLoader;
+	}
+
 	/**
 	 * Retrieve the game board ONLY for saving game state.
 	 * @return tile array forming game board
@@ -415,4 +436,34 @@ public class Maze {
 	public BufferedImage getChapImage() {
 		return chap.getImage();
 	}
+
+	/**
+	 * Move all the secondary actors to their next location
+	 */
+	public void moveSecondaryActors() {
+		for (Actor a : secondaries) {
+			a.move(this);
+		}
+	}
+
+	/**
+	 * Add a new secondary actor to board
+	 * @param a new secondary actor to add
+	 */
+	public void addSecondaryActor(Actor a) {
+		Preconditions.checkArgument(!a.getName().equals("chap"), "Chap cannot be secondary actor");
+		secondaries.add(a);
+	}
+
+	/**
+	 * Determine if Chap is alive if they overlap with a secondary actor
+	 * @return true if chap is alive
+	 */
+	public boolean isChapAlive() {
+		for (Actor a : secondaries) {
+			if (a.getPosition().equals(chap.getPosition())) return false;
+		}
+		return true;
+	}
+
 }

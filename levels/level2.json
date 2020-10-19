@@ -7,24 +7,104 @@
     "/____/a/__////__/",
     "/__#_/c/__////__/",
     "/_#__/d/__////__/",
-    "/____/b/__////__/",
+    "/1___/b/__////__/",
     "//D/////D//////A/",
     "/_____//________/",
     "/_____//!_?#_a__/",
     "/__#__//________/",
     "/_____//B//////A/",
-    "/_____//_#////__/",
+    "/1____//_#////__/",
     "///A////__////__/",
     "/______/__////__/",
     "/______/__////__/",
     "/__#a__C_a////__/",
     "/__d#__/_#////__/",
     "/______/__////_#/",
-    "/______/__////_c/"
+    "/1_____/__////_c/"
   ],
   "clock": 120,
   "levelNumber": 2,
   "helpText": [
-    "Don't touch the monsters\nNote: to be added soon\n"
-  ]
+    "Don\u0027t touch the monsters!\n(Monsters to be added soon)\n"
+  ],
+  "secondaryActorPaths": {
+    "1": [
+      [
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "WEST",
+        "WEST",
+        "WEST",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH"
+      ],
+      [
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "WEST",
+        "WEST",
+        "WEST",
+        "WEST",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH"
+      ],
+      [
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "EAST",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "NORTH",
+        "WEST",
+        "WEST",
+        "WEST",
+        "WEST",
+        "WEST",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH",
+        "SOUTH"
+      ]
+    ]
+  },
+  "secondaryActorNames": {
+    "1": "monster"
+  },
+  "secondaryActorPositions": {
+    "1": [
+      {
+        "x": 1,
+        "y": 7
+      },
+      {
+        "x": 1,
+        "y": 13
+      },
+      {
+        "x": 1,
+        "y": 20
+      }
+    ]
+  }
 }

@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 
 import java.io.File;
 import java.io.FileReader;
@@ -24,12 +26,20 @@ public class LevelLoader {
      */
     private final TreeMap<Integer, Level> levels;
 
+    /***
+     * Store the secondary Actor objects created from the jar and JSON files
+     */
+    private final TreeMap<String, Actor> secondaryActor = null;
+
+    private ActorLoader actorLoader;
+
     /**
      * Constructor for LevelLoader.
      */
     public LevelLoader(){
         levelFiles = detectLevelFiles();
         levels = createLevels();
+
     }
 
     /**
