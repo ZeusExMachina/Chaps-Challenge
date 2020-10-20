@@ -7,7 +7,7 @@ import java.io.IOException;
 /**
  * Tiles make up the maze.
  */
-public abstract class Tile {
+public abstract class  Tile {
 
 	/**
 	 * Find out whether or not the player can move onto this tile
@@ -54,11 +54,11 @@ public abstract class Tile {
 	 * Get tile's Position on Maze board
 	 * @return position of tile
 	 */
-	abstract Position getPosition();
+	public abstract Position getPosition();
 
 	/**
 	 * Get ASCII representation of Tile for testing purposes
 	 * @return tile's code
 	 */
-	abstract String code();
+	public abstract String code();
 }

@@ -109,22 +109,21 @@ public class Maze {
 		}
 	}
 
-	// TODO: delete if no longer needed
-//	/**
-//	 * Load level from serialised objects as a result of loading game.
-//	 *
-//	 * @param newBoard new array of tiles forming board
-//	 * @param newChap new Chap object
-//	 * @param inventoryToAdd new inventory
-//	 * @param treasures new treasures left count
-//	 */
-//	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
-//		inventory.clear();
-//		inventory.addAll(inventoryToAdd);
-//		treasuresLeft = treasures;
-//		chap = newChap;
-//		board = newBoard;
-//	}
+	/**
+	 * Load level from serialised objects as a result of loading game.
+	 *
+	 * @param newBoard new array of tiles forming board
+	 * @param newChap new Chap object
+	 * @param inventoryToAdd new inventory
+	 * @param treasures new treasures left count
+	 */
+	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
+		inventory.clear();
+		inventory.addAll(inventoryToAdd);
+		treasuresLeft = treasures;
+		chap = newChap;
+		board = newBoard;
+	}
 
 	/**
 	 * Set the tooltip text of a given HelpTile, specified by giving
@@ -172,7 +171,7 @@ public class Maze {
 	 * @param col column or x-coordinate of position
 	 * @return tile made
 	 */
-	private Tile makeTile(char c, int row, int col) {
+	public Tile makeTile(char c, int row, int col) {
 		if (c >= 'A' && c <= 'D') return new DoorTile(c, row, col);
 		if (c >= 'a' && c <= 'd') return new KeyTile(c, row, col);
 		if (c == 'X') return new ExitLockTile(row, col);
@@ -362,26 +361,24 @@ public class Maze {
 	public Actor getChap() {
 		return chap;
 	}
-	
 
-	// TODO: delete if no longer needed
-//	/**
-//	 * Retrieve the game board ONLY for saving game state.
-//	 * @return tile array forming game board
-//	 */
-//	public Tile[][] getBoard() {
-//		return board;
-//	}
-//
+	/**
+	 * Retrieve the game board ONLY for saving game state.
+	 * @return tile array forming game board
+	 */
+	public Tile[][] getBoard() {
+		return board;
+	}
 
-//
-//	/**
-//	 * Retrieve the contents of the inventory  ONLY for saving game state.
-//	 * @return inventory list
-//	 */
-//	public List<Tile> getInventory() {
-//		return inventory;
-//	}
+
+
+	/**
+	 * Retrieve the contents of the inventory  ONLY for saving game state.
+	 * @return inventory list
+	 */
+	public List<Tile> getInventory() {
+		return inventory;
+	}
 
 	/**
 	 * Figure out if player is at the end of level

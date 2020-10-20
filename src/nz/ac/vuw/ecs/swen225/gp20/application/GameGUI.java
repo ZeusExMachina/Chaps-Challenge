@@ -40,6 +40,7 @@ public class GameGUI {
      * Timer object for game, adjusts time display
      */
     private Timer timer = new Timer();
+
     /**
      * current game level - always starts with 1
      */
@@ -251,6 +252,14 @@ public class GameGUI {
         //game potential starts as paused
         //delete save
 
+    }
+
+    /**
+     * Get the current level
+     * @return the level number
+     */
+    public int getLevel() {
+        return level;
     }
 
     /**
@@ -527,7 +536,9 @@ public class GameGUI {
      */
     public void saveGameState(){
         System.out.println("Saving Game state...");
-        gameState.saveState();
+        try{
+            gameState.saveState();
+        } catch (IOException e){}
         System.exit(0);
     }
 
