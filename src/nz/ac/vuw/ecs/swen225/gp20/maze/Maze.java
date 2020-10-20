@@ -2,7 +2,6 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
-import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -49,7 +48,7 @@ public class Maze {
 	/**
 	 * Stores the LevelLoader
 	 */
-	private LevelLoader levelLoader;
+	private LevelLoader loader;
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -68,14 +67,16 @@ public class Maze {
 	/**
 	 * Parse given String array converting each character into a cell.
 	 *
-	 * @param in input String array
-	 * @param helpText helpText String array
+	 * @param in input board String array
+	 * @param helpText array storing each HelpTile's text
+	 * @param l Persistence object used to load secondary actors
 	 */
-	public void loadLevel(String[] in, String[] helpText) {
+	public void loadLevel(String[] in, String[] helpText, LevelLoader l) {
 		chap = null;
 		secondaries.clear();
 		inventory.clear();
 		treasuresLeft = 0;
+		loader = l;
 
 		for (String row : in) {
 			Preconditions.checkArgument(row.length() == in[0].length(),
@@ -109,7 +110,7 @@ public class Maze {
 			throw new AssertionError("Board should have an exit '@'");
 		}
 
-		if (levelLoader != null) addAnySecondaryActors(levelLoader.getCurrentLevel());
+		if (this.loader != null) addAnySecondaryActors(this.loader.getCurrentLevel());
 	}
 
 	// TODO: delete if no longer needed
@@ -314,7 +315,7 @@ public class Maze {
 	 * @param d given direction
 	 * @return if move successful
 	 */
-	public boolean moveChap(Direction d) {
+	public String moveChap(Direction d) {
 		try {
 			String soundName = "chap";
 			Tile t = getNeighbouringTile(chap.getPosition(), d);
@@ -341,13 +342,12 @@ public class Maze {
 				if (treasuresLeft == 0) {
 					unlockExitLocks();
 				}
-				Renderer.playSound(soundName);
-				return true;
+				return soundName;
 			}
 		} catch (IllegalArgumentException ignored) {
 			// go straight to return false
 		}
-		return false;
+		return null;
 	}
 
 	/**
@@ -449,11 +449,18 @@ public class Maze {
 	/**
 	 * Move all the secondary actors to their next location
 	 */
-	public Collection<Actor> moveSecondaryActors() {
+	public void moveSecondaryActors() {
 		for (Actor a : secondaries) {
 			a.move(this);
 		}
-		return secondaries;
+	}
+
+	/**
+	 * Get an immutable collection of secondary actors
+	 * @return set of secondary actors
+	 */
+	public Set<Actor> getSecondaryActors() {
+		return Collections.unmodifiableSet(secondaries);
 	}
 
 	/**
@@ -467,8 +474,8 @@ public class Maze {
 
 	public void addAnySecondaryActors(int levelNumber){
 
-		if(levelLoader.getActorLoader().isRequiredForThisLevel(levelNumber)){
-			secondaries = levelLoader.getActorLoader().getSetOfSecondaryActors(levelNumber, levelLoader);
+		if(loader.getActorLoader().isRequiredForThisLevel(levelNumber)){
+			secondaries = loader.getActorLoader().getSetOfSecondaryActors(levelNumber, loader);
 		}
 	}
 
@@ -481,9 +488,5 @@ public class Maze {
 			if (a.getPosition().equals(chap.getPosition())) return false;
 		}
 		return true;
-	}
-
-	public void setLevelLoader(LevelLoader levelLoader) {
-		this.levelLoader = levelLoader;
 	}
 }

@@ -1,7 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
-import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

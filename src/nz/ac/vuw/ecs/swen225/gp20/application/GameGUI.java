@@ -116,7 +116,6 @@ public class GameGUI {
 
 
         maze = Maze.getInstance();
-        maze.setLevelLoader(loader);
         setGameLevel(level); //start loader on game start
 
 
@@ -461,8 +460,7 @@ public class GameGUI {
     public void setGameLevel(int levelNum){
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
-        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
-
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
     }
 
     /**
@@ -491,7 +489,7 @@ public class GameGUI {
      */
     public void resetMaze(){
         try {
-            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
+            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
             setChipsRemaining();
             render.update();
             startTime();
@@ -594,7 +592,11 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
-        if (maze.moveChap(d)) render.update();
+        String move = maze.moveChap(d);
+        if (move != null) {
+            render.update();
+            Renderer.playSound(move);
+        }
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
@@ -636,7 +638,8 @@ public class GameGUI {
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 if(actorMoveCount == 3){
-                    for (Actor secondaryActor : maze.moveSecondaryActors()) {
+                    maze.moveSecondaryActors();
+                    for (Actor secondaryActor : maze.getSecondaryActors()) {
                         if(render.isPositionOnScreen(secondaryActor.getPosition())) Renderer.playSound(secondaryActor.getName());
                     }
                     actorMoveCount = 0;
