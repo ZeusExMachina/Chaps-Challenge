@@ -28,7 +28,7 @@ public class MazeTests {
 		};
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
-		m.loadLevel(in, help);
+		m.loadLevel(in, help, null);
 		return m;
 	}
 
@@ -54,7 +54,7 @@ public class MazeTests {
 	@Test
 	public void test02_moveChapSouth() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.SOUTH));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
 						  "//A/X/B//\n" +
@@ -70,8 +70,8 @@ public class MazeTests {
 	@Test
 	public void test03_moveChapBack() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.NORTH));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
 						  "//A/X/B//\n" +
@@ -87,7 +87,7 @@ public class MazeTests {
 	@Test
 	public void test04_moveChapNorth() {
 		Maze m = getMaze();
-		assertFalse(m.moveChap(Direction.NORTH));
+		assertNull(m.moveChap(Direction.NORTH));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
 						  "//A/X/B//\n" +
@@ -103,10 +103,10 @@ public class MazeTests {
 	@Test
 	public void test05_pickUp() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.EAST));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
@@ -123,16 +123,16 @@ public class MazeTests {
 	@Test
 	public void test06_unlock() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
-		assertTrue(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.NORTH));
 		assertFalse(m.containsKey(KeyTile.Colour.GREEN));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
@@ -149,9 +149,9 @@ public class MazeTests {
 	@Test
 	public void test07_noUnlock() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertFalse(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNull(m.moveChap(Direction.NORTH));
 		String expected = "/////////\n" +
 						  "/d#/@/#c/\n" +
 						  "//A/X/B//\n" +
@@ -167,18 +167,18 @@ public class MazeTests {
 	@Test
 	public void test08_getTreasure() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH));
 		assertTrue(m.containsKey(KeyTile.Colour.GREEN));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.NORTH));
 		assertEquals(m.getTreasuresLeft(), 4);
-		assertTrue(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.NORTH));
 		assertEquals(m.getTreasuresLeft(), 3);
 		String expected = "/////////\n" +
 						  "/d#/@/!c/\n" +
@@ -195,54 +195,54 @@ public class MazeTests {
 	@Test
 	public void test09_finishLevel() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH)); // get key to B
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.NORTH)); // unlock B
-		assertTrue(m.moveChap(Direction.NORTH)); // get treasure
-		assertTrue(m.moveChap(Direction.EAST));  // get key to C
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.SOUTH)); // get key to A
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH)); // get key to B
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.NORTH)); // unlock B
+		assertNotNull(m.moveChap(Direction.NORTH)); // get treasure
+		assertNotNull(m.moveChap(Direction.EAST));  // get key to C
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.SOUTH)); // get key to A
 		assertEquals(2, m.countTypesInInventory(KeyTile.class));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.NORTH)); // unlock A
-		assertTrue(m.moveChap(Direction.NORTH)); // get treasure
-		assertTrue(m.moveChap(Direction.WEST)); // get key to D
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.SOUTH));
-		assertTrue(m.moveChap(Direction.WEST)); // unlock C
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.SOUTH)); // get treasure
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.EAST)); // unlock D
-		assertTrue(m.moveChap(Direction.EAST));
-		assertTrue(m.moveChap(Direction.SOUTH)); // get treasure
-		assertTrue(m.moveChap(Direction.NORTH));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.WEST));
-		assertTrue(m.moveChap(Direction.NORTH)); // unlock exit lock
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.NORTH)); // unlock A
+		assertNotNull(m.moveChap(Direction.NORTH)); // get treasure
+		assertNotNull(m.moveChap(Direction.WEST)); // get key to D
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.WEST)); // unlock C
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.SOUTH)); // get treasure
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.EAST)); // unlock D
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNotNull(m.moveChap(Direction.SOUTH)); // get treasure
+		assertNotNull(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.WEST));
+		assertNotNull(m.moveChap(Direction.NORTH)); // unlock exit lock
 		assertFalse(m.isLevelDone());
-		assertTrue(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.NORTH));
 		assertTrue(m.isLevelDone());
 		assertEquals(0, m.countTypesInInventory(DoorTile.class));
 		assertEquals(0, m.countTypesInInventory(ExitLockTile.class));
@@ -277,7 +277,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help);
+			Maze.getInstance().loadLevel(in, help, null);
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -298,7 +298,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help);
+			Maze.getInstance().loadLevel(in, help, null);
 		} catch (AssertionError e) {
 			return;
 		}
@@ -320,7 +320,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help);
+			Maze.getInstance().loadLevel(in, help, null);
 		} catch (AssertionError ignored) {
 			return;
 		}
@@ -333,8 +333,8 @@ public class MazeTests {
 	@Test
 	public void test13_movetoWall() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.EAST));
-		assertFalse(m.moveChap(Direction.NORTH));
+		assertNotNull(m.moveChap(Direction.EAST));
+		assertNull(m.moveChap(Direction.NORTH));
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class MazeTests {
 	@Test
 	public void test14_setHelp() {
 		Maze m = getMaze();
-		assertTrue(m.moveChap(Direction.SOUTH));
+		assertNotNull(m.moveChap(Direction.SOUTH));
 		assertEquals("Unit tests", m.isOnHelp());
 	}
 
@@ -382,8 +382,7 @@ public class MazeTests {
 				assertNotNull(i);
 			}
 		}
-		Actor chap = new Chap(new Position(0,0), "chap");
-		assertNotNull(chap.getImage());
+		assertNotNull(m.getChapImage());
 //		for (KeyTile.Colour c : KeyTile.Colour.values()) {
 //			DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
 //			assertNotNull(d.getImage());
@@ -423,7 +422,7 @@ public class MazeTests {
 		};
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
-		m.loadLevel(in, help);
+		m.loadLevel(in, help, null);
 		List<Direction> path = Arrays.asList(Direction.EAST,
 				Direction.EAST,
 				Direction.WEST,

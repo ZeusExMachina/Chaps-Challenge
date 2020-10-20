@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 
+import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.GameStateController;
@@ -292,6 +293,7 @@ public class GameGUI {
             clearControlFrame();
             controlsGamePlay();
             resetMaze();
+            render.startBackgroundMusic();
             if (replayer != null) { replayer.endCurrentReplay(); }
         };
 
@@ -459,8 +461,7 @@ public class GameGUI {
     public void setGameLevel(int levelNum){
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
-        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
-
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
     }
 
     /**
@@ -489,7 +490,7 @@ public class GameGUI {
      */
     public void resetMaze(){
         try {
-            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level));
+            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
             setChipsRemaining();
             render.update();
             startTime();
@@ -592,6 +593,11 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
+        String move = maze.moveChap(d);
+        if (move != null) {
+            render.update();
+            Renderer.playSound(move);
+        }
         maze.getChap().isMoving();
         if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
@@ -638,6 +644,9 @@ public class GameGUI {
                 render.display();
                 if(actorMoveCount == 3){
                     maze.moveSecondaryActors();
+                    for (Actor secondaryActor : maze.getSecondaryActors()) {
+                        if(render.isPositionOnScreen(secondaryActor.getPosition())) Renderer.playSound(secondaryActor.getName());
+                    }
                     actorMoveCount = 0;
                 }
                 actorMoveCount += 1;
@@ -699,6 +708,7 @@ public class GameGUI {
      */
     public void levelCompleteDialog(){
         timer.cancel();
+        render.stopBackgroundMusic();
         inGame = false;
         JDialog levelComplete = new JDialog(mainFrame, "Level Completed");
         levelComplete.setLayout(new GridLayout(2,1,0,0));
