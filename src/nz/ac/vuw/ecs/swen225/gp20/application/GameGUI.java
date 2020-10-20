@@ -151,6 +151,7 @@ public class GameGUI {
         saveGame.addActionListener(e -> saveGameState());
 
         gameMenu.addActionListener(e -> {
+            render.stopBackgroundMusic();
             clearControlFrame();
             controlsStart();
         });
@@ -256,6 +257,7 @@ public class GameGUI {
      * (before level start)
      */
     public void controlsStart(){
+
         currentReplay = false;
         inGame = false;
         stopTime();
@@ -502,7 +504,6 @@ public class GameGUI {
             setChipsRemaining();
             render.update();
             startTime();
-            createTask();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -661,9 +662,9 @@ public class GameGUI {
                 if(timeVal <= 10) {
                     timeLabel.setForeground(Color.red);
                 }
-                if(timeVal <= 0){
+                if(timeVal <= 0 || !maze.isChapAlive()){
                     timer.cancel();
-                    timeOutDialog();
+                    gameOverDialog(maze.isChapAlive());
                 }else{
                     timeVal = timeVal - 0.1 ;
                 }
@@ -688,12 +689,15 @@ public class GameGUI {
 
     /**
      * display a dialog if the player does not complete the level in the allocated time
+     * @param time - true if cause of game over is out of time
      */
-    public void timeOutDialog(){
+    public void gameOverDialog(Boolean time){
+        render.stopBackgroundMusic();
         inGame = false;
         JDialog timeOutDisplay = new JDialog(mainFrame, "Time is Up!");
         timeOutDisplay.setSize(350,200);
         JLabel gameOverLabel = new JLabel("Time's Up!", SwingConstants.CENTER);
+        if(!time){gameOverLabel.setText("You Died!");}
         gameOverLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
         JPanel buttonFrame = new JPanel();
         JButton restartButton = new JButton("Restart");
@@ -738,6 +742,7 @@ public class GameGUI {
         JButton restartButton = new JButton("Restart");
         restartButton.addActionListener(e -> {
             levelComplete.dispose();
+            render.startBackgroundMusic();
             clearControlFrame();
             resetMaze();
             controlsGamePlay();
