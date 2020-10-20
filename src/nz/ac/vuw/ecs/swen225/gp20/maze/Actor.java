@@ -6,8 +6,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * From handout: An Actor is a game character that moves around, like Chap,
@@ -31,6 +29,31 @@ public abstract class Actor {
      * Stores name of actor for accessing image, e.g. "chap".
      */
     protected final String name;
+    
+    /**
+     *  Allows program to know which frames to display for actor.
+     */
+    protected boolean isMoving = true;
+    
+    /**
+     * which frame to currently display for the actor.
+     */
+    protected int frameCounter = 0;
+    
+    /**
+     * the max amount of frames, so program doesn't try display an image that isn't there.
+     */
+    protected int maxFrame = 3;
+    
+    /**
+     * The time it takes to switch between moving animation
+     * and idling animation
+     */
+    protected int movingCooldown = 3;
+    /**
+     * the current time in the cool down.
+     */
+    protected int movingTimer = 0;
 
     /**
      * Make a new actor, starting by facing south towards camera.
@@ -67,13 +90,35 @@ public abstract class Actor {
      * @return buffered image to display
      */
     public BufferedImage getImage() {
-        String path = "resources/" +name + "_" + direction.toString() + ".png";
+        String movement = (isMoving) ? "run" : "idle";
+        String dir = direction.toString();
+        String path = "resources/"+name+"_animation/rescaled/" + name + "_" + movement + "_" + frameCounter + "_" + dir + ".png";
         try {
             return ImageIO.read(new File(path));
         } catch (IOException e) {
             // Go to runtime exception
         }
         throw new RuntimeException("Chap image not found");
+    }
+    
+    /**
+     * updates the frame to be displayed
+     */
+    public void updateFrame(){
+        frameCounter = (frameCounter == maxFrame) ? 0 : frameCounter + 1;
+        if(isMoving && movingTimer == movingCooldown) {
+            isMoving = false;
+            movingTimer = 0;
+        }else movingTimer++;
+        
+    }
+    
+    /**
+     * tells the character whether it is moving or not.
+     */
+    public void isMoving(){
+        isMoving = true;
+        movingTimer = 0;
     }
 
     /**

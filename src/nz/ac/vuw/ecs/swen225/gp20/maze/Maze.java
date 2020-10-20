@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -407,7 +408,13 @@ public class Maze {
 		}
 		for (Actor a : secondaries) {
 			Position pos = a.getPosition();
-			result[pos.getY()][pos.getX()] = a.getImage();
+			BufferedImage background = result[pos.getY()][pos.getX()];
+			BufferedImage newImage = new BufferedImage(background.getWidth(), background.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics g = newImage.getGraphics();
+			g.drawImage(background, 0, 0, null);
+			g.drawImage(a.getImage(),0,0,null);
+			g.dispose();
+			result[pos.getY()][pos.getX()] = newImage;
 		}
 		return result;
 	}
@@ -441,6 +448,8 @@ public class Maze {
 	 */
 	public void moveSecondaryActors() {
 		for (Actor a : secondaries) {
+			a.updateFrame();
+			a.isMoving();
 			a.move(this);
 		}
 	}

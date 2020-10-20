@@ -592,6 +592,7 @@ public class GameGUI {
      */
     public void moveCalled(Direction d){
         setChipsRemaining();
+        maze.getChap().isMoving();
         if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
@@ -633,6 +634,8 @@ public class GameGUI {
             @Override
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                maze.getChap().updateFrame();
+                render.display();
                 if(actorMoveCount == 3){
                     maze.moveSecondaryActors();
                     actorMoveCount = 0;
