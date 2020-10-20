@@ -1,5 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.application;
 
+import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.GameStateController;
@@ -292,6 +293,7 @@ public class GameGUI {
             clearControlFrame();
             controlsGamePlay();
             resetMaze();
+            render.startBackgroundMusic();
             if (replayer != null) { replayer.endCurrentReplay(); }
         };
 
@@ -634,7 +636,9 @@ public class GameGUI {
             public void run() {
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 if(actorMoveCount == 3){
-                    maze.moveSecondaryActors();
+                    for (Actor secondaryActor : maze.moveSecondaryActors()) {
+                        if(render.isPositionOnScreen(secondaryActor.getPosition())) Renderer.playSound(secondaryActor.getName());
+                    }
                     actorMoveCount = 0;
                 }
                 actorMoveCount += 1;
@@ -696,6 +700,7 @@ public class GameGUI {
      */
     public void levelCompleteDialog(){
         timer.cancel();
+        render.stopBackgroundMusic();
         inGame = false;
         JDialog levelComplete = new JDialog(mainFrame, "Level Completed");
         levelComplete.setLayout(new GridLayout(2,1,0,0));

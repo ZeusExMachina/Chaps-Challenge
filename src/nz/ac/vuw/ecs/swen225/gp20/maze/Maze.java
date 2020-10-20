@@ -2,12 +2,10 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
+import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -318,18 +316,24 @@ public class Maze {
 	 */
 	public boolean moveChap(Direction d) {
 		try {
+			String soundName = "chap";
 			Tile t = getNeighbouringTile(chap.getPosition(), d);
 			if (t.canMoveTo(this)) {
 				chap.move(t.getPosition(), d);
 				if (t.isCleared()) {
-					if (t.isInventoried()) inventory.add(t);
+					if (t.isInventoried()) {
+						inventory.add(t);
+						soundName = "key";
+					}
 					clearTile(chap.getPosition());
 					if (t instanceof TreasureTile) {
+						soundName = "treasure";
 						treasuresLeft--;
 						if (treasuresLeft < 0) {
 							throw new AssertionError("Treasures left shouldn't be negative.");
 						}
 					} else if (t instanceof DoorTile) {
+						soundName = "door";
 						KeyTile.Colour c = ((DoorTile) t).getColour();
 						removeKey(c);
 					}
@@ -337,6 +341,7 @@ public class Maze {
 				if (treasuresLeft == 0) {
 					unlockExitLocks();
 				}
+				Renderer.playSound(soundName);
 				return true;
 			}
 		} catch (IllegalArgumentException ignored) {
@@ -444,10 +449,11 @@ public class Maze {
 	/**
 	 * Move all the secondary actors to their next location
 	 */
-	public void moveSecondaryActors() {
+	public Collection<Actor> moveSecondaryActors() {
 		for (Actor a : secondaries) {
 			a.move(this);
 		}
+		return secondaries;
 	}
 
 	/**

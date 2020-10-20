@@ -27,11 +27,13 @@ public class Canvas extends JPanel {
 	private boolean isGameStarted = false;
 	private BufferedImage defaultImage = null;
 	private BufferedImage chapImage = null;
+	
+	private int centerOffset = 4;
 
 	/**
 	 * Constructor, sets the size and allows it to be focusable.
 	 */
-	public Canvas() {
+	Canvas() {
 		this.setPreferredSize(new Dimension(576, 576));
 		this.setFocusable(true);
 		this.requestFocus();
@@ -42,11 +44,10 @@ public class Canvas extends JPanel {
 	 *
 	 * @param g - Graphics object (do not call this method)
 	 */
-	public void paint(Graphics g) {
+	 public void paint(Graphics g) {
 		if (!isGameStarted) return;
 
 		BufferedImage[][] board = maze.getImages();
-		int centerOffset = 4;
 		int xIndex = origin.getX() - centerOffset;
 		int yIndex = origin.getY() - centerOffset;
 		int NUM_COLS = 9;
@@ -98,13 +99,17 @@ public class Canvas extends JPanel {
 	 * Displays the board to the screen.
 	 * @param m TODO
 	 */
-	public void display(Maze m) {
+	void display(Maze m) {
 		isGameStarted = true;
 		maze = m;
 		defaultImage = new WallTile(0, 0).getImage();
 		chapImage = maze.getChapImage();
 		origin = maze.getChapPosition();
 		this.repaint();
+	}
+	
+	boolean isPositionOnScreen(int x, int y) {
+		return (x > origin.getX() - centerOffset && x < origin.getX() + centerOffset && y < origin.getY() + centerOffset && y > origin.getY() - centerOffset);
 	}
 
 
