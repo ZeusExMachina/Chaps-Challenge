@@ -1,7 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
-import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -45,12 +44,7 @@ public class Maze {
 	/**
 	 * Stores secondary actors to move around
 	 */
-	private Set<Actor> secondaries = new HashSet<>();
-
-	/**
-	 * Stores the LevelLoader
-	 */
-	private LevelLoader loader;
+	private final Set<Actor> secondaries = new HashSet<>();
 
 	/**
 	 * Private constructor so only 1 instance made
@@ -71,14 +65,16 @@ public class Maze {
 	 *
 	 * @param in input board String array
 	 * @param helpText array storing each HelpTile's text
-	 * @param l Persistence object used to load secondary actors
+	 * @param actorsToAdd collection of Actors in level
 	 */
-	public void loadLevel(String[] in, String[] helpText, LevelLoader l) {
+	public void loadLevel(String[] in, String[] helpText, Set<Actor> actorsToAdd) {
 		chap = null;
-		secondaries.clear();
 		inventory.clear();
 		treasuresLeft = 0;
-		loader = l;
+
+		Preconditions.checkNotNull(actorsToAdd, "Secondary actor set shouldn't be null");
+		secondaries.clear();
+		secondaries.addAll(actorsToAdd);
 
 		for (String row : in) {
 			Preconditions.checkArgument(row.length() == in[0].length(),
@@ -111,8 +107,6 @@ public class Maze {
 		if (!isExitSet) {
 			throw new AssertionError("Board should have an exit '@'");
 		}
-
-		if (this.loader != null) addAnySecondaryActors(this.loader.getCurrentLevel());
 	}
 
 	// TODO: delete if no longer needed
@@ -483,13 +477,6 @@ public class Maze {
 	public void addSecondaryActor(Actor a) {
 		Preconditions.checkArgument(!a.getName().equals("chap"), "Chap cannot be secondary actor");
 		secondaries.add(a);
-	}
-
-	public void addAnySecondaryActors(int levelNumber){
-
-		if(loader.getActorLoader().isRequiredForThisLevel(levelNumber)){
-			secondaries = loader.getActorLoader().getSetOfSecondaryActors(levelNumber, loader);
-		}
 	}
 
 	/**
