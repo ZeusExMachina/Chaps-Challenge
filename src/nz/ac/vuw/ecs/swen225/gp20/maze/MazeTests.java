@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +30,11 @@ public class MazeTests {
 		};
 		Maze m = Maze.getInstance();
 		String[] help = {"Unit tests"};
-		m.loadLevel(in, help, null);
+		Set<Actor> monsters = new HashSet<>();
+		List<Direction> path = Arrays.asList(Direction.EAST, Direction.WEST);
+		monsters.add(new Monster(new Position(2,3), "monster", path));
+		m.loadLevel(in, help, monsters);
+		m.addSecondaryActor(new Monster(new Position(5,3), "monster", path));
 		return m;
 	}
 
@@ -45,6 +51,7 @@ public class MazeTests {
 						  "#/b_?_a/#\n" +
 						  "/////////\n";
 		assertEquals(expected, m.toString());
+		assertNotNull(m.getChap());
 		assertEquals("(4,3)", m.getChapPosition().toString());
 	}
 
@@ -277,7 +284,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help, null);
+			Maze.getInstance().loadLevel(in, help, new HashSet<>());
 		} catch (IllegalArgumentException ignored) {
 			// OK
 		}
@@ -298,7 +305,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help, null);
+			Maze.getInstance().loadLevel(in, help, new HashSet<>());
 		} catch (AssertionError e) {
 			return;
 		}
@@ -320,7 +327,7 @@ public class MazeTests {
 		};
 		String[] help = {"Unit tests"};
 		try {
-			Maze.getInstance().loadLevel(in, help, null);
+			Maze.getInstance().loadLevel(in, help, new HashSet<>());
 		} catch (AssertionError ignored) {
 			return;
 		}
@@ -383,26 +390,10 @@ public class MazeTests {
 			}
 		}
 		assertNotNull(m.getChapImage());
-//		for (KeyTile.Colour c : KeyTile.Colour.values()) {
-//			DoorTile d = new DoorTile((char) ('A'+c.ordinal()), 0, 0);
-//			assertNotNull(d.getImage());
-//		}
-//		ExitLockTile l = new ExitLockTile( 0, 0);
-//		assertNotNull(l.getImage());
-//		ExitTile e = new ExitTile( 0, 0);
-//		assertNotNull(e.getImage());
-//		FreeTile f = new FreeTile(0,0);
-//		assertNotNull(f.getImage());
-//		HelpTile h = new HelpTile(0, 0);
-//		assertNotNull(h.getImage());
-//		for (KeyTile.Colour c : KeyTile.Colour.values()) {
-//			KeyTile k = new KeyTile((char) ('a'+c.ordinal()), 0, 0);
-//			assertNotNull(k.getImage());
-//		}
-//		TreasureTile t = new TreasureTile(0, 0);
-//		assertNotNull(t.getImage());
-//		WallTile w = new WallTile(0, 0);
-//		assertNotNull(w.getImage());
+		List<BufferedImage> inventory = m.getInventoryImages();
+		for (BufferedImage i : inventory) {
+			assertNotNull(i);
+		}
 	}
 
 	/**
@@ -410,31 +401,12 @@ public class MazeTests {
 	 */
 	@Test
 	public void test18_secondaryActors(){
-		String[] in = {
-				"/////////",
-				"/d#/@/#c/",
-				"//A/X/B//",
-				"//_____//",
-				"_C__!__D_",
-				"//_____//",
-				"#/b_?_a/#",
-				"/////////"
-		};
-		Maze m = Maze.getInstance();
-		String[] help = {"Unit tests"};
-		m.loadLevel(in, help, null);
-		List<Direction> path = Arrays.asList(Direction.EAST,
-				Direction.EAST,
-				Direction.WEST,
-				Direction.WEST);
-		Actor roach1 = new Monster(new Position(3,3), "roach", path);
-		Actor roach2 = new Monster(new Position(3,5), "roach", path);
-		m.addSecondaryActor(roach1);
-		m.addSecondaryActor(roach2);
+		Maze m = getMaze();
 		m.moveSecondaryActors();
 		assertTrue(m.isChapAlive());
-		m.moveChap(Direction.SOUTH);
+		m.moveChap(Direction.WEST);
 		assertFalse(m.isChapAlive());
+		assertEquals(2, m.getSecondaryActors().size());
 	}
 
 	/**

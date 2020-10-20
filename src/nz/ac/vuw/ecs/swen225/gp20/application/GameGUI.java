@@ -461,7 +461,11 @@ public class GameGUI {
     public void setGameLevel(int levelNum){
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
-        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
+        Set<Actor> secondaries = new HashSet<>();
+        if (loader.getActorLoader().isRequiredForThisLevel(levelNum)) {
+            secondaries = loader.getActorLoader().getSetOfSecondaryActors(levelNum, loader);
+        }
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
     }
 
     /**
@@ -490,7 +494,11 @@ public class GameGUI {
      */
     public void resetMaze(){
         try {
-            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), loader);
+            Set<Actor> secondaries = new HashSet<>();
+            if (loader.getActorLoader().isRequiredForThisLevel(level)) {
+                secondaries = loader.getActorLoader().getSetOfSecondaryActors(level, loader);
+            }
+            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
             setChipsRemaining();
             render.update();
             startTime();

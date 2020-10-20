@@ -53,6 +53,8 @@ public class Monster extends Actor {
             Position p = newTile.getPosition();
             if (newTile instanceof FreeTile) {
                 move(p, d);
+            } else {
+                throw new RuntimeException("Secondary actor moving to non-free tile");
             }
         } catch (IllegalArgumentException ignored) {
             throw new RuntimeException("Secondary actor making illegal moves");
