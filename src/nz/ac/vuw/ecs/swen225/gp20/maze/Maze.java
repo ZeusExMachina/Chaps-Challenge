@@ -354,6 +354,15 @@ public class Maze {
 	public int getTreasuresLeft() {
 		return treasuresLeft;
 	}
+	
+	/**
+	 * Retrieve the Chap actor ONLY for saving game state.
+	 * @return Chap object
+	 */
+	public Actor getChap() {
+		return chap;
+	}
+	
 
 	// TODO: delete if no longer needed
 //	/**
@@ -364,13 +373,7 @@ public class Maze {
 //		return board;
 //	}
 //
-//	/**
-//	 * Retrieve the Chap actor ONLY for saving game state.
-//	 * @return Chap object
-//	 */
-//	public Actor getChap() {
-//		return chap;
-//	}
+
 //
 //	/**
 //	 * Retrieve the contents of the inventory  ONLY for saving game state.
