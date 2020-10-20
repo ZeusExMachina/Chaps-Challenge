@@ -116,7 +116,7 @@ public class GameGUI {
 
 
         maze = Maze.getInstance();
-        maze.setLevelLoader(loader);
+       // maze.setLevelLoader(loader);
         setGameLevel(level); //start loader on game start
 
 
@@ -599,7 +599,7 @@ public class GameGUI {
             Renderer.playSound(move);
         }
         maze.getChap().isMoving();
-        if (maze.moveChap(d)) render.update();
+        //if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
