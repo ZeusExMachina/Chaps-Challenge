@@ -23,11 +23,11 @@ import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
  * @author Elijah Guarina
  */
 public class Replayer {
-	
+
 	// ------------------------------------------------
 	// ------------------- FIELDS ---------------------
 	// ------------------------------------------------
-	
+
 	/**
 	 * Stores the history of actions done by actors from a loaded game replay.
 	 */
@@ -41,7 +41,7 @@ public class Replayer {
 	 */
 	private int level;
 	/**
-	 * Keeps track of whether the program is auto-replaying through a recorded 
+	 * Keeps track of whether the program is auto-replaying through a recorded
 	 * game, or is going through it step-by-step.
 	 */
 	private boolean autoReplaying;
@@ -61,27 +61,27 @@ public class Replayer {
 	 * This object replays actions regularly while replaying in auto-replay mode.
 	 */
 	private ActionPlayer replayedAction;
-	
+
 	// ------------------------------------------------
 	// ----------------- CONSTANTS --------------------
 	// ------------------------------------------------
-	
+
 	/**
 	 * The period between two distinct timestamps in a game being replayed when the replay speed is 1.0x (only relevant while in auto-replay mode).
 	 */
-	private final static long DEFAULT_DELAY_MILLIS = 100L;
-	
+	public final static long DEFAULT_DELAY_MILLIS = 100L;
+
 	/**
 	 * Holds the possible replay speeds that a recorded game can be replayed at.
 	 */
 	public static final List<Double> REPLAY_SPEEDS = Collections.unmodifiableList(Arrays.asList(0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0));
-	
+
 	// ------------------------------------------------
 	// ---------------- CONSTRUCTOR -------------------
 	// ------------------------------------------------
-	
+
 	/**
-	 * Create a new Replayer that is associated with a given 
+	 * Create a new Replayer that is associated with a given
 	 * Controller.
 	 * @param ui is the GUI associated with the game
 	 */
@@ -93,11 +93,11 @@ public class Replayer {
 		this.currentTimeInReplay = 0.0;
 		this.replayedAction = new ActionPlayer();
 	}
-	
+
 	// ------------------------------------------------
 	// ------------- GETTERS & SETTERS ----------------
 	// ------------------------------------------------
-	
+
 	/**
 	 * Get the level of the loaded game record.
 	 * @return the level of the loaded game record, or -1 if no game is loaded
@@ -105,10 +105,10 @@ public class Replayer {
 	public int getRecordingLevel() {
 		return level;
 	}
-	
+
 	/**
-	 * Check whether or not a replayed game is currently being 
-	 * auto-replayed, or if it is replaying the actions in a 
+	 * Check whether or not a replayed game is currently being
+	 * auto-replayed, or if it is replaying the actions in a
 	 * step-by-step manner.
 	 * @return true if auto-replaying,
 	 * 		   false if replaying step-by-step
@@ -116,7 +116,7 @@ public class Replayer {
 	public boolean isAutoReplaying() {
 		return autoReplaying;
 	}
-	
+
 	/**
 	 * Get the currently set replay speed for replaying games.
 	 * @return the replay speed
@@ -126,6 +126,15 @@ public class Replayer {
 	}
 	
 	/**
+	 * Check whether there is a loaded game record that still has moves yet to be replayed.
+	 * @return true if there is a loaded game record that has moves yet to be replayed
+	 * 		   false if there is no loaded game or all moves of a loaded game have been replayed
+	 */
+	public boolean hasMovesToReplay() {
+		return gameRecordHistory!=null&&!gameRecordHistory.isEmpty();
+	}
+
+	/**
 	 * Set the replay speed for the recorded game to be replayed at.
 	 * Only accepts speeds from replaySpeeds.
 	 * @param speed is the new replay speed to set
@@ -134,7 +143,7 @@ public class Replayer {
 	public void setReplaySpeed(double speed) throws IllegalArgumentException {
 		// First check if the entered replay speed is valid, if so set it.
 		// Speed must be 0.0 < x < 2.0, and must be divisible by 0.25.
-		if (!REPLAY_SPEEDS.contains(speed)) { 
+		if (!REPLAY_SPEEDS.contains(speed)) {
 			throw new IllegalArgumentException("Invalid replay speed value of " + speed + " entered.");
 		} else {
 			replaySpeed = speed;
@@ -144,13 +153,22 @@ public class Replayer {
 			}
 		}
 	}
-	
+
+	/**
+	 * Get the time before the next move in a loaded game record.
+	 * @return the time before the next move, or -1 if there is no loaded game.
+	 */
+	public long getTimeBeforeNextMove() {
+		return gameRecordHistory!=null&&!gameRecordHistory.isEmpty() ?
+				(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : -1L;
+	}
+
 	// ----------------------------------------------
 	// ---------------- REPLAYING -------------------
 	// ----------------------------------------------
-	
+
 	/**
-	 * Replay a recorded action from a loaded game by simulating 
+	 * Replay a recorded action from a loaded game by simulating
 	 * player input in the GUI.
 	 */
 	private class ActionPlayer extends TimerTask {
@@ -176,13 +194,13 @@ public class Replayer {
 			if (autoReplaying) { currentTimeInReplay += DEFAULT_DELAY_MILLIS/1000.0; }
 		}
 	}
-	
+
 	/**
-	 * Switch between the "auto-replay" setting and the 
+	 * Switch between the "auto-replay" setting and the
 	 * "step-by-step" setting for replaying games.
-	 * If switching to auto-replay mode, then start 
-	 * replaying actions at regular intervals. 
-	 * If switching to step-by-step mode, replay actions 
+	 * If switching to auto-replay mode, then start
+	 * replaying actions at regular intervals.
+	 * If switching to step-by-step mode, replay actions
 	 * manually one at a time.
 	 */
 	public void toggleReplayType() {
@@ -197,21 +215,24 @@ public class Replayer {
 			// TODO: Need to also stop timer of Application
 		}
 	}
-	
+
 	/**
 	 * When in step-by-step replay mode, perform the next action.
-	 * Adjusts the current time in the replayed game to the 
+	 * Adjusts the current time in the replayed game to the
 	 * recorded time that the action to replay was performed.
-	 * Should only be called while in step-by-step mode. If in 
+	 * Should only be called while in step-by-step mode. If in
 	 * auto-replay mode, nothing will happen.
+	 * @return the timestamp of the move that is replayed
 	 */
-	public void replayNextAction() {
+	public double replayNextAction() {
 		// Do nothing if auto-replaying, or if there is no game to replay
-		if (autoReplaying || gameRecordHistory == null || gameRecordHistory.isEmpty()) { return; }
-		currentTimeInReplay = gameRecordHistory.peek().getTimeStamp();
+		if (autoReplaying || gameRecordHistory == null || gameRecordHistory.isEmpty()) { return -1.0; }
+		double newCurrentTime = gameRecordHistory.peek().getTimeStamp();
+		currentTimeInReplay = newCurrentTime;
 		replayedAction.run();
+		return newCurrentTime;
 	}
-	
+
 	/**
 	 * Clear the queue of any loaded game record and stop replaying.
 	 */
@@ -220,7 +241,7 @@ public class Replayer {
 		if (gameRecordHistory != null) { gameRecordHistory.clear(); }
 		currentTimeInReplay = 0.0;
 	}
-	
+
 	/**
 	 * Stop the current timer from automatically replaying actions from a game recording.
 	 */
@@ -230,23 +251,23 @@ public class Replayer {
 			timer.purge();
 		}
 	}
-	
+
 	/**
 	 * Start/Resume the timer to automatically replay actions from a game recording.
 	 */
 	private void playTimer() {
 		timer = new Timer();
 		replayedAction = new ActionPlayer();
-		timer.schedule(replayedAction, 
-				(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+		timer.schedule(replayedAction,
+				getTimeBeforeNextMove(), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 	}
-	
+
 	// ----------------------------------------------
 	// ----------------- LOADING --------------------
 	// ----------------------------------------------
-	
+
 	/**
-	 * Load a JSON file of a game replay and store it in the 
+	 * Load a JSON file of a game replay and store it in the
 	 * gameHistory queue.
 	 * @param file is the name of the file to load
 	 * @throws IOException when an error occurs when reading the file

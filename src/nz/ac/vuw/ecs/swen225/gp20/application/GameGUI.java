@@ -13,6 +13,7 @@ import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -316,7 +317,7 @@ public class GameGUI {
     public void controlsGamePlay(){
         inGame = true;
         setGameLevel(level);
-        controls.setLayout(new GridLayout(4,1,10,0));
+        controls.setLayout(currentReplay ? new GridLayout(5,1,10,0) : new GridLayout(4,1,10,0));
 
         setTime();
         setChipsRemaining();
@@ -334,6 +335,60 @@ public class GameGUI {
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         timerPanel.add(timeLabel);
         controls.add(timerPanel);
+        
+        //REPLAYING
+        if (currentReplay) {
+        	JPanel replayPanel = new JPanel();
+        	JLabel replayLabel = new JLabel("Replay Controls");
+        	replayLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 18));
+
+        	JButton stepForward = new JButton("Step replay");
+        	stepForward.setEnabled(replayer!=null ? !replayer.isAutoReplaying() : false);
+            stepForward.addActionListener(new ActionListener() {
+            	public void actionPerformed(java.awt.event.ActionEvent e) {
+            		if (replayer != null) {
+            			// Replay the next move and change the time
+            			double nextMoveTimestamp = replayer.replayNextAction();
+            			if (nextMoveTimestamp > 0) {
+            				timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
+            				timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+            			}
+            		}
+            	};
+            });
+
+            JButton replayModeToggle = new JButton(
+            		replayer!=null&&replayer.isAutoReplaying() ? "Toggle to Step-by-Step" : "Toggle to Auto-replay");
+            replayModeToggle.addActionListener(new ActionListener() {
+            	public void actionPerformed(ActionEvent e) {
+            		if (replayer != null) {
+                    	replayer.toggleReplayType();
+                    	if (replayer.isAutoReplaying()) {
+                    		// Auto-replay mode
+                    		replayModeToggle.setText("Toggle to Step-by-step");
+                    		stepForward.setEnabled(false);
+                    		long timeBeforeNextMove = replayer.getTimeBeforeNextMove();
+                    		if (timeBeforeNextMove >= 0) {
+	                    		timer = new Timer();
+	                            timer.schedule(createTask(), timeBeforeNextMove,
+	                            		(long)(Replayer.DEFAULT_DELAY_MILLIS/replayer.getReplaySpeed()));
+                    		}
+                    	} else {
+                    		// Step-by-step mode
+                    		replayModeToggle.setText("Toggle to Auto-replay");
+                    		stepForward.setEnabled(true);
+                    		stopTime();
+                    	}
+                    }
+            	}
+            });
+            
+            replayPanel.add(replayLabel);
+            replayPanel.add(replayModeToggle);
+            replayPanel.add(stepForward);
+        	controls.add(replayPanel);
+        }
+
 
         //CHIPS
         JPanel chipsPanel = new JPanel();
@@ -440,9 +495,6 @@ public class GameGUI {
                 resetMaze();
                 clearControlFrame();
                 controlsGamePlay();
-                replayer.toggleReplayType(); // Just here for testing purposes - this needs to be relocated later
-
-
             } catch (IllegalArgumentException | NullPointerException exp) {
                 System.out.println("Error loading replay");
             }
@@ -623,7 +675,7 @@ public class GameGUI {
         stopTime();
         actorMoveCount = 1;
         timer = new Timer();
-        timer.schedule(createTask(), 500,100);
+        if (!currentReplay) { timer.schedule(createTask(), 500,100); }
 
     }
 
@@ -648,6 +700,7 @@ public class GameGUI {
         return new TimerTask() {
             @Override
             public void run() {
+            	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
                 render.display();
