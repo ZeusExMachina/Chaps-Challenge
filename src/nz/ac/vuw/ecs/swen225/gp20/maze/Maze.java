@@ -1,7 +1,6 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 import com.google.common.base.Preconditions;
-import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
 import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 
 import java.awt.*;
@@ -76,6 +75,8 @@ public class Maze {
 	 * @param helpText helpText String array
 	 */
 	public void loadLevel(String[] in, String[] helpText) {
+		chap = null;
+		secondaries.clear();
 		inventory.clear();
 		treasuresLeft = 0;
 
@@ -111,24 +112,25 @@ public class Maze {
 			throw new AssertionError("Board should have an exit '@'");
 		}
 
-		addAnySecondaryActors(levelLoader.getCurrentLevel());
+		if (levelLoader != null) addAnySecondaryActors(levelLoader.getCurrentLevel());
 	}
 
-	/**
-	 * Load level from serialised objects as a result of loading game.
-	 *
-	 * @param newBoard new array of tiles forming board
-	 * @param newChap new Chap object
-	 * @param inventoryToAdd new inventory
-	 * @param treasures new treasures left count
-	 */
-	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
-		inventory.clear();
-		inventory.addAll(inventoryToAdd);
-		treasuresLeft = treasures;
-		chap = newChap;
-		board = newBoard;
-	}
+	// TODO: delete if no longer needed
+//	/**
+//	 * Load level from serialised objects as a result of loading game.
+//	 *
+//	 * @param newBoard new array of tiles forming board
+//	 * @param newChap new Chap object
+//	 * @param inventoryToAdd new inventory
+//	 * @param treasures new treasures left count
+//	 */
+//	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
+//		inventory.clear();
+//		inventory.addAll(inventoryToAdd);
+//		treasuresLeft = treasures;
+//		chap = newChap;
+//		board = newBoard;
+//	}
 
 	/**
 	 * Set the tooltip text of a given HelpTile, specified by giving
@@ -353,29 +355,30 @@ public class Maze {
 		return treasuresLeft;
 	}
 
-	/**
-	 * Retrieve the game board ONLY for saving game state.
-	 * @return tile array forming game board
-	 */
-	public Tile[][] getBoard() {
-		return board;
-	}
-
-	/**
-	 * Retrieve the Chap actor ONLY for saving game state.
-	 * @return Chap object
-	 */
-	public Actor getChap() {
-		return chap;
-	}
-
-	/**
-	 * Retrieve the contents of the inventory  ONLY for saving game state.
-	 * @return inventory list
-	 */
-	public List<Tile> getInventory() {
-		return inventory;
-	}
+	// TODO: delete if no longer needed
+//	/**
+//	 * Retrieve the game board ONLY for saving game state.
+//	 * @return tile array forming game board
+//	 */
+//	public Tile[][] getBoard() {
+//		return board;
+//	}
+//
+//	/**
+//	 * Retrieve the Chap actor ONLY for saving game state.
+//	 * @return Chap object
+//	 */
+//	public Actor getChap() {
+//		return chap;
+//	}
+//
+//	/**
+//	 * Retrieve the contents of the inventory  ONLY for saving game state.
+//	 * @return inventory list
+//	 */
+//	public List<Tile> getInventory() {
+//		return inventory;
+//	}
 
 	/**
 	 * Figure out if player is at the end of level
@@ -424,7 +427,9 @@ public class Maze {
 	 * @return immutable inventory list
 	 */
 	public List<BufferedImage> getInventoryImages() {
-		return inventory.stream().map(Tile::getImage).collect(Collectors.toUnmodifiableList());
+		return inventory.stream()
+				.map(Tile::getImage)
+				.collect(Collectors.toUnmodifiableList());
 	}
 
 	/**

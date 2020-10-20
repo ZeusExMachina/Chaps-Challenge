@@ -1,6 +1,5 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
