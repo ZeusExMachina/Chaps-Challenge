@@ -58,6 +58,18 @@ public class GameGUI {
      */
     private final GameStateController gameState = new GameStateController(this);
     /**
+     * A button in the drop-down menu to restart the current level.
+     */
+    private final JMenuItem restartLevel = new JMenuItem("Restart Level");
+    /**
+     * A button in the drop-down menu to save the current game state and exit the program.
+     */
+    private final JMenuItem saveGame = new JMenuItem("Save and Exit");
+    /**
+     * A button in the drop-down menu to save a recording of the current game.
+     */
+    private final JMenuItem saveRecording = new JMenuItem("Save Recording");
+    /**
      * responsible for time level display, adjusted in timer task
      */
     private final JLabel timeLabel = new JLabel();
@@ -144,8 +156,6 @@ public class GameGUI {
 
         JMenuItem loadReplay = new JMenuItem("Load Replay");
         JMenuItem gameMenu = new JMenuItem("Main Menu");
-        JMenuItem restartLevel = new JMenuItem("Restart Level");
-        JMenuItem saveGame = new JMenuItem("Save and Exit");
 
         loadReplay.addActionListener(e -> {
             clearControlFrame();
@@ -161,6 +171,10 @@ public class GameGUI {
         });
 
         saveGame.addActionListener(e -> saveGameState());
+        
+        saveRecording.addActionListener(e -> {
+        	if (!currentReplay && recorder!=null) { recorder.saveGame(); }
+        });
 
         gameMenu.addActionListener(e -> {
             render.stopBackgroundMusic();
@@ -171,6 +185,7 @@ public class GameGUI {
         load.add(gameMenu);
         load.add(restartLevel);
         load.add(saveGame);
+        load.add(saveRecording);
 
         mainFrame.setJMenuBar(mb);
 
@@ -265,6 +280,11 @@ public class GameGUI {
         currentReplay = false;
         inGame = false;
         stopTime();
+        
+        // Disabling menu items
+        restartLevel.setEnabled(false);
+        saveGame.setEnabled(false);
+        saveRecording.setEnabled(false);
 
         controls.setLayout(new GridLayout(3,1,0,0));
 
@@ -309,6 +329,11 @@ public class GameGUI {
         inGame = true;
         render.startBackgroundMusic();
         setChipsRemaining();
+        
+        // Enabling menu items
+        restartLevel.setEnabled(true);
+        saveGame.setEnabled(true);
+        saveRecording.setEnabled(true);
 
         constructControlGrid("LEVEL: " + String.format("%02d",this.level));
 
@@ -369,7 +394,7 @@ public class GameGUI {
                     if (timeBeforeNextMove >= 0) {
                         timer = new Timer();
                         timer.schedule(createTask(), timeBeforeNextMove,
-                                (long)(Replayer.DEFAULT_DELAY_MILLIS/replayer.getReplaySpeed()));
+                                (long)(100L/replayer.getReplaySpeed()));
                     }
                 } else {
                     // Step-by-step mode
@@ -400,6 +425,11 @@ public class GameGUI {
         if (replayer != null) { replayer.endCurrentReplay(); }
         constructControlGrid("LOAD REPLAY");
         replayer = new Replayer(this);
+        
+        // Disabling menu items
+        restartLevel.setEnabled(false);
+        saveGame.setEnabled(false);
+        saveRecording.setEnabled(false);
 
         //start button - enabled to toggle
         JButton startReplay = new JButton("Start Replay");

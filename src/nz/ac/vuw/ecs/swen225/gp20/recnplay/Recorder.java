@@ -91,8 +91,7 @@ public class Recorder {
 	public String saveGame() {
 		String fileName = null;
 		try {
-			fileName = generateSaveFileName();
-			Writer writer = Files.newBufferedWriter(Paths.get(fileName));
+			Writer writer = Files.newBufferedWriter(Paths.get("replays", generateSaveFileName()));
 			new Gson().toJson(actionHistory, writer);
 			writer.flush();
 			writer.close();
