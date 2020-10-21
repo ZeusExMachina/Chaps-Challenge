@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Controls the saving and loading of game states.
+ *
+ * @author Jared Boult 300256617
  */
 public class GameStateController {
 

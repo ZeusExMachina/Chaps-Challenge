@@ -12,6 +12,8 @@ import java.util.List;
  * This class collects all the data required to save and load
  * game states in a class to be easily serialised altogether
  * using the GSON library.
+ *
+ * @author Jared Boult 300256617
  */
 class State {
 
@@ -99,28 +101,6 @@ class State {
         }
         return result;
     }
-
-
-
-//    /**
-//     * Take the String representation of the Board and create
-//     * Tiles for each of the String entries
-//     * @return a 2D array of Tiles
-//     */
-//    private Tile[][] convertBoardToTile(){
-//        Tile[][] result = new Tile[board.length][board[0].length];
-//        for(int i = 0; i < board.length; i++){
-//            for(int j = 0; j < board[i].length; j++){
-//                String tileInfo = board[i][j];
-//                if(tileInfo == null){
-//                    result[i][j] = null;
-//                } else {
-//                    result[i][j] = convertToTile(tileInfo);
-//                }
-//            }
-//        }
-//        return result;
-//    }
 
     /**
      * Take a serialised String and create a new Tile from it

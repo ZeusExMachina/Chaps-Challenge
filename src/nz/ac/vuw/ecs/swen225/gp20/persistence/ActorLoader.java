@@ -14,7 +14,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
+ * This class is responsible for loading in the secondary actors from a
+ * Jar file stored in the levels directory
  *
+ * @author Jared Boult 300256617
  */
 public class ActorLoader {
 
@@ -92,6 +95,7 @@ public class ActorLoader {
             className = className.replace('/', '.');
             unknownClasses.get(levelNumber).add(cl.loadClass("nz.ac.vuw.ecs.swen225.gp20.maze." + className));
         }
+        jarFile.close();
     }
 
     /**
