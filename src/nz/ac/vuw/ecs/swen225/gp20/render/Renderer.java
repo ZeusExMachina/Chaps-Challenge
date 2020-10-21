@@ -163,7 +163,7 @@ public class Renderer {
       } catch (Exception e) {
         System.err.println(e.getMessage());
       }
-      return null;
+      return soundEffects.get("key");
   }
   
   /**
