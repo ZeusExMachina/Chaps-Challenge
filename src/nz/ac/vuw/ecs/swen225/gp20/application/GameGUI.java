@@ -33,9 +33,14 @@ public class GameGUI {
      */
     private final JFrame mainFrame = new JFrame("Chap's Challenge");
     /**
-     * left jPanel- content changes with each game state
+     * middle panel contained in controls
      */
-    private final JPanel controls = new JPanel();
+    private final JPanel midControl = new JPanel();
+
+    /**
+     * lower panel contained in controls
+     */
+    private final JPanel lowerControl = new JPanel();
     /**
      * Timer object for game, adjusts time display
      */
@@ -117,24 +122,25 @@ public class GameGUI {
     public GameGUI(){
 
 
+        //INITIALISE GAME STATE
         maze = Maze.getInstance();
-       // maze.setLevelLoader(loader);
         Canvas board = render.getCanvas();
+
+        //check for saved progress
         if(gameState.previousStateFound()){
             setGameLevel(gameState.getLevel());
             gameState.loadGameState();
             gameState.loadMazeState();
             startTime();
-            render.startBackgroundMusic();
             gameState.deletePreviousState();
         }else {
-            setGameLevel(level); //start loader on game start
+            setGameLevel(level);
         }
         render.setMaze(maze);
         render.display();
 
 
-
+        //CONSTRUCT FRAME
         mainFrame.setSize(900, 600);
         mainFrame.setVisible(true);
         mainFrame.setLayout(new GridBagLayout());
@@ -142,6 +148,8 @@ public class GameGUI {
         mainFrame.setResizable(false);
         mainFrame.setLayout(new BorderLayout());
 
+
+        //MENU BAR
         JMenuBar mb = new JMenuBar();
         JMenu load = new JMenu("Modes");
         mb.add(load);
@@ -178,13 +186,33 @@ public class GameGUI {
         mainFrame.setJMenuBar(mb);
 
 
-
+        //ADD MAP
         board.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
         mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
 
+        //SIDE PANEL
+        JPanel controls = new JPanel();
         controls.setSize(new Dimension((int)(0.3*mainFrame.getWidth()), mainFrame.getHeight()));
         mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
         controls.setPreferredSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
+        controls.setLayout(new GridLayout(2,1,0,0));
+
+        //panels inside controls - to change during program
+        JPanel upperControl = new JPanel();
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.setLayout(new GridLayout(2,1,10,0));
+        JLabel title = new JLabel("Chap's Challenge");
+        title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
+        title.setHorizontalAlignment(JLabel.CENTER);
+        titlePanel.add(title);
+        levelLabel.setFont(new java.awt.Font("Arial", ~Font.BOLD, 16));
+        titlePanel.add(levelLabel);
+        upperControl.add(titlePanel);
+
+        upperControl.add(midControl);
+        controls.add(upperControl);
+        controls.add(lowerControl);
 
         pauseMenu.setSize(350,200);
         pauseMenu.setLayout(new GridLayout(2,1,0,0));
@@ -226,7 +254,6 @@ public class GameGUI {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                //super.keyPressed(e);
                 if(!pauseState) {
                     if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
                         control = true;
@@ -243,7 +270,8 @@ public class GameGUI {
                 if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
             }
         });
-
+        midControl.setPreferredSize(new Dimension(controls.getWidth(), mainFrame.getHeight()/4));
+        //midControl.setBackground(Color.red);
         if(gameState.previousStateFound()){
             controlsGamePlay();
         }else{
@@ -269,33 +297,15 @@ public class GameGUI {
         currentReplay = false;
         inGame = false;
         stopTime();
-        controls.setLayout(new GridLayout(2,1,0,0));
-
-        JPanel topHalf = new JPanel();
-        topHalf.setLayout(new GridLayout(2,1,10,0));
-        JPanel bottomHalf = new JPanel();
-        controls.add(topHalf);
-        controls.add(bottomHalf);
-
-
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new GridLayout(2,1,10,0));
-        JLabel title = new JLabel("Chap's Challenge");
-        title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
-        title.setHorizontalAlignment(JLabel.CENTER);
-        titlePanel.add(title);
-        levelLabel.setFont(new java.awt.Font("Arial", ~Font.BOLD, 16));
-        titlePanel.add(levelLabel);
-        topHalf.add(titlePanel);
 
         JPanel startPanel = new JPanel();
         JButton startGame = new JButton("Start Game");
-        bottomHalf.setLayout(new GridLayout(10,2,10,0));
-        bottomHalf.add(new JLabel("Arrow Keys : Move"));
-        bottomHalf.add(new JLabel("Space      : Pause"));
-        bottomHalf.add(new JLabel("Esc        : Resume"));
-        bottomHalf.add(new JLabel("Ctrl + X   : Exit Game"));
-        bottomHalf.add(new JLabel("Ctrl + 1   : Reset Level"));
+        lowerControl.setLayout(new GridLayout(10,2,10,0));
+        lowerControl.add(new JLabel("Arrow Keys : Move"));
+        lowerControl.add(new JLabel("Space      : Pause"));
+        lowerControl.add(new JLabel("Esc        : Resume"));
+        lowerControl.add(new JLabel("Ctrl + X   : Exit Game"));
+        lowerControl.add(new JLabel("Ctrl + 1   : Reset Level"));
 
 
         startGame.setFocusable(false);
@@ -303,17 +313,15 @@ public class GameGUI {
             clearControlFrame();
             controlsGamePlay();
             resetMaze();
-            render.startBackgroundMusic();
             if (replayer != null) { replayer.endCurrentReplay(); }
         };
 
         startGame.addActionListener(aL);
         startPanel.add(startGame);
 
-        topHalf.add(startPanel);
+        midControl.add(startPanel);
 
-        controls.revalidate();
-        controls.repaint();
+        repaintDisplayPanels();
 
     }
 
@@ -323,17 +331,10 @@ public class GameGUI {
      */
     public void controlsGamePlay(){
         inGame = true;
-        //setGameLevel(level);
-        controls.setLayout(currentReplay ? new GridLayout(5,1,10,0) : new GridLayout(4,1,10,0));
+        render.startBackgroundMusic();
 
         setTime();
         setChipsRemaining();
-
-        //LEVEL
-        JPanel levelPanel = new JPanel();
-        levelLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
-        levelPanel.add(levelLabel);
-        controls.add(levelPanel);
 
 
         //TIME
@@ -341,81 +342,87 @@ public class GameGUI {
         timeLabel.setText("TIME: " + String.format("%03d",(int)timeVal));
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
         timerPanel.add(timeLabel);
-        controls.add(timerPanel);
+        midControl.add(timerPanel);
         
-        //REPLAYING
-        if (currentReplay) {
-        	JPanel replayPanel = new JPanel();
-        	JLabel replayLabel = new JLabel("Replay Controls");
-        	replayLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 18));
-
-        	JButton stepForward = new JButton("Step replay");
-        	stepForward.setEnabled(replayer != null && !replayer.isAutoReplaying());
-            stepForward.setFocusable(false);
-            stepForward.addActionListener(new ActionListener() {
-            	public void actionPerformed(java.awt.event.ActionEvent e) {
-            		if (replayer != null) {
-            			// Replay the next move and change the time
-            			double nextMoveTimestamp = replayer.replayNextAction();
-            			if (nextMoveTimestamp > 0) {
-            				timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
-            				timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
-            			}
-            		}
-            	}
-            });
-
-            JButton replayModeToggle = new JButton(
-            		replayer!=null&&replayer.isAutoReplaying() ? "Toggle to Step-by-Step" : "Toggle to Auto-replay");
-            replayModeToggle.setFocusable(false);
-            replayModeToggle.addActionListener(new ActionListener() {
-            	public void actionPerformed(ActionEvent e) {
-            		if (replayer != null) {
-                    	replayer.toggleReplayType();
-                    	if (replayer.isAutoReplaying()) {
-                    		// Auto-replay mode
-                    		replayModeToggle.setText("Toggle to Step-by-step");
-                    		stepForward.setEnabled(false);
-                    		long timeBeforeNextMove = replayer.getTimeBeforeNextMove();
-                    		if (timeBeforeNextMove >= 0) {
-	                    		timer = new Timer();
-	                            timer.schedule(createTask(), timeBeforeNextMove,
-	                            		(long)(Replayer.DEFAULT_DELAY_MILLIS/replayer.getReplaySpeed()));
-                    		}
-                    	} else {
-                    		// Step-by-step mode
-                    		replayModeToggle.setText("Toggle to Auto-replay");
-                    		stepForward.setEnabled(true);
-                    		stopTime();
-                    	}
-                    }
-            	}
-            });
-            
-            replayPanel.add(replayLabel);
-            replayPanel.add(replayModeToggle);
-            replayPanel.add(stepForward);
-        	controls.add(replayPanel);
-        }
-
+        lowerControl.setLayout(new GridLayout(2,1,0,0));
 
         //CHIPS
         JPanel chipsPanel = new JPanel();
         chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
         chipsPanel.add(chipsLabel);
-        controls.add(chipsPanel);
+        lowerControl.add(chipsPanel);
 
 
         //KEYS
         Inventory keysPanel = render.getInventory();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
-        controls.add(keysPanel);
+        lowerControl.add(keysPanel);
 
         // Start a new recorder
         recorder = new Recorder(level, timeVal);
 
-        controls.revalidate();
-        controls.repaint();
+        repaintDisplayPanels();
+    }
+
+    /**
+     * adjust control display for replay control options
+     */
+    public void operateReplayControls(){
+        //REPLAYING
+        if (currentReplay) {
+            JPanel replayPanel = new JPanel();
+            JLabel replayLabel = new JLabel("Replay Controls");
+            replayLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 18));
+
+            JButton stepForward = new JButton("Step replay");
+            stepForward.setEnabled(replayer != null && !replayer.isAutoReplaying());
+            stepForward.setFocusable(false);
+            stepForward.addActionListener(new ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    if (replayer != null) {
+                        // Replay the next move and change the time
+                        double nextMoveTimestamp = replayer.replayNextAction();
+                        if (nextMoveTimestamp > 0) {
+                            timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
+                            timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                        }
+                    }
+                }
+            });
+
+            JButton replayModeToggle = new JButton(
+                    replayer!=null&&replayer.isAutoReplaying() ? "Toggle to Step-by-Step" : "Toggle to Auto-replay");
+            replayModeToggle.setFocusable(false);
+            replayModeToggle.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (replayer != null) {
+                        replayer.toggleReplayType();
+                        if (replayer.isAutoReplaying()) {
+                            // Auto-replay mode
+                            replayModeToggle.setText("Toggle to Step-by-step");
+                            stepForward.setEnabled(false);
+                            long timeBeforeNextMove = replayer.getTimeBeforeNextMove();
+                            if (timeBeforeNextMove >= 0) {
+                                timer = new Timer();
+                                timer.schedule(createTask(), timeBeforeNextMove,
+                                        (long)(Replayer.DEFAULT_DELAY_MILLIS/replayer.getReplaySpeed()));
+                            }
+                        } else {
+                            // Step-by-step mode
+                            replayModeToggle.setText("Toggle to Auto-replay");
+                            stepForward.setEnabled(true);
+                            stopTime();
+                        }
+                    }
+                }
+            });
+
+            replayPanel.add(replayLabel);
+            replayPanel.add(replayModeToggle);
+            replayPanel.add(stepForward);
+            //controls.add(replayPanel);
+        }
+
     }
 
     /**
@@ -427,30 +434,23 @@ public class GameGUI {
         stopTime();
         if (replayer != null) { replayer.endCurrentReplay(); }
         replayer = new Replayer(this);
-        controls.setLayout(new GridLayout(2,1,10,0));
 
         //start button - enabled to toggle
         JButton startReplay = new JButton("Start Replay");
         startReplay.setEnabled(false);
 
-        //two frames for each half
-        JPanel topHalf = new JPanel();
-        topHalf.setLayout(new GridLayout(4,1,10,0));
-        controls.add(topHalf);
-        JPanel bottomHalf = new JPanel();
-        bottomHalf.setLayout(new GridLayout(1,2,10,0));
-        controls.add(bottomHalf);
 
         //top half - title and file select
         JLabel title = new JLabel("Replay Game");
         title.setFont(new java.awt.Font("Arial", Font.BOLD, 26));
         title.setHorizontalAlignment(JLabel.CENTER);
-        topHalf.add(title);
+        midControl.add(title);
 
+        lowerControl.setLayout(new GridLayout(2,1,0,0));
 
         //LOAD PANEL = LOAD FILE OPTIONS
         JPanel loadPanel = new JPanel();
-        topHalf.add(loadPanel);
+        midControl.add(loadPanel);
 
         JButton selectFile = new JButton("Load File");
         selectFile.setFocusable(false);
@@ -483,7 +483,7 @@ public class GameGUI {
 
         //SPEED PANEL - speed options
         JPanel speedPanel = new JPanel();
-        topHalf.add(speedPanel);
+        midControl.add(speedPanel);
         JLabel speedTitle = new JLabel("Replay Speed:");
         speedPanel.add(speedTitle);
         List<Double> speedValues = Replayer.REPLAY_SPEEDS;
@@ -495,7 +495,7 @@ public class GameGUI {
 
         //start panel - button and speed error
         JPanel startPanel = new JPanel();
-        topHalf.add(startPanel);
+        midControl.add(startPanel);
 
         ActionListener startAL = e -> {
             try {
@@ -511,8 +511,7 @@ public class GameGUI {
         startReplay.addActionListener(startAL);
         startPanel.add(startReplay);
 
-        controls.revalidate();
-        controls.repaint();
+        repaintDisplayPanels();
 
 
     }
@@ -558,10 +557,26 @@ public class GameGUI {
      */
     public void clearControlFrame(){
         inGame = false;
-        for(Component c : controls.getComponents()){
-            controls.remove(c);
+        for(Component c : midControl.getComponents()){
+            midControl.remove(c);
         }
-        controls.repaint();
+        midControl.repaint();
+        for(Component c : lowerControl.getComponents()){
+            lowerControl.remove(c);
+        }
+        lowerControl.repaint();
+    }
+
+    /**
+     * repaints mid and lower display frames after display changes
+     */
+    public void repaintDisplayPanels(){
+        lowerControl.revalidate();
+        lowerControl.repaint();
+        midControl.revalidate();
+        midControl.repaint();
+
+
     }
 
     /**
@@ -820,7 +835,6 @@ public class GameGUI {
         JButton restartButton = new JButton("Restart");
         restartButton.addActionListener(e -> {
             levelComplete.dispose();
-            render.startBackgroundMusic();
             clearControlFrame();
             resetMaze();
             controlsGamePlay();
