@@ -1,5 +1,7 @@
 package nz.ac.vuw.ecs.swen225.gp20.maze;
 
+import nz.ac.vuw.ecs.swen225.gp20.persistence.ActorLoader;
+import nz.ac.vuw.ecs.swen225.gp20.persistence.LevelLoader;
 import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
@@ -29,12 +31,20 @@ public class MazeTests {
 				"/////////"
 		};
 		Maze m = Maze.getInstance();
+		LevelLoader ll = new LevelLoader();
+		ActorLoader al = ll.getActorLoader();
+
 		String[] help = {"Unit tests"};
 		Set<Actor> monsters = new HashSet<>();
 		List<Direction> path = Arrays.asList(Direction.EAST, Direction.WEST);
-		monsters.add(new Monster(new Position(2,3), "monster", path));
+
+		Actor a1 = al.createSecondaryActor(2, "1", "monster",
+				new Position(2,3), path);
+		Actor a2 = al.createSecondaryActor(2, "1", "monster",
+				new Position(5,3), path);
+		monsters.add(a1);
 		m.loadLevel(in, help, monsters);
-		m.addSecondaryActor(new Monster(new Position(5,3), "monster", path));
+		m.addSecondaryActor(a2);
 		return m;
 	}
 
@@ -407,19 +417,5 @@ public class MazeTests {
 		m.moveChap(Direction.WEST);
 		assertFalse(m.isChapAlive());
 		assertEquals(2, m.getSecondaryActors().size());
-	}
-
-	/**
-	 * Test that actors without resources fail properly
-	 */
-	@Test
-	public void test19_badActor(){
-		Actor a = new Monster(new Position(3,3), "roach", Arrays.asList(Direction.EAST, Direction.EAST));
-		try {
-			assertNull(a.getImage());
-		} catch (RuntimeException e) {
-			return;
-		}
-		fail("Exception expected");
 	}
 }
