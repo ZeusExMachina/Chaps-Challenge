@@ -68,6 +68,7 @@ public class LevelLoader {
         for(File levelFile : levelFiles){
             try {
                 JsonReader reader = new JsonReader(new FileReader(levelFile, StandardCharsets.UTF_8));
+//                JsonReader reader = new JsonReader(new FileReader(levelFile));  // JAVA 8
                 Level currentLevel = gson.fromJson(reader, Level.class);
                 allLevels.put(currentLevel.getLevelNumber(), currentLevel);
             } catch(IOException ignored) {}

@@ -97,6 +97,7 @@ public class KeyTile extends Tile {
 
 	@Override
 	public String code() {
+//		return Character.toString((char)('a'+colour.ordinal()));  // JAVA 8
 		return Character.toString('a'+colour.ordinal());
 	}
 }

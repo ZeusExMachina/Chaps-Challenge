@@ -433,6 +433,7 @@ public class Maze {
 		return inventory.stream()
 				.map(Tile::getImage)
 				.collect(Collectors.toUnmodifiableList());
+//				.collect(Collectors.toList());  // JAVA 8
 	}
 
 	/**

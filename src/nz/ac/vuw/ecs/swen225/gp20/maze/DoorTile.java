@@ -72,6 +72,7 @@ public class DoorTile extends Tile {
 
 	@Override
 	public String code() {
+//		return Character.toString((char)('A'+colour.ordinal())); // JAVA 8
 		return Character.toString('A'+colour.ordinal());
 	}
 
