@@ -132,7 +132,6 @@ public class GameGUI {
             gameState.loadGameState();
             gameState.loadMazeState();
             startTime();
-            gameState.deletePreviousState();
         }else {
             setGameLevel(level);
         }
@@ -271,8 +270,9 @@ public class GameGUI {
             }
         });
         midControl.setPreferredSize(new Dimension(controls.getWidth(), mainFrame.getHeight()/4));
-        //midControl.setBackground(Color.red);
+
         if(gameState.previousStateFound()){
+            gameState.deletePreviousState();
             controlsGamePlay();
         }else{
             controlsStart();
@@ -698,7 +698,6 @@ public class GameGUI {
             Renderer.playSound(move);
         }
         maze.getChap().isMoving();
-        //if (maze.moveChap(d)) render.update();
         if(maze.isLevelDone()){
             levelCompleteDialog();
         }
