@@ -20,7 +20,7 @@ public class Renderer {
    */
   private static final Renderer instance = new Renderer();
   /**
-   *  all of the sound effects for the game.
+   * all of the sound effects for the game.
    */
   private static HashMap<String, Clip> soundEffects;
   /**
@@ -53,11 +53,12 @@ public class Renderer {
   
   /**
    * loads all of the sound effect files for the game.
+   *
    * @return a map of the filenames and the associated clips.
    */
   private HashMap<String, Clip> loadSoundFiles() {
     HashMap<String, Clip> sounds = new HashMap<>();
-    HashSet<String> audioFileNames = new HashSet<>(Arrays.asList("key","monster","chap","treasure","door","main_game"));
+    HashSet<String> audioFileNames = new HashSet<>(Arrays.asList("key", "monster", "chap", "treasure", "door", "main_game"));
     for (String filename : audioFileNames) {
       try {
         Clip clip = AudioSystem.getClip();
@@ -65,13 +66,13 @@ public class Renderer {
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioFile.toURI().toURL());
         clip.open(audioIn);
         sounds.put(filename, clip);
-      }catch(IOException | UnsupportedAudioFileException e){
+      } catch (IOException | UnsupportedAudioFileException e) {
         System.out.println(e.getLocalizedMessage());
-      }catch(LineUnavailableException e){
-         sounds.put(filename, sounds.get("key"));
+      } catch (LineUnavailableException e) {
+        sounds.put(filename, sounds.get("key"));
       }
     }
-   return sounds;
+    return sounds;
   }
   
   /**
@@ -143,7 +144,7 @@ public class Renderer {
    * stops the background music for the game.
    */
   public void stopBackgroundMusic() {
-    if(backgroundMusic != null) {
+    if (backgroundMusic != null) {
       backgroundMusic.stop();
     }
   }
@@ -155,14 +156,11 @@ public class Renderer {
    * @return the clip that is being played.
    */
   public static Clip playSound(String filename) {
-      try {
-        Clip clip = soundEffects.get(filename);
-        clip.setFramePosition(0);
-        clip.start();
-        return clip;
-      } catch (Exception e) {
-        return soundEffects.get("key");
-      }
+    Clip clip = soundEffects.get(filename);
+    if (clip == null) clip = soundEffects.get("key");
+    clip.setFramePosition(0);
+    clip.start();
+    return clip;
   }
   
   /**
