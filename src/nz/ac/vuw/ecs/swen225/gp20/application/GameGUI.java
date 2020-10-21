@@ -739,7 +739,7 @@ public class GameGUI {
         return new TimerTask() {
             @Override
             public void run() {
-                if (maze.getChap() != null) return;
+                if (maze.getChap() == null) return;
             	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
