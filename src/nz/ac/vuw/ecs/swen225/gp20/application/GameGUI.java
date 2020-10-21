@@ -126,6 +126,7 @@ public class GameGUI {
             gameState.loadMazeState();
             startTime();
             render.startBackgroundMusic();
+            gameState.deletePreviousState();
         }else {
             setGameLevel(level); //start loader on game start
         }
@@ -204,6 +205,7 @@ public class GameGUI {
                     pauseState = false;
                     hidePauseDialog();
                     timer = new Timer();
+                    render.startBackgroundMusic();
                     startTime();
                 }
             }
@@ -233,13 +235,6 @@ public class GameGUI {
                     } else {
                         singleKeyUse(e);
                     }
-                }else if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                    pauseState = false;
-                    System.out.println("Resume Game");
-                    hidePauseDialog();
-                    timer = new Timer();
-                    startTime();
-
                 }
             }
 
@@ -249,25 +244,11 @@ public class GameGUI {
             }
         });
 
-       ///TODO: IF previous save file exists - don;t load from start
         if(gameState.previousStateFound()){
-            //System.out.println("load previous save");
-
-            //gameState.loadState();
             controlsGamePlay();
-
-            //render.setMaze(maze);
-            //render.display();
-
         }else{
             controlsStart();
         }
-
-        //LOAD SAVE:
-        //set time, level info etc
-        //create timer task
-        //game potential starts as paused
-        //delete save
 
     }
 
@@ -370,6 +351,7 @@ public class GameGUI {
 
         	JButton stepForward = new JButton("Step replay");
         	stepForward.setEnabled(replayer != null && !replayer.isAutoReplaying());
+            stepForward.setFocusable(false);
             stepForward.addActionListener(new ActionListener() {
             	public void actionPerformed(java.awt.event.ActionEvent e) {
             		if (replayer != null) {
@@ -385,6 +367,7 @@ public class GameGUI {
 
             JButton replayModeToggle = new JButton(
             		replayer!=null&&replayer.isAutoReplaying() ? "Toggle to Step-by-Step" : "Toggle to Auto-replay");
+            replayModeToggle.setFocusable(false);
             replayModeToggle.addActionListener(new ActionListener() {
             	public void actionPerformed(ActionEvent e) {
             		if (replayer != null) {
@@ -673,6 +656,7 @@ public class GameGUI {
                     if (!pauseState) {
                         pauseState = true;
                         displayPauseDialog();
+                        render.stopBackgroundMusic();
                         timer.cancel();
                     } else {
                         System.out.println("game already paused");
@@ -855,7 +839,9 @@ public class GameGUI {
             setGameLevel(level + 1);
             levelComplete.dispose();
             clearControlFrame();
-            controlsStart();
+            resetMaze();
+            render.startBackgroundMusic();
+            controlsGamePlay();
         });
 
         if(!loader.getAllLevelNumbers().contains(this.level + 1)){//not the last level
