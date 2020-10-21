@@ -40,6 +40,8 @@ class State {
      */
     private final int treasuresLeft;
 
+
+
     /**
      * @param levelNumber the current level
      * @param timeVal clock or timer number
@@ -57,6 +59,11 @@ class State {
         this.board = board;
         this.inventory = inventory;
         this.treasuresLeft = treasuresLeft;
+    }
+
+
+    public int getLevelNumber() {
+        return levelNumber;
     }
 
     /**
