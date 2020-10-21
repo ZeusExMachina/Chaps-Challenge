@@ -241,7 +241,11 @@ public class GameGUI {
         //TODO: IF previous save file exists - don;t load from start
         if(gameState.previousStateFound()){
             System.out.println("load previous save");
+            controlsGamePlay();
             gameState.loadState();
+            render.setMaze(maze);
+            render.display();
+
         }else{
             controlsStart();
         }

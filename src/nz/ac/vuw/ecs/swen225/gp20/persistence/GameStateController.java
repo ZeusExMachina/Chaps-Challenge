@@ -10,12 +10,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Writer;
-import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,8 +36,8 @@ public class GameStateController {
     }
 
     /**
-     *
-     * @return
+     * Fetches the state variables and forms a State object to store them in
+     * @return a State object
      */
     private State createStateToSave(){
         int levelNumber = game.getLevel();
@@ -55,6 +53,7 @@ public class GameStateController {
     /**
      * Automatically saves a copy of the current game
      * state to the default location.
+     * @throws IOException if file cannot be written
      */
     public void saveState() throws IOException {
         State current = createStateToSave();
@@ -69,8 +68,10 @@ public class GameStateController {
     }
 
     /**
-     * @param board
-     * @return
+     * Converts the 2D array of Tiles representing the Board into
+     * a 2D array of Strings for serialisation by the Gson library.
+     * @param board the board from Maze
+     * @return a 2D array of Strings
      */
     private String[][] convertBoardToString(Tile[][] board){
         String[][] result = new String[board.length][board[0].length];
@@ -88,8 +89,10 @@ public class GameStateController {
     }
 
     /**
-     * @param inventory
-     * @return
+     * Converts the List of  Tiles representing the Inventory into
+     * a List of Strings for serialisation by the Gson library.
+     * @param inventory the inventory from Maze
+     * @return a List of Strings
      */
     private ArrayList<String> convertInventoryToString(List<Tile> inventory){
         ArrayList<String> result = new ArrayList<>();
@@ -113,13 +116,15 @@ public class GameStateController {
             } catch(IOException ignored) {}
         }
         if(savedState != null){
-            savedState.setMaze();
             savedState.setGame(game);
+            savedState.setMaze();
         }
     }
 
     /**
-     * @return
+     * Return an array containing the saved state JSON file or
+     * an empty array if the saved state doesn't exist
+     * @return an Array of Files that match a saved state format
      */
     private File[] detectStateFile(){
         File levelsFolder = new File("levels");
@@ -139,12 +144,13 @@ public class GameStateController {
     }
 
     /**
-     * @return
+     * Remove any previous state files saved
+     * @return true if successful, false if file could not be deleted
      */
     public boolean deletePreviousState(){
         for(File f : detectStateFile()){
             return f.delete();
         }
-        return false;
+        return true;
     }
 }

@@ -18,11 +18,21 @@ import java.util.jar.JarFile;
  */
 public class ActorLoader {
 
-    private Map<Integer, List<Class<?>>> unknownClasses = new HashMap<>();
-    private Map<Integer, Map<String, Class<?>>> verifiedClasses = new HashMap<>();
+    /**
+     * Classes that have been fetched from a jar file
+     */
+    private final Map<Integer, List<Class<?>>> unknownClasses = new HashMap<>();
+
+    /**
+     * Classes that have been verified as instances of Actor, stored first by level number,
+     * then by String code.
+     */
+    private final Map<Integer, Map<String, Class<?>>> verifiedClasses = new HashMap<>();
 
     /**
      * Constructor for the secondary actor loader
+     *
+     * @param allLoadedLevelNumbers a list of the levels found (by LevelLoader)
      */
     public ActorLoader(List<Integer> allLoadedLevelNumbers){
 
@@ -30,8 +40,10 @@ public class ActorLoader {
     }
 
     /**
+     * Find all classes stored in the jar files and verify they are valid
+     * Actor subclasses.
      *
-     * @param levelNumbers
+     * @param levelNumbers a list of the levels found (by LevelLoader)
      */
     private void initialise(List<Integer> levelNumbers){
         for(int num : levelNumbers){
@@ -47,9 +59,10 @@ public class ActorLoader {
 
 
     /**
+     * Find a jar file that matches the given level
      *
-     * @param levelNumber
-     * @return
+     * @param levelNumber the level number to check for jars
+     * @return a list of jar files that relate to the level
      */
     private File[] detectMatchingJarFile(int levelNumber){
         File jarFolder = new File("levels");
@@ -58,9 +71,13 @@ public class ActorLoader {
     }
 
     /**
-     * @param jar
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * Loop through the classes stored in a given jar file and store
+     * them by level number for later verification.
+     *
+     * @param jar the jar file that may hold secondary actors
+     *
+     * @throws IOException cannot read the jar file
+     * @throws ClassNotFoundException the secondary Actor class cannot be loaded
      */
     private void storeUnknownClasses(int levelNumber, File jar) throws IOException, ClassNotFoundException {
         JarFile jarFile = new JarFile(jar);
@@ -83,7 +100,8 @@ public class ActorLoader {
     }
 
     /**
-     *
+     * This instantiates an object of an unverified class and checks it
+     * is an instance of Actor, then stores it by level number
      */
     private void verifyClasses(){
         for (Integer levelNumber : unknownClasses.keySet()){

@@ -1,11 +1,9 @@
 package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
-import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Chap;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Tile;
-import nz.ac.vuw.ecs.swen225.gp20.recnplay.Recorder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +41,7 @@ class State {
     private final int treasuresLeft;
 
     /**
+     * @param levelNumber the current level
      * @param timeVal clock or timer number
      * @param chap The Actor
      * @param board The board
@@ -60,6 +59,9 @@ class State {
         this.treasuresLeft = treasuresLeft;
     }
 
+    /**
+     * Set the Maze with the loaded components
+     */
     public void setMaze(){
         List<Tile> loadedInventory = convertInventoryToTile();
         Tile[][] loadedBoard = convertBoardToTile();
@@ -67,25 +69,35 @@ class State {
 
     }
 
+    /**
+     * Set the GameGUI with the loaded components
+     * @param game the current Game class
+     */
     public void setGame(GameGUI game){
         game.setGameLevel(levelNumber);
-        game.setTime();
+        game.setTime(timeVal);
     }
 
-    public List<Tile> convertInventoryToTile(){
+    /**
+     * Take the String representation of the Inventory and
+     * create Tiles for each of the String entries
+     * @return a List of Tiles
+     */
+    private List<Tile> convertInventoryToTile(){
         ArrayList<Tile> result = new ArrayList<>();
         for(int i = 0; i < inventory.size(); i++){
             String tileInfo = inventory.get(i);
-            String[] coordinates = tileInfo.substring(1, tileInfo.length()-2).split(",");
-            int x = Integer.parseInt(coordinates[0]);
-            int y = Integer.parseInt(coordinates[1]);
-            char code = tileInfo.substring(tileInfo.length()-1).charAt(0);
-            result.add(Maze.getInstance().makeTile(code, x, y));
+            result.add(convertToTile(tileInfo));
         }
         return result;
     }
 
-    public Tile[][] convertBoardToTile(){
+    /**
+     * Take the String representation of the Board and create
+     * Tiles for each of the String entries
+     * @return a 2D array of Tiles
+     */
+    private Tile[][] convertBoardToTile(){
         Tile[][] result = new Tile[board.length][board[0].length];
         for(int i = 0; i < board.length; i++){
             for(int j = 0; j < board[i].length; j++){
@@ -93,14 +105,23 @@ class State {
                 if(tileInfo == null){
                     result[i][j] = null;
                 } else {
-                    String[] coordinates = tileInfo.substring(1, tileInfo.length()-2).split(",");
-                    int x = Integer.parseInt(coordinates[0]);
-                    int y = Integer.parseInt(coordinates[1]);
-                    char code = tileInfo.substring(tileInfo.length()-1).charAt(0);
-                    result[i][j] = Maze.getInstance().makeTile(code, x, y);
+                    result[i][j] = convertToTile(tileInfo);
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * Take a serialised String and create a new Tile from it
+     * @param tileInfo the String representation of a Tile
+     * @return a Tile object with the parameters provided
+     */
+    private Tile convertToTile(String tileInfo){
+        String[] coordinates = tileInfo.substring(1, tileInfo.length()-2).split(",");
+        int x = Integer.parseInt(coordinates[0]);
+        int y = Integer.parseInt(coordinates[1]);
+        char code = tileInfo.substring(tileInfo.length()-1).charAt(0);
+        return Maze.getInstance().makeTile(code, x, y);
     }
 }
