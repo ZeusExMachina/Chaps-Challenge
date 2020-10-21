@@ -131,7 +131,8 @@ public class GameGUI {
         if(gameState.previousStateFound()){
             setGameLevel(gameState.getLevel());
             gameState.loadGameState();
-            gameState.loadMazeState(loader.getLevelHelpText(level));
+            gameState.loadMazeState(loader.getLevelHelpText(level),
+                    loader.getActorLoader().getSetOfSecondaryActors(level, loader));
             startTime();
         }else {
             setGameLevel(level);

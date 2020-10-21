@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Controls the saving and loading of game states.
@@ -88,10 +89,11 @@ public class GameStateController {
      * Update Maze with data from the State object
      *
      * @param helpText the helpText for the level tiles
+     * @param secondaries the Set of secondary actors
      */
-    public void loadMazeState(String[] helpText){
+    public void loadMazeState(String[] helpText, Set<Actor> secondaries){
         State s = createState();
-        s.setMaze(helpText);
+        s.setMaze(helpText, secondaries);
     }
 
     /**

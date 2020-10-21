@@ -1,12 +1,14 @@
 package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
+import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Chap;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This class collects all the data required to save and load
@@ -74,10 +76,11 @@ class State {
     /**
      * Set the Maze with the loaded components
      * @param helpText The help text of the level
+     * @param secondaries The set of secondary actors
      */
-    public void setMaze(String[] helpText){
+    public void setMaze(String[] helpText, Set<Actor> secondaries){
         List<Tile> tileInventory = convertInventoryToTile();
-        Maze.getInstance().loadLevel(board, helpText,  chap, tileInventory, treasuresLeft);
+        Maze.getInstance().loadLevel(board, helpText,  chap, tileInventory, treasuresLeft, secondaries);
     }
 
     /**

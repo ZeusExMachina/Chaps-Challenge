@@ -117,9 +117,10 @@ public class Maze {
 	 * @param newChap new Chap object
 	 * @param inventoryToAdd new inventory
 	 * @param treasures new treasures left count
+	 * @param secondaries the Set of secondary Actors
 	 */
 	public void loadLevel(String[] in, String[] helpText, Actor newChap,
-						  List<Tile> inventoryToAdd, int treasures) {
+						  List<Tile> inventoryToAdd, int treasures, Set<Actor> secondaries) {
 		loadLevel(in, helpText, secondaries);
 		inventory.clear();
 		inventory.addAll(inventoryToAdd);
