@@ -115,6 +115,15 @@ public class GameGUI {
      * manages secondary actor movements
      */
     private int actorMoveCount = 1;
+    /**
+     * The amount of time in milliseconds between two calls of the TimerTask's run() method.
+     */
+    private static final long TIMER_INTERVAL_MILLIS = 50L;
+    /**
+     * The value at which actorMoveCount triggers the movement of all secondary actors.
+     */
+    private static final int MONSTER_MOVE_CONDITION = 300/(int)TIMER_INTERVAL_MILLIS;
+    
 
     /**
      * Constructor for the gui
@@ -371,12 +380,25 @@ public class GameGUI {
 
         ActionListener stepAL = e -> {
             if (replayer != null) {
-                // Replay the next move and change the time
-                double nextMoveTimestamp = replayer.replayNextAction();
-                if (nextMoveTimestamp > 0) {
-                    timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
-                    timeLabel.setText(String.format("%03d",((int)timeVal)));
-                }
+            	if (!replayer.hasMovesToReplay()) { replayCompleteDialog(); }
+            	else {
+            		// Replay the next move and change the time
+	            	long timeBeforeNextMove = replayer.getTimeBeforeNextMoveMillis();
+	                double nextMoveTimestamp = replayer.replayNextAction();
+	                if (nextMoveTimestamp > 0) {
+	                	// Adjust the displayed clock
+	                    timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
+	                    timeLabel.setText(String.format("%03d",((int)timeVal)));
+	                    // Move any monsters/secondary actors the appropriate amount of movements
+	                    for (double i = 0.0; i < (double)timeBeforeNextMove/(double)TIMER_INTERVAL_MILLIS; i+=1.0) {
+	                    	if (actorMoveCount == MONSTER_MOVE_CONDITION) {
+	                    		maze.moveSecondaryActors();
+	                    		actorMoveCount = 0;
+	                    	}
+	                    	actorMoveCount += 1;
+	                    }
+	                }
+            	}
             }
         };
         stepForward.addActionListener(stepAL);
@@ -391,12 +413,13 @@ public class GameGUI {
                     // Auto-replay mode
                     replayModeToggle.setText("Toggle to Step-by-step");
                     stepForward.setEnabled(false);
-                    long timeBeforeNextMove = replayer.getTimeBeforeNextMove();
+                    long timeBeforeNextMove = replayer.getTimeBeforeNextMoveMillis();
                     if (timeBeforeNextMove >= 0) {
                         timer = new Timer();
                         timer.schedule(createTask(), timeBeforeNextMove,
-                                (long)(100L/replayer.getReplaySpeed()));
+                                (long)(TIMER_INTERVAL_MILLIS/replayer.getReplaySpeed()));
                     }
+                    if (!replayer.hasMovesToReplay()) { replayCompleteDialog(); }
                 } else {
                     // Step-by-step mode
                     replayModeToggle.setText("Toggle to Auto-replay");
@@ -742,7 +765,7 @@ public class GameGUI {
         }
         maze.getChap().isMoving();
         if(maze.isLevelDone()){
-            levelCompleteDialog();
+            if (!currentReplay) levelCompleteDialog();
         }
         if (!currentReplay) recorder.recordNewAction(d, timeVal);
         setChipsRemaining();
@@ -756,7 +779,7 @@ public class GameGUI {
         stopTime();
         actorMoveCount = 1;
         timer = new Timer();
-        if (!currentReplay) { timer.schedule(createTask(), 500,100); }
+        if (!currentReplay) { timer.schedule(createTask(), 500, TIMER_INTERVAL_MILLIS); }
 
     }
 
@@ -782,12 +805,16 @@ public class GameGUI {
             @Override
             public void run() {
                 if (maze.getChap() == null || render == null) return;
-            	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
+            	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) {
+            		timer.cancel();
+            		replayCompleteDialog();
+            		return;
+            	}
                 timeLabel.setText(String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
                 render.update();
                 render.display();
-                if(actorMoveCount == 3){
+                if(actorMoveCount == MONSTER_MOVE_CONDITION){
                     maze.moveSecondaryActors();
                     for (Actor secondaryActor : maze.getSecondaryActors()) {
                         if(render.isPositionOnScreen(secondaryActor.getPosition())) Renderer.playSound(secondaryActor.getName());
@@ -802,7 +829,7 @@ public class GameGUI {
                     timer.cancel();
                     gameOverDialog(maze.isChapAlive());
                 }else{
-                    timeVal = timeVal - 0.1 ;
+                    timeVal = timeVal - TIMER_INTERVAL_MILLIS/1000.0;
                 }
             }
         };
@@ -917,6 +944,31 @@ public class GameGUI {
         levelComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 
 
+    }
+    
+    /**
+     * Display a dialog when a replay has finished.
+     */
+    public void replayCompleteDialog() {
+    	render.stopBackgroundMusic();
+        inGame = false;
+        JDialog replayComplete = new JDialog(mainFrame, "Replay Finished");
+        replayComplete.setSize(350,200);
+        JLabel replayCompleteLabel = new JLabel("Replay Finished", SwingConstants.CENTER);
+        replayCompleteLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        JPanel buttonFrame = new JPanel();
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> {
+            replayComplete.dispose();
+            clearControlFrame();
+            replayControls();
+        });
+        replayComplete.setLayout(new GridLayout(2,1,0,0));
+        replayComplete.add(replayCompleteLabel);
+        buttonFrame.add(closeButton);
+        replayComplete.add(buttonFrame);
+        replayComplete.setVisible(true);
+        replayComplete.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     }
 
     /**

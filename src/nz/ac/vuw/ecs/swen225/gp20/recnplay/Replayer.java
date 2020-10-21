@@ -58,10 +58,6 @@ public class Replayer {
 	 */
 	private Timer timer;
 	/**
-	 * The timestamp of the most recently-replayed move.
-	 */
-	private double lastMoveTimestamp;
-	/**
 	 * This object replays actions regularly while replaying in auto-replay mode.
 	 */
 	private ActionPlayer replayedAction;
@@ -95,7 +91,6 @@ public class Replayer {
 		this.autoReplaying = false;
 		this.replaySpeed = 1.0;
 		this.currentTimeInReplay = 0.0;
-		this.lastMoveTimestamp = 0.0;
 		this.replayedAction = new ActionPlayer();
 	}
 
@@ -162,21 +157,11 @@ public class Replayer {
 	/**
 	 * Get the time before the next move in a loaded game record.
 	 * @return the time before the next move from the current time in the 
-	 * 		   recording, or -1 if there is no loaded game
+	 * 		   recording in milliseconds, or -1 if there is no loaded game
 	 */
-	public long getTimeBeforeNextMove() {
-		return gameRecordHistory!=null&&!gameRecordHistory.isEmpty() ?
-				(long)(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : -1L;
-	}
-	
-	/**
-	 * Get the time difference between the most recently-replayed move and the 
-	 * next move to replay.
-	 * @return the time difference between the previous and next moves, or -1 if there is no loaded game
-	 */
-	public double getPrevAndNextMoveTimeDiff() {
-		return gameRecordHistory!=null&&!gameRecordHistory.isEmpty() ?
-				gameRecordHistory.peek().getTimeStamp()-lastMoveTimestamp : -1.0;
+	public long getTimeBeforeNextMoveMillis() {
+		return (long) (gameRecordHistory!=null&&!gameRecordHistory.isEmpty() ?
+				1000*(gameRecordHistory.peek().getTimeStamp()-currentTimeInReplay) : -1L);
 	}
 
 	// ----------------------------------------------
@@ -199,9 +184,7 @@ public class Replayer {
 			if (gameRecordHistory != null && !gameRecordHistory.isEmpty()) {
 				// If the next action was performed at this time in the recorded game, replay the action
 				if (gameRecordHistory.peek().getTimeStamp() <= currentTimeInReplay) {
-					ActionRecord moveToReplay = gameRecordHistory.poll();
-					gui.moveCalled(moveToReplay.getMoveDirection());
-					lastMoveTimestamp = moveToReplay.getTimeStamp();
+					gui.moveCalled(gameRecordHistory.poll().getMoveDirection());
 				}
 				// Check if the replay has finished. If so, stop auto-replaying.
 				if (gameRecordHistory.isEmpty()) {
@@ -269,7 +252,7 @@ public class Replayer {
 		timer = new Timer();
 		replayedAction = new ActionPlayer();
 		timer.schedule(replayedAction,
-				getTimeBeforeNextMove(), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
+				getTimeBeforeNextMoveMillis(), (long)(DEFAULT_DELAY_MILLIS/replaySpeed));
 	}
 	
 	/**
@@ -279,7 +262,6 @@ public class Replayer {
 		stopTimer();
 		if (gameRecordHistory != null) { gameRecordHistory.clear(); }
 		currentTimeInReplay = 0.0;
-		lastMoveTimestamp = 0.0;
 	}
 
 	// ----------------------------------------------
