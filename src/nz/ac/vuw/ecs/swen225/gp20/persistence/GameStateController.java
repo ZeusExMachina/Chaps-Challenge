@@ -106,7 +106,7 @@ public class GameStateController {
     /**
      * Loads a game state from the default location.
      */
-    public void loadState(){
+    public State loadState(){
         Gson gson = new Gson();
         State savedState = null;
         for(File state : detectStateFile()){
@@ -115,10 +115,14 @@ public class GameStateController {
                 savedState = gson.fromJson(reader, State.class);
             } catch(IOException ignored) {}
         }
-        if(savedState != null){
-            savedState.setGame(game);
-            savedState.setMaze();
+        return savedState;
+    }
+
+    public int getLevel(){
+        if(loadState() != null){
+            return loadState().getLevelNumber();
         }
+        return 0;
     }
 
     /**
