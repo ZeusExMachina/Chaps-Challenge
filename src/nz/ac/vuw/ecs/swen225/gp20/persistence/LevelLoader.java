@@ -125,7 +125,7 @@ public class LevelLoader {
      *         List of List of Directions, one for each secondary Actor
      */
     public Map<String, List<List<Direction>>> getLevelActorPaths(int levelNumber){
-        if(!invalidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorPaths();
@@ -138,7 +138,7 @@ public class LevelLoader {
      *         Actor name
      */
     public Map<String, String> getLevelActorNames(int levelNumber){
-        if(!invalidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorNames();
