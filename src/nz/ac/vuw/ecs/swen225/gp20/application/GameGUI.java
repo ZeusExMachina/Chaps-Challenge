@@ -691,7 +691,7 @@ public class GameGUI {
      * @param d value of direction enum
      */
     public void moveCalled(Direction d){
-        setChipsRemaining();
+
         String move = maze.moveChap(d);
         if (move != null) {
             render.update();
@@ -703,6 +703,7 @@ public class GameGUI {
             levelCompleteDialog();
         }
         if (currentReplay) recorder.recordNewAction(d, timeVal);
+        setChipsRemaining();
     }
 
     /**
