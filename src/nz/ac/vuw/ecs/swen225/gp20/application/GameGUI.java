@@ -593,6 +593,7 @@ public class GameGUI {
             maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
             setChipsRemaining();
             render.update();
+            stopTime();
             startTime();
         } catch (Exception e) {
             e.printStackTrace();
@@ -738,10 +739,12 @@ public class GameGUI {
         return new TimerTask() {
             @Override
             public void run() {
+                if (maze.getChap() != null) return;
             	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
                 render.update();
+                render.display();
                 if(actorMoveCount == 3){
                     maze.moveSecondaryActors();
                     for (Actor secondaryActor : maze.getSecondaryActors()) {

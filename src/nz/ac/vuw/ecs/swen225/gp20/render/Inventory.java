@@ -28,6 +28,7 @@ public class Inventory extends JPanel {
    * @param g - Graphics component to draw with.
    */
   public void paint(Graphics g){
+    g.clearRect(0, 0, getWidth(), getHeight());
     if(inventoryImages == null)return;
     int xIndex = 0;
     int yIndex = 0;
