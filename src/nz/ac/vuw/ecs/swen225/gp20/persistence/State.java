@@ -129,6 +129,6 @@ class State {
         int x = Integer.parseInt(coordinates[0]);
         int y = Integer.parseInt(coordinates[1]);
         char code = tileInfo.substring(tileInfo.length()-1).charAt(0);
-        return Maze.getInstance().makeTile(code, x, y);
+        return Maze.getInstance().makeTile(code, y, x);
     }
 }
