@@ -57,7 +57,7 @@ public class Renderer {
    */
   private HashMap<String, Clip> loadSoundFiles() {
     HashMap<String, Clip> sounds = new HashMap<>();
-    HashSet<String> audioFileNames = new HashSet<>(Arrays.asList("monster","chap","treasure","door","key","main_game"));
+    HashSet<String> audioFileNames = new HashSet<>(Arrays.asList("key","monster","chap","treasure","door","main_game"));
     for (String filename : audioFileNames) {
       try {
         Clip clip = AudioSystem.getClip();
