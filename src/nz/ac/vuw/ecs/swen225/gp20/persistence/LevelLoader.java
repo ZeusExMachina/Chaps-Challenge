@@ -13,6 +13,8 @@ import java.util.*;
 
 /**
  *  A class responsible for loading level data from json files.
+ *
+ * @author Jared Boult 300256617
  */
 public class LevelLoader {
 

@@ -10,6 +10,8 @@ import java.util.Map;
  * This class represents a level of the game. Each Level consists of a
  * level number, a clock value, and a layout of tiles. Each of these classes
  * contains information read in from a JSON file in the levels folder.
+ *
+ * @author Jared Boult 300256617
  */
 class Level {
 
