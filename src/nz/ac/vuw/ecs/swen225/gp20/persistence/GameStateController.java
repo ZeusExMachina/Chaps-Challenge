@@ -153,7 +153,8 @@ public class GameStateController {
 
     /**
      * Remove any previous state files saved
-     * @return true if successful, false if file could not be deleted
+     * @return true if deleted successfully or file never existed,
+     * false if file could not be deleted.
      */
     public boolean deletePreviousState(){
         for(File f : detectStateFile()){

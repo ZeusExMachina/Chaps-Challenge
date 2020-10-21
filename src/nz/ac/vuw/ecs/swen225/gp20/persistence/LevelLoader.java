@@ -151,7 +151,7 @@ public class LevelLoader {
      *         List of Positions, one for each secondary actor.
      */
     public Map<String, List<Position>> getLevelActorPositions(int levelNumber){
-        if(!invalidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorPositions();
