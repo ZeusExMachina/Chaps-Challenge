@@ -161,9 +161,8 @@ public class Renderer {
         clip.start();
         return clip;
       } catch (Exception e) {
-        System.err.println(e.getMessage());
+        return soundEffects.get("key");
       }
-      return soundEffects.get("key");
   }
   
   /**
