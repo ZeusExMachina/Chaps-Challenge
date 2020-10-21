@@ -336,27 +336,35 @@ public class GameGUI {
         setChipsRemaining();
 
 
+        //grid layout
+        JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new GridLayout(3,2,0,10));
+
         //TIME
-        JPanel timerPanel = new JPanel();
-        timeLabel.setText("TIME: " + String.format("%03d",(int)timeVal));
+
+        JLabel timeTitle = new JLabel("Time: ", SwingConstants.RIGHT);
+        timeTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
+        statsPanel.add(timeTitle);
+        timeLabel.setText(String.format("%03d",(int)timeVal));
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
-        timerPanel.add(timeLabel);
-        midControl.add(timerPanel);
-        
-        lowerControl.setLayout(new GridLayout(2,1,0,0));
+        statsPanel.add(timeLabel);
 
         //CHIPS
-        JPanel chipsPanel = new JPanel();
-        chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
-        chipsPanel.add(chipsLabel);
-        lowerControl.add(chipsPanel);
+        JLabel chipsTitle1 = new JLabel("Chips  ", SwingConstants.RIGHT);
+        chipsTitle1.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
+        JLabel chipsTitle = new JLabel("Remaining: ", SwingConstants.RIGHT);
+        chipsTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
+        statsPanel.add(chipsTitle1);
+        statsPanel.add(new JLabel());
+        statsPanel.add(chipsTitle);
+        chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 24));
+        statsPanel.add(chipsLabel);
 
-
+        midControl.add(statsPanel);
         //KEYS
         Inventory keysPanel = render.getInventory();
         keysPanel.setBorder(BorderFactory.createTitledBorder("Inventory"));
         lowerControl.add(keysPanel);
-
         // Start a new recorder
         recorder = new Recorder(level, timeVal);
 
@@ -383,7 +391,7 @@ public class GameGUI {
                         double nextMoveTimestamp = replayer.replayNextAction();
                         if (nextMoveTimestamp > 0) {
                             timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
-                            timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                            timeLabel.setText(String.format("%03d",((int)timeVal)));
                         }
                     }
                 }
@@ -740,7 +748,7 @@ public class GameGUI {
             public void run() {
                 if (maze.getChap() == null) return;
             	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
-                timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
+                timeLabel.setText(String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
                 render.update();
                 render.display();
@@ -776,7 +784,8 @@ public class GameGUI {
      * Set number of chips remaining in maze object
      */
     public void setChipsRemaining(){
-        chipsLabel.setText("Chips Remaining: " + maze.getTreasuresLeft());
+        chipsLabel.setText(String.format("%03d",(maze.getTreasuresLeft())));
+
 
     }
 
