@@ -272,7 +272,7 @@ public class GameGUI {
         midControl.setPreferredSize(new Dimension(controls.getWidth(), mainFrame.getHeight()/4));
 
         if(gameState.previousStateFound()){
-            gameState.deletePreviousState();
+            System.out.println(gameState.deletePreviousState());
             controlsGamePlay();
         }else{
             controlsStart();
@@ -311,6 +311,7 @@ public class GameGUI {
         startGame.setFocusable(false);
         ActionListener aL = e -> {
             clearControlFrame();
+            setTime();
             controlsGamePlay();
             resetMaze();
             if (replayer != null) { replayer.endCurrentReplay(); }
@@ -332,8 +333,6 @@ public class GameGUI {
     public void controlsGamePlay(){
         inGame = true;
         render.startBackgroundMusic();
-
-        setTime();
         setChipsRemaining();
 
 
@@ -459,7 +458,7 @@ public class GameGUI {
         ActionListener aL = e -> {
             JFileChooser j = new JFileChooser();
             j.showOpenDialog(mainFrame);
-            try { //TODO: test for valid file format
+            try {
                 replayer.loadGameReplay(j.getSelectedFile());
                 fileNameDisplay.setForeground(Color.black);
                 fileNameDisplay.setText(j.getSelectedFile().getName());
@@ -503,6 +502,7 @@ public class GameGUI {
                 setGameLevel(replayer.getRecordingLevel());
                 resetMaze();
                 clearControlFrame();
+                setTime();
                 controlsGamePlay();
             } catch (IllegalArgumentException | NullPointerException exp) {
                 System.out.println("Error loading replay");
@@ -837,6 +837,7 @@ public class GameGUI {
             levelComplete.dispose();
             clearControlFrame();
             resetMaze();
+            setTime();
             controlsGamePlay();
         });
 
@@ -855,6 +856,7 @@ public class GameGUI {
             clearControlFrame();
             resetMaze();
             render.startBackgroundMusic();
+            setTime();
             controlsGamePlay();
         });
 
@@ -894,7 +896,7 @@ public class GameGUI {
      * @param t - time left
      */
     public void setTime(double t){
-        this.timeVal = t; //TODO: this does NOT create associated timer task
+        this.timeVal = t;
     }
 
 }
