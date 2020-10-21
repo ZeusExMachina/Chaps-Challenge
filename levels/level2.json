@@ -25,7 +25,7 @@
   "clock": 120,
   "levelNumber": 2,
   "helpText": [
-    "Don\u0027t touch the monsters!\n(Monsters to be added soon)\n"
+    "Don\u0027t touch the monsters!\nUse each key wisely.\n"
   ],
   "secondaryActorPaths": {
     "1": [
