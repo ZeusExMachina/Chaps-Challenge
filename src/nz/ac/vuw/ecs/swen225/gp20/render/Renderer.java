@@ -64,10 +64,11 @@ public class Renderer {
         File audioFile = new File("resources/sounds/" + filename + ".wav");
         AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioFile.toURI().toURL());
         clip.open(audioIn);
-        
         sounds.put(filename, clip);
-      }catch(LineUnavailableException | IOException | UnsupportedAudioFileException e){
+      }catch(IOException | UnsupportedAudioFileException e){
         System.out.println(e.getLocalizedMessage());
+      }catch(LineUnavailableException e){
+         sounds.put(filename, sounds.get("key"));
       }
     }
    return sounds;
