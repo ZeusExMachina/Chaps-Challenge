@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 import nz.ac.vuw.ecs.swen225.gp20.maze.*;
-import nz.ac.vuw.ecs.swen225.gp20.recnplay.Recorder;
 
 import java.io.File;
 import java.io.FileReader;
@@ -37,14 +36,14 @@ public class GameStateController {
 
     /**
      * Fetches the state variables and forms a State object to store them in
+     *
      * @return a State object
      */
     private State createStateToSave(){
         int levelNumber = game.getLevel();
         double timeVal = game.getTime();
-        Recorder recorder = game.getRecorder();
         Chap chap = (Chap) Maze.getInstance().getChap();
-        String[][] board = convertBoardToString(Maze.getInstance().getBoard());
+        String[] board = Maze.getInstance().toString().split("\\n");
         ArrayList<String> inventory = convertInventoryToString(Maze.getInstance().getInventory());
         int treasuresLeft = Maze.getInstance().getTreasuresLeft();
         return new State(levelNumber, timeVal, chap, board, inventory, treasuresLeft);
@@ -53,6 +52,7 @@ public class GameStateController {
     /**
      * Automatically saves a copy of the current game
      * state to the default location.
+     *
      * @throws IOException if file cannot be written
      */
     public void saveState() throws IOException {
@@ -68,46 +68,33 @@ public class GameStateController {
     }
 
     /**
-     * Converts the 2D array of Tiles representing the Board into
-     * a 2D array of Strings for serialisation by the Gson library.
-     * @param board the board from Maze
-     * @return a 2D array of Strings
-     */
-    private String[][] convertBoardToString(Tile[][] board){
-        String[][] result = new String[board.length][board[0].length];
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[i].length; j++){
-                Tile tile = board[i][j];
-                if(tile == null){
-                    result[i][j] = null;
-                } else {
-                    result[i][j] = tile.getPosition().toString() + tile.code();
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
      * Converts the List of  Tiles representing the Inventory into
      * a List of Strings for serialisation by the Gson library.
+     *
      * @param inventory the inventory from Maze
      * @return a List of Strings
      */
     private ArrayList<String> convertInventoryToString(List<Tile> inventory){
         ArrayList<String> result = new ArrayList<>();
-        for(int i = 0; i < inventory.size(); i++){
-            Tile tile = inventory.get(i);
+        for (Tile tile : inventory) {
             result.add(tile.getPosition().toString() + tile.code());
         }
         return result;
     }
 
-    public void loadMazeState(){
+    /**
+     * Update Maze with data from the State object
+     *
+     * @param helpText the helpText for the level tiles
+     */
+    public void loadMazeState(String[] helpText){
         State s = createState();
-        s.setMaze();
+        s.setMaze(helpText);
     }
 
+    /**
+     * Update GameGUI with data from the State object
+     */
     public void loadGameState(){
         State s = createState();
         s.setGame(game);
@@ -115,6 +102,8 @@ public class GameStateController {
 
     /**
      * Loads a game state from the default location.
+     *
+     * @return a State object
      */
     public State createState(){
         Gson gson = new Gson();
@@ -128,6 +117,11 @@ public class GameStateController {
         return savedState;
     }
 
+    /**
+     * Get the level number of the saved game
+     *
+     * @return the level of the saved game
+     */
     public int getLevel(){
         if(createState() != null){
             return createState().getLevelNumber();

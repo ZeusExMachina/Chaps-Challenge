@@ -19,20 +19,18 @@ import java.util.jar.JarFile;
 public class ActorLoader {
 
     /**
-     * Classes that have been fetched from a jar file
+     * Stores classes pulled from jar files in the levels directory, by level number.
      */
     private final Map<Integer, List<Class<?>>> unknownClasses = new HashMap<>();
-
     /**
-     * Classes that have been verified as instances of Actor, stored first by level number,
-     * then by String code.
+     * Stores classes that are verified as subtypes of Actor by level number, then
+     * by String code.
      */
     private final Map<Integer, Map<String, Class<?>>> verifiedClasses = new HashMap<>();
 
     /**
      * Constructor for the secondary actor loader
-     *
-     * @param allLoadedLevelNumbers a list of the levels found (by LevelLoader)
+     * @param allLoadedLevelNumbers the levels loaded successfully by
      */
     public ActorLoader(List<Integer> allLoadedLevelNumbers){
 
@@ -40,10 +38,10 @@ public class ActorLoader {
     }
 
     /**
-     * Find all classes stored in the jar files and verify they are valid
-     * Actor subclasses.
+     * Stores any classes found in jar files, then verifies them as
+     * valid secondary actor classes in a field.
      *
-     * @param levelNumbers a list of the levels found (by LevelLoader)
+     * @param levelNumbers the levels already loaded
      */
     private void initialise(List<Integer> levelNumbers){
         for(int num : levelNumbers){
@@ -59,25 +57,22 @@ public class ActorLoader {
 
 
     /**
-     * Find a jar file that matches the given level
-     *
-     * @param levelNumber the level number to check for jars
-     * @return a list of jar files that relate to the level
+     * Find jar files with the correct name in the levels directory
+     * @param levelNumber a specific level number
+     * @return an Array of matching jar files
      */
     private File[] detectMatchingJarFile(int levelNumber){
         File jarFolder = new File("levels");
         return jarFolder.listFiles(((dir, name) ->
-                name.matches("level" + String.valueOf(levelNumber) + ".jar")));
+                name.matches("level" + levelNumber + ".jar")));
     }
 
     /**
-     * Loop through the classes stored in a given jar file and store
-     * them by level number for later verification.
-     *
-     * @param jar the jar file that may hold secondary actors
-     *
-     * @throws IOException cannot read the jar file
-     * @throws ClassNotFoundException the secondary Actor class cannot be loaded
+     * Store any classes found in the jar files
+     * @param levelNumber A level number
+     * @param jar A jar file from levels directory
+     * @throws IOException If cannot access the jar file
+     * @throws ClassNotFoundException If class cannot be created
      */
     private void storeUnknownClasses(int levelNumber, File jar) throws IOException, ClassNotFoundException {
         JarFile jarFile = new JarFile(jar);
@@ -100,8 +95,7 @@ public class ActorLoader {
     }
 
     /**
-     * This instantiates an object of an unverified class and checks it
-     * is an instance of Actor, then stores it by level number
+     *
      */
     private void verifyClasses(){
         for (Integer levelNumber : unknownClasses.keySet()){
@@ -123,9 +117,10 @@ public class ActorLoader {
     }
 
     /**
-     *
-     * @param levelNumber
-     * @return
+     * Create the secondary actors stored in the Level file
+     * @param levelNumber A level number
+     * @param levelLoader the levelLoader object
+     * @return a Set of Actors
      */
     public Set<Actor> getSetOfSecondaryActors(int levelNumber, LevelLoader levelLoader){
         Set<Actor> actors = new HashSet<>();
@@ -144,17 +139,20 @@ public class ActorLoader {
 
     /**
      * Returns an Actor object
-     * @param code
-     * @param n
-     * @param p
-     * @param path
-     * @return
+     *
+     * @param levelNumber a Level number
+     * @param code the single character String representation of an Actor
+     * @param name the Actor name
+     * @param position the Actor position
+     * @param path the Actor's path of Directions
+     * @return a Actor object
      */
-    public Actor createSecondaryActor(Integer levelNumber, String code, String n, Position p, List<Direction> path){
+    public Actor createSecondaryActor(Integer levelNumber, String code, String name,
+                                      Position position, List<Direction> path){
         Object o = null;
         try{
             o = verifiedClasses.get(levelNumber).get(code).getDeclaredConstructor(Position.class,
-                    String.class, List.class).newInstance(p, n, path);
+                    String.class, List.class).newInstance(position, name, path);
         } catch (InstantiationException | InvocationTargetException
                 | NoSuchMethodException | IllegalAccessException e) {
             e.printStackTrace();
@@ -163,8 +161,9 @@ public class ActorLoader {
     }
 
     /**
-     * @param levelNumber
-     * @return
+     * Checks if secondary actors classes were found for a given level.
+     * @param levelNumber a Level number
+     * @return True if imported classes were found.
      */
     public boolean isRequiredForThisLevel(int levelNumber){
         return verifiedClasses.containsKey(levelNumber) && !verifiedClasses.get(levelNumber).isEmpty();

@@ -45,6 +45,9 @@ class Level {
      */
     private final Map<String, String> secondaryActorNames;
 
+    /**
+     *
+     */
     private final Map<String, List<Position>> secondaryActorPositions;
 
     /**
@@ -69,13 +72,14 @@ class Level {
 
     /**
      * Constructor for a Level including secondary actors
-     * @param levelNumber
-     * @param levelLayout
-     * @param clock
-     * @param helpText
-     * @param secondaryActorPaths
-     * @param secondaryActorNames
-     * @param secondaryActorPositions
+     *
+     * @param levelNumber the Level number
+     * @param levelLayout The Maze board as a String array
+     * @param clock the clock/time value
+     * @param helpText the Level's help text
+     * @param secondaryActorPaths the secondary actors paths
+     * @param secondaryActorNames the secondary actors names
+     * @param secondaryActorPositions the secondary actors positions
      */
     protected Level(int levelNumber, String[] levelLayout, int clock, String[] helpText, Map<String,
             List<List<Direction>>> secondaryActorPaths, Map<String, String> secondaryActorNames,
@@ -89,14 +93,29 @@ class Level {
         this.secondaryActorPositions = secondaryActorPositions;
     }
 
+    /**
+     * Getter for the secondary actor paths
+     * @return A Map storing a List of List of Directions, with
+     *         the key as the Actor string code
+     */
     public Map<String, List<List<Direction>>> getSecondaryActorPaths() {
         return secondaryActorPaths;
     }
 
+    /**
+     * Getter for the secondary actor names
+     * @return A Map storing a List of names, with
+     *         the key as the Actor string code
+     */
     public Map<String, String> getSecondaryActorNames() {
         return secondaryActorNames;
     }
 
+    /**
+     * Getter for the secondary actor positions
+     * @return A Map of containing a List of Positions, with
+     *         the key as the Actor string code
+     */
     public Map<String, List<Position>> getSecondaryActorPositions() {
         return secondaryActorPositions;
     }

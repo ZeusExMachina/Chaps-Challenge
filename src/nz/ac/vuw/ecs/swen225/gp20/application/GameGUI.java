@@ -130,7 +130,7 @@ public class GameGUI {
         if(gameState.previousStateFound()){
             setGameLevel(gameState.getLevel());
             gameState.loadGameState();
-            gameState.loadMazeState();
+            gameState.loadMazeState(loader.getLevelHelpText(level));
             startTime();
         }else {
             setGameLevel(level);

@@ -28,9 +28,9 @@ class State {
      */
     private final Chap chap;
     /**
-     * The board field in Maze
+     * The board in Maze as a String
      */
-    private final String[][] board;
+    private final String[] board;
     /**
      * The inventory field in Maze
      */
@@ -51,7 +51,7 @@ class State {
      * @param treasuresLeft The treasuresLeft number
      */
     public State(int levelNumber, double timeVal, Chap chap,
-                 String[][] board, ArrayList<String> inventory,
+                 String[] board, ArrayList<String> inventory,
                     int treasuresLeft){
         this.levelNumber = levelNumber;
         this.timeVal = timeVal;
@@ -61,19 +61,21 @@ class State {
         this.treasuresLeft = treasuresLeft;
     }
 
-
+    /**
+     * Get the level number
+     * @return the level number
+     */
     public int getLevelNumber() {
         return levelNumber;
     }
 
     /**
      * Set the Maze with the loaded components
+     * @param helpText The help text of the level
      */
-    public void setMaze(){
-        List<Tile> loadedInventory = convertInventoryToTile();
-        Tile[][] loadedBoard = convertBoardToTile();
-        Maze.getInstance().loadLevel(loadedBoard, chap, loadedInventory, treasuresLeft);
-
+    public void setMaze(String[] helpText){
+        List<Tile> tileInventory = convertInventoryToTile();
+        Maze.getInstance().loadLevel(board, helpText,  chap, tileInventory, treasuresLeft);
     }
 
     /**
@@ -92,32 +94,33 @@ class State {
      */
     private List<Tile> convertInventoryToTile(){
         ArrayList<Tile> result = new ArrayList<>();
-        for(int i = 0; i < inventory.size(); i++){
-            String tileInfo = inventory.get(i);
+        for (String tileInfo : inventory) {
             result.add(convertToTile(tileInfo));
         }
         return result;
     }
 
-    /**
-     * Take the String representation of the Board and create
-     * Tiles for each of the String entries
-     * @return a 2D array of Tiles
-     */
-    private Tile[][] convertBoardToTile(){
-        Tile[][] result = new Tile[board.length][board[0].length];
-        for(int i = 0; i < board.length; i++){
-            for(int j = 0; j < board[i].length; j++){
-                String tileInfo = board[i][j];
-                if(tileInfo == null){
-                    result[i][j] = null;
-                } else {
-                    result[i][j] = convertToTile(tileInfo);
-                }
-            }
-        }
-        return result;
-    }
+
+
+//    /**
+//     * Take the String representation of the Board and create
+//     * Tiles for each of the String entries
+//     * @return a 2D array of Tiles
+//     */
+//    private Tile[][] convertBoardToTile(){
+//        Tile[][] result = new Tile[board.length][board[0].length];
+//        for(int i = 0; i < board.length; i++){
+//            for(int j = 0; j < board[i].length; j++){
+//                String tileInfo = board[i][j];
+//                if(tileInfo == null){
+//                    result[i][j] = null;
+//                } else {
+//                    result[i][j] = convertToTile(tileInfo);
+//                }
+//            }
+//        }
+//        return result;
+//    }
 
     /**
      * Take a serialised String and create a new Tile from it

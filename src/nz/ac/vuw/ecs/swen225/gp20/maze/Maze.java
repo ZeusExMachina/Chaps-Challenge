@@ -112,17 +112,19 @@ public class Maze {
 	/**
 	 * Load level from serialised objects as a result of loading game.
 	 *
-	 * @param newBoard new array of tiles forming board
+	 * @param in input board String array
+	 * @param helpText the level help text array
 	 * @param newChap new Chap object
 	 * @param inventoryToAdd new inventory
 	 * @param treasures new treasures left count
 	 */
-	public void loadLevel(Tile[][] newBoard, Actor newChap, List<Tile> inventoryToAdd, int treasures) {
+	public void loadLevel(String[] in, String[] helpText, Actor newChap,
+						  List<Tile> inventoryToAdd, int treasures) {
+		loadLevel(in, helpText, secondaries);
 		inventory.clear();
 		inventory.addAll(inventoryToAdd);
 		treasuresLeft = treasures;
 		chap = newChap;
-		board = newBoard;
 	}
 
 	/**
@@ -361,16 +363,6 @@ public class Maze {
 	public Actor getChap() {
 		return chap;
 	}
-
-	/**
-	 * Retrieve the game board ONLY for saving game state.
-	 * @return tile array forming game board
-	 */
-	public Tile[][] getBoard() {
-		return board;
-	}
-
-
 
 	/**
 	 * Retrieve the contents of the inventory  ONLY for saving game state.

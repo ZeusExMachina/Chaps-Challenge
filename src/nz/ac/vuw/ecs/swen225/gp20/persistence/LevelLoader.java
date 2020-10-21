@@ -2,7 +2,6 @@ package nz.ac.vuw.ecs.swen225.gp20.persistence;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
-import nz.ac.vuw.ecs.swen225.gp20.maze.Actor;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 
@@ -21,20 +20,14 @@ public class LevelLoader {
      * Stores the JSON files that hold level layout data
      */
     private final File[] levelFiles;
-
     /**
      * Store the Level objects created from the JSON files
      */
     private final TreeMap<Integer, Level> levels;
-
-    /***
-     * Store the secondary Actor objects created from the jar and JSON files
+    /**
+     * The ActorLoader object
      */
-    private final TreeMap<String, Actor> secondaryActor = null;
-
-    private int currentLevel = 0;
-
-    private ActorLoader actorLoader;
+    private final ActorLoader actorLoader;
 
     /**
      * Constructor for LevelLoader.
@@ -82,8 +75,8 @@ public class LevelLoader {
      * @param levelNumber The number of the level (starting from 1)
      * @return True if there is a level that matches the level number given.
      */
-    private boolean isValidLevel(int levelNumber){
-        return levels.containsKey(levelNumber);
+    private boolean invalidLevel(int levelNumber){
+        return !levels.containsKey(levelNumber);
     }
 
     /**
@@ -93,11 +86,8 @@ public class LevelLoader {
      * @return A String representation of the level layout.
      */
     public String[] getLevelLayout(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
-        }
-        if (currentLevel != levelNumber){
-            currentLevel = levelNumber;
         }
         return levels.get(levelNumber).getLayout();
     }
@@ -109,7 +99,7 @@ public class LevelLoader {
      * @return The amount of time in seconds to complete the level
      */
     public int getLevelClock(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getClock();
@@ -122,40 +112,49 @@ public class LevelLoader {
      * @return The help text in an array
      */
     public String[] getLevelHelpText(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getHelpText();
     }
 
+    /**
+     * Get any secondary actor paths for a given level.
+     * @param levelNumber a Level number
+     * @return A map where the key is the Actor code and there is a
+     *         List of List of Directions, one for each secondary Actor
+     */
     public Map<String, List<List<Direction>>> getLevelActorPaths(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(!invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorPaths();
     }
 
+    /**
+     * Get the secondary actor names for a given level.
+     * @param levelNumber a Level number
+     * @return A map where the key is the Actor code and the value is the
+     *         Actor name
+     */
     public Map<String, String> getLevelActorNames(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(!invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorNames();
     }
 
+    /**
+     * Get the secondary actor positions for a given level.
+     * @param levelNumber a Level number
+     * @return A map where the key is the Actor code and the value is the
+     *         List of Positions, one for each secondary actor.
+     */
     public Map<String, List<Position>> getLevelActorPositions(int levelNumber){
-        if(!isValidLevel(levelNumber)){
+        if(!invalidLevel(levelNumber)){
             throw new IllegalArgumentException("That level number is invalid.");
         }
         return levels.get(levelNumber).getSecondaryActorPositions();
-    }
-
-
-    /***
-     * Get current level
-     * @return the current level number.
-     */
-    public int getCurrentLevel() {
-        return currentLevel;
     }
 
     /**
@@ -167,8 +166,8 @@ public class LevelLoader {
     }
 
     /**
-     *
-     * @return
+     * Getter for the ActorLoader
+     * @return the ActorLoader object
      */
     public ActorLoader getActorLoader() {
         return actorLoader;
