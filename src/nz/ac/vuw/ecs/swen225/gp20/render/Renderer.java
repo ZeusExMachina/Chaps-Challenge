@@ -3,11 +3,12 @@ package nz.ac.vuw.ecs.swen225.gp20.render;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Maze;
 import nz.ac.vuw.ecs.swen225.gp20.maze.Position;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Class the controls the display and information sent to
@@ -18,6 +19,10 @@ public class Renderer {
    * The current instance of Renderer.
    */
   private static final Renderer instance = new Renderer();
+  /**
+   *  all of the sound effects for the game.
+   */
+  private static HashMap<String, Clip> soundEffects;
   /**
    * The current Maze instance, needed to send game information to
    * the canvas and inventory.
@@ -43,6 +48,29 @@ public class Renderer {
   private Renderer() {
     canvas = new Canvas();
     inventory = new Inventory();
+    soundEffects = loadSoundFiles();
+  }
+  
+  /**
+   * loads all of the sound effect files for the game.
+   * @return a map of the filenames and the associated clips.
+   */
+  private HashMap<String, Clip> loadSoundFiles() {
+    HashMap<String, Clip> sounds = new HashMap<>();
+    HashSet<String> audioFileNames = new HashSet<>(Arrays.asList("monster","chap","treasure","door","key","main_game"));
+    for (String filename : audioFileNames) {
+      try {
+        Clip clip = AudioSystem.getClip();
+        File audioFile = new File("resources/sounds/" + filename + ".wav");
+        AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioFile.toURI().toURL());
+        clip.open(audioIn);
+        
+        sounds.put(filename, clip);
+      }catch(LineUnavailableException | IOException | UnsupportedAudioFileException e){
+        System.out.println(e.getLocalizedMessage());
+      }
+    }
+   return sounds;
   }
   
   /**
@@ -127,10 +155,8 @@ public class Renderer {
    */
   public static Clip playSound(String filename) {
       try {
-        Clip clip = AudioSystem.getClip();
-        File audioFile = new File("resources/sounds/" + filename + ".wav");
-        AudioInputStream audioIn = AudioSystem.getAudioInputStream(audioFile.toURI().toURL());
-        clip.open(audioIn);
+        Clip clip = soundEffects.get(filename);
+        clip.setFramePosition(0);
         clip.start();
         return clip;
       } catch (Exception e) {
