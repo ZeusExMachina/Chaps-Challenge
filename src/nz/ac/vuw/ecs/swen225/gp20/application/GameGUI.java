@@ -244,25 +244,11 @@ public class GameGUI {
             }
         });
 
-       ///TODO: IF previous save file exists - don;t load from start
         if(gameState.previousStateFound()){
-            //System.out.println("load previous save");
-
-            //gameState.loadState();
             controlsGamePlay();
-
-            //render.setMaze(maze);
-            //render.display();
-
         }else{
             controlsStart();
         }
-
-        //LOAD SAVE:
-        //set time, level info etc
-        //create timer task
-        //game potential starts as paused
-        //delete save
 
     }
 
@@ -853,7 +839,9 @@ public class GameGUI {
             setGameLevel(level + 1);
             levelComplete.dispose();
             clearControlFrame();
-            controlsStart();
+            resetMaze();
+            render.startBackgroundMusic();
+            controlsGamePlay();
         });
 
         if(!loader.getAllLevelNumbers().contains(this.level + 1)){//not the last level
