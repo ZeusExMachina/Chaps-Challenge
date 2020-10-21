@@ -40,6 +40,7 @@ public class GameGUI {
      * Timer object for game, adjusts time display
      */
     private Timer timer = new Timer();
+
     /**
      * current game level - always starts with 1
      */
@@ -118,7 +119,19 @@ public class GameGUI {
 
         maze = Maze.getInstance();
        // maze.setLevelLoader(loader);
-        setGameLevel(level); //start loader on game start
+        Canvas board = render.getCanvas();
+        if(gameState.previousStateFound()){
+            setGameLevel(gameState.getLevel());
+            gameState.loadGameState();
+            gameState.loadMazeState();
+            startTime();
+            render.startBackgroundMusic();
+        }else {
+            setGameLevel(level); //start loader on game start
+        }
+        render.setMaze(maze);
+        render.display();
+
 
 
         mainFrame.setSize(900, 600);
@@ -163,9 +176,8 @@ public class GameGUI {
 
         mainFrame.setJMenuBar(mb);
 
-        Canvas board = render.getCanvas();
-        render.setMaze(maze);
-        render.display();
+
+
         board.setSize((int)(0.7*mainFrame.getWidth()), mainFrame.getHeight());
         mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
 
@@ -237,10 +249,16 @@ public class GameGUI {
             }
         });
 
-        //TODO: IF previous save file exists - don;t load from start
+       ///TODO: IF previous save file exists - don;t load from start
         if(gameState.previousStateFound()){
-            System.out.println("load previous save");
-            gameState.loadState();
+            //System.out.println("load previous save");
+
+            //gameState.loadState();
+            controlsGamePlay();
+
+            //render.setMaze(maze);
+            //render.display();
+
         }else{
             controlsStart();
         }
@@ -251,6 +269,14 @@ public class GameGUI {
         //game potential starts as paused
         //delete save
 
+    }
+
+    /**
+     * Get the current level
+     * @return the level number
+     */
+    public int getLevel() {
+        return level;
     }
 
     /**
@@ -316,7 +342,7 @@ public class GameGUI {
      */
     public void controlsGamePlay(){
         inGame = true;
-        setGameLevel(level);
+        //setGameLevel(level);
         controls.setLayout(currentReplay ? new GridLayout(5,1,10,0) : new GridLayout(4,1,10,0));
 
         setTime();
@@ -343,7 +369,7 @@ public class GameGUI {
         	replayLabel.setFont(new java.awt.Font("Arial", Font.BOLD, 18));
 
         	JButton stepForward = new JButton("Step replay");
-        	stepForward.setEnabled(replayer!=null ? !replayer.isAutoReplaying() : false);
+        	stepForward.setEnabled(replayer != null && !replayer.isAutoReplaying());
             stepForward.addActionListener(new ActionListener() {
             	public void actionPerformed(java.awt.event.ActionEvent e) {
             		if (replayer != null) {
@@ -354,7 +380,7 @@ public class GameGUI {
             				timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
             			}
             		}
-            	};
+            	}
             });
 
             JButton replayModeToggle = new JButton(
@@ -516,18 +542,30 @@ public class GameGUI {
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
         levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
         Set<Actor> secondaries = new HashSet<>();
-        if (loader.getActorLoader().isRequiredForThisLevel(levelNum)) {
-            secondaries = loader.getActorLoader().getSetOfSecondaryActors(levelNum, loader);
+        if (loader.getActorLoader().isRequiredForThisLevel(level)) {
+            secondaries = loader.getActorLoader().getSetOfSecondaryActors(level, loader);
         }
         maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
     }
+
+//    /**
+//     * load secondary actors for level
+//     */
+//    public Set<Actor> loadSecondaryActors(){
+//
+//        return secondaries;
+//    }
 
     /**
      * save the current game state and exit the program
      */
     public void saveGameState(){
         System.out.println("Saving Game state...");
-        gameState.saveState();
+        try{
+            gameState.saveState();
+        } catch (IOException e){
+            return;
+        }
         System.exit(0);
     }
 
@@ -703,7 +741,7 @@ public class GameGUI {
             	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) { timer.cancel(); return; }
                 timeLabel.setText("TIME: " + String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
-                render.display();
+                render.update();
                 if(actorMoveCount == 3){
                     maze.moveSecondaryActors();
                     for (Actor secondaryActor : maze.getSecondaryActors()) {

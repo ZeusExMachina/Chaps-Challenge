@@ -114,7 +114,9 @@ public class Renderer {
    * stops the background music for the game.
    */
   public void stopBackgroundMusic() {
-    backgroundMusic.stop();
+    if(backgroundMusic != null) {
+      backgroundMusic.stop();
+    }
   }
   
   /**

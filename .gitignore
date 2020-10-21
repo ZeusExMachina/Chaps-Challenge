@@ -1,3 +1,4 @@
 # Don't upload compiled code
 /out/
 *.class
+/levels/saved_state.json
