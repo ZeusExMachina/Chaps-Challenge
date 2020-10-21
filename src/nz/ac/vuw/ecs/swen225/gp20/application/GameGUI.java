@@ -13,10 +13,7 @@ import nz.ac.vuw.ecs.swen225.gp20.render.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -58,17 +55,9 @@ public class GameGUI {
      */
     private final GameStateController gameState = new GameStateController(this);
     /**
-     * A button in the drop-down menu to restart the current level.
+     * menu bar item to hold game controls - only usable in game
      */
-    private final JMenuItem restartLevel = new JMenuItem("Restart Level");
-    /**
-     * A button in the drop-down menu to save the current game state and exit the program.
-     */
-    private final JMenuItem saveGame = new JMenuItem("Save and Exit");
-    /**
-     * A button in the drop-down menu to save a recording of the current game.
-     */
-    private final JMenuItem saveRecording = new JMenuItem("Save Recording");
+    private final JMenu inGameMenu = new JMenu("Game");
     /**
      * responsible for time level display, adjusted in timer task
      */
@@ -138,11 +127,7 @@ public class GameGUI {
 
         //check for saved progress
         if(gameState.previousStateFound()){
-            setGameLevel(gameState.getLevel());
-            gameState.loadGameState();
-            gameState.loadMazeState(loader.getLevelHelpText(level),
-                    loader.getActorLoader().getSetOfSecondaryActors(level, loader));
-            startTime();
+            resumeLevel();
         }else {
             setGameLevel(level);
         }
@@ -150,126 +135,153 @@ public class GameGUI {
         render.display();
 
 
-        //CONSTRUCT FRAME
-        mainFrame.setSize(900, 600);
-        mainFrame.setVisible(true);
-        mainFrame.setLayout(new GridBagLayout());
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setResizable(false);
-        mainFrame.setLayout(new BorderLayout());
+        render.setMaze(maze);
+            render.display();
+
+            //CONSTRUCT FRAME
+            mainFrame.setSize(900, 600);
+            mainFrame.setVisible(true);
+            mainFrame.setLayout(new GridBagLayout());
+            mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainFrame.setResizable(false);
+            mainFrame.setLayout(new BorderLayout());
 
 
-        //MENU BAR
-        JMenuBar mb = new JMenuBar();
-        JMenu load = new JMenu("Modes");
-        mb.add(load);
+            //MENU BAR
+            JMenuBar mb = new JMenuBar();
+            JMenu load = new JMenu("Modes");
+            mb.add(load);
+            mb.add(inGameMenu);
 
-        JMenuItem loadReplay = new JMenuItem("Load Replay");
-        JMenuItem gameMenu = new JMenuItem("Main Menu");
+            JMenuItem restartLevel = new JMenuItem("Restart Level");
+            JMenuItem saveGame = new JMenuItem("Save and Exit");
+            JMenuItem saveRecording = new JMenuItem("Save Recording");
 
-        loadReplay.addActionListener(e -> {
-            clearControlFrame();
-            replayControls();
-        });
+            JMenuItem loadReplay = new JMenuItem("Load Replay");
+            JMenuItem gameMenu = new JMenuItem("Main Menu");
 
-        restartLevel.addActionListener(e -> {
-            //restart the game - from current level
-            resetMaze();
-            setTime();
-            clearControlFrame();
-            controlsGamePlay();
-        });
+            loadReplay.addActionListener(e -> {
+                clearControlFrame();
+                replayControls();
+            });
 
-        saveGame.addActionListener(e -> saveGameState());
-        
-        saveRecording.addActionListener(e -> {
-        	if (!currentReplay && recorder!=null) { recorder.saveGame(); }
-        });
+            restartLevel.addActionListener(e -> {
+                //restart the game - from current level
+                resetMaze();
+                setTime();
+                clearControlFrame();
+                controlsGamePlay();
+            });
 
-        gameMenu.addActionListener(e -> {
-            render.stopBackgroundMusic();
-            clearControlFrame();
-            controlsStart();
-        });
-        load.add(loadReplay);
-        load.add(gameMenu);
-        load.add(restartLevel);
-        load.add(saveGame);
-        load.add(saveRecording);
+            saveGame.addActionListener(e -> saveGameState());
 
-        mainFrame.setJMenuBar(mb);
-
-        //ADD MAP
-        board.setSize((2*(mainFrame.getWidth()/3)), mainFrame.getHeight());
-        mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
-
-        //SIDE PANEL
-        //controls.setSize(new Dimension((int)(mainFrame.getWidth()/3), mainFrame.getHeight()));
-        mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
-        controls.setPreferredSize(new Dimension(mainFrame.getWidth()/3, mainFrame.getHeight()));
-
-
-        pauseMenu.setSize(350,200);
-        pauseMenu.setLayout(new GridLayout(2,1,0,0));
-        JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
-        pauseTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
-        pauseMenu.add(pauseTitle);
-        pauseMenu.add(new JLabel("ESC to resume", SwingConstants.CENTER));
-        pauseMenu.setLocationRelativeTo(null);
-        pauseMenu.setVisible(false);
-        pauseMenu.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-
-            }
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-                    pauseState = false;
-                    hidePauseDialog();
-                    timer = new Timer();
-                    render.startBackgroundMusic();
-                    startTime();
+            saveRecording.addActionListener(e -> {
+                if (!currentReplay && recorder != null) {
+                    recorder.saveGame();
                 }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
+            });
 
-            }
-        });
+            gameMenu.addActionListener(e -> {
+                render.stopBackgroundMusic();
+                clearControlFrame();
+                controlsStart();
+            });
+            load.add(loadReplay);
+            load.add(gameMenu);
+            inGameMenu.add(restartLevel);
+            inGameMenu.add(saveGame);
+            inGameMenu.add(saveRecording);
 
-        board.addKeyListener(new KeyAdapter() {
-            /**
-             * true if control key is currently held down
-             */
-            boolean control = false;
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
+            mainFrame.setJMenuBar(mb);
 
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if(!pauseState) {
-                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                        control = true;
-                    } else if (control) {
-                        controlKeyUse(e);
-                    } else {
-                        singleKeyUse(e);
+            //ADD MAP
+            board.setSize((2 * (mainFrame.getWidth() / 3)), mainFrame.getHeight());
+            mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
+
+            //SIDE PANEL
+            mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
+            mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            controls.setPreferredSize(new Dimension(mainFrame.getWidth() / 3, mainFrame.getHeight()));
+
+
+            pauseMenu.setSize(350, 200);
+            pauseMenu.setLayout(new GridLayout(2, 1, 0, 0));
+            JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
+            pauseTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+            pauseMenu.add(pauseTitle);
+            pauseMenu.add(new JLabel("ESC to resume", SwingConstants.CENTER));
+            pauseMenu.setLocationRelativeTo(null);
+            pauseMenu.setVisible(false);
+            pauseMenu.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+            pauseMenu.addKeyListener(new KeyListener() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        pauseState = false;
+                        hidePauseDialog();
+                        timer = new Timer();
+                        render.startBackgroundMusic();
+                        startTime();
                     }
                 }
-            }
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
-            }
-        });
 
-        if(gameState.previousStateFound()){
-            controlsGamePlay();
-        }else{
-            controlsStart();
-        }
+                @Override
+                public void keyReleased(KeyEvent e) {
+
+                }
+            });
+
+            board.addKeyListener(new KeyAdapter() {
+                /**
+                 * true if control key is currently held down
+                 */
+                boolean control = false;
+
+                @Override
+                public void keyTyped(KeyEvent e) {
+                }
+
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (!pauseState) {
+                        if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                            control = true;
+                        } else if (control) {
+                            controlKeyUse(e);
+                        } else {
+                            singleKeyUse(e);
+                        }
+                    }
+                }
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
+                }
+            });
+
+        controlsStart();
+            if (gameState.previousStateFound()) {
+                clearControlFrame();
+                controlsGamePlay();
+            }
+
+    }
+
+    /**
+     * resume level from saved file
+     */
+    public void resumeLevel(){
+        setGameLevel(gameState.getLevel());
+        gameState.loadGameState();
+        gameState.loadMazeState(loader.getLevelHelpText(level),
+                loader.getActorLoader().getSetOfSecondaryActors(level, loader));
+        startTime();
 
     }
 
@@ -289,12 +301,9 @@ public class GameGUI {
 
         currentReplay = false;
         inGame = false;
-        stopTime();
         
         // Disabling menu items
-        restartLevel.setEnabled(false);
-        saveGame.setEnabled(false);
-        saveRecording.setEnabled(false);
+        inGameMenu.setEnabled(false);
 
         controls.setLayout(new GridLayout(3,1,0,0));
 
@@ -304,13 +313,22 @@ public class GameGUI {
         JButton startGame = new JButton("Start Game");
 
 
-        JPanel lowerPanel = new JPanel();
-        lowerPanel.setLayout(new GridLayout(10,2,10,0));
-        lowerPanel.add(new JLabel("Arrow Keys : Move"));
-        lowerPanel.add(new JLabel("Space      : Pause"));
-        lowerPanel.add(new JLabel("Esc        : Resume"));
-        lowerPanel.add(new JLabel("Ctrl + X   : Exit Game"));
-        lowerPanel.add(new JLabel("Ctrl + 1   : Reset Level"));
+        JPanel controlDisplay = new JPanel();
+        controlDisplay.setLayout(new GridLayout(7,2,10,0));
+        controlDisplay.add(new JLabel("Arrow Keys :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Move"));
+        controlDisplay.add(new JLabel("Space :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Pause"));
+        controlDisplay.add(new JLabel("Esc :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Resume"));
+        controlDisplay.add(new JLabel("Ctrl + X :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Exit Game"));
+        controlDisplay.add(new JLabel("Ctrl + 1 :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Reset Level One"));
+        controlDisplay.add(new JLabel("Ctrl + P :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Reset Level"));
+        controlDisplay.add(new JLabel("Ctrl + S :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Save & Exit"));
 
 
         startGame.setFocusable(false);
@@ -325,7 +343,7 @@ public class GameGUI {
         startGame.addActionListener(aL);
         startPanel.add(startGame);
         controls.add(startPanel);
-        controls.add(lowerPanel);
+        controls.add(controlDisplay);
 
         repaintDisplayPanels();
 
@@ -341,9 +359,7 @@ public class GameGUI {
         setChipsRemaining();
         
         // Enabling menu items
-        restartLevel.setEnabled(true);
-        saveGame.setEnabled(true);
-        saveRecording.setEnabled(true);
+        inGameMenu.setEnabled(true);
 
         constructControlGrid("LEVEL: " + String.format("%02d",this.level));
 
@@ -451,9 +467,7 @@ public class GameGUI {
         replayer = new Replayer(this);
         
         // Disabling menu items
-        restartLevel.setEnabled(false);
-        saveGame.setEnabled(false);
-        saveRecording.setEnabled(false);
+        inGameMenu.setEnabled(false);
 
         //start button - enabled to toggle
         JButton startReplay = new JButton("Start Replay");
@@ -542,27 +556,32 @@ public class GameGUI {
     public JPanel createGameStatsPanel(int size){
         //grid layout
         JPanel statsPanel = new JPanel();
-        statsPanel.setLayout(new GridLayout(4,2,0,10));
+        statsPanel.setLayout(new GridLayout(2,1,0,0));
 
         //TIME
+        JPanel timePanel = new JPanel();
+        timePanel.setLayout(new GridLayout(0,2,0,0));
         JLabel timeTitle = new JLabel("Time: ", SwingConstants.RIGHT);
         timeTitle.setFont(new java.awt.Font("Arial", Font.BOLD, size));
-        statsPanel.add(timeTitle);
+        timePanel.add(timeTitle);
         timeLabel.setText(String.format("%03d",(int)timeVal));
         timeLabel.setFont(new java.awt.Font("Arial", Font.BOLD, size));
-        statsPanel.add(timeLabel);
+        timePanel.add(timeLabel);
+        statsPanel.add(timePanel);
 
         //CHIPS
+        JPanel chipsPanel = new JPanel();
+        chipsPanel.setLayout(new GridLayout(2,2,0,0));
         JLabel chipsTitle1 = new JLabel("Chips  ", SwingConstants.RIGHT);
         chipsTitle1.setFont(new java.awt.Font("Arial", Font.BOLD, size));
         JLabel chipsTitle = new JLabel("Remaining: ", SwingConstants.RIGHT);
         chipsTitle.setFont(new java.awt.Font("Arial", Font.BOLD, size));
-        for(int i = 0; i < 2; i++) statsPanel.add(new JLabel());
-        statsPanel.add(chipsTitle1);
-        statsPanel.add(new JLabel());
-        statsPanel.add(chipsTitle);
+        chipsPanel.add(chipsTitle1);
+        chipsPanel.add(new JLabel());
+        chipsPanel.add(chipsTitle);
         chipsLabel.setFont(new java.awt.Font("Arial", Font.BOLD, size));
-        statsPanel.add(chipsLabel);
+        chipsPanel.add(chipsLabel);
+        statsPanel.add(chipsPanel);
 
         return statsPanel;
     }
@@ -689,22 +708,35 @@ public class GameGUI {
 
             case KeyEvent.VK_X:
                 //exit the program
+                gameState.deletePreviousState();
                 System.exit(0);
                 break;
             case KeyEvent.VK_S:
-                saveGameState();
-                break;
-            case KeyEvent.VK_R:
-                System.out.println("Resume saved game");
+                if(inGame && !currentReplay)saveGameState();
                 break;
             case KeyEvent.VK_P:
-                System.out.println("Last Unfinished Level");
-                break;
-            case KeyEvent.VK_1:
                 //restart the game - from current level
                 resetMaze();
                 clearControlFrame();
+                stopTime();
                 controlsStart();
+                break;
+            case KeyEvent.VK_1:
+                //restart the game - from first level
+                setGameLevel(1);
+                resetMaze();
+                clearControlFrame();
+                stopTime();
+                controlsStart();
+                break;
+            case KeyEvent.VK_R:
+                //restart the game - from current level
+                if(gameState.previousStateFound()) {
+                    resetMaze();
+                    resumeLevel();
+                    clearControlFrame();
+                    controlsGamePlay();
+                }
                 break;
             default:
                 break;
@@ -868,6 +900,7 @@ public class GameGUI {
         restartButton.addActionListener(e -> {
             timeOutDisplay.dispose();
             clearControlFrame();
+            stopTime();
             controlsStart();
         });
         timeOutDisplay.setLayout(new GridLayout(2,1,0,0));
@@ -916,6 +949,7 @@ public class GameGUI {
         menuButton.addActionListener(e -> {
             levelComplete.dispose();
             clearControlFrame();
+            stopTime();
             controlsStart();
         });
 
