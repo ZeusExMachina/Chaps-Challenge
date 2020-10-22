@@ -433,6 +433,7 @@ public class Maze {
 	 * @return chap's position
 	 */
 	public Position getChapPosition() {
+		if (chap == null) return null;
 		return chap.getPosition();
 	}
 
@@ -441,6 +442,7 @@ public class Maze {
 	 * @return chap's image
 	 */
 	public BufferedImage getChapImage() {
+		if (chap == null) return null;
 		return chap.getImage();
 	}
 
