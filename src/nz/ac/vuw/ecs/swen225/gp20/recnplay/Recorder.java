@@ -14,7 +14,7 @@ import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 /**
  * Stores the history of actions done by actors in a game.
  * Can also save the current history as a JSON file.
- * @author Elijah Guarina
+ * @author Elijah Guarina 300447332
  */
 public class Recorder {
 	
