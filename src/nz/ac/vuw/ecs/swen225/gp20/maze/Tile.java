@@ -6,6 +6,8 @@ import java.io.IOException;
 
 /**
  * Tiles make up the maze.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public abstract class  Tile {
 

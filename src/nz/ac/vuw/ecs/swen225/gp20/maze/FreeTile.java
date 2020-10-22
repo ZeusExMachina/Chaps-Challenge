@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * From handout: Actors can freely move onto those tiles.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class FreeTile extends Tile {
 	/**

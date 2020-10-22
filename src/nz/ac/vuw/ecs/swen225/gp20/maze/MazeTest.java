@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Test suite ensuring game logic is sound.
  */
-public class MazeTests {
+public class MazeTest {
 
 	/**
 	 * Construct a new Maze with level loaded.

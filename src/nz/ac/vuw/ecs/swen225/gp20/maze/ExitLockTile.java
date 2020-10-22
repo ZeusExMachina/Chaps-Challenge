@@ -6,6 +6,8 @@ import java.awt.image.BufferedImage;
  * From handout: Behaves like a wall time for Chap as long as there are still
  * uncollected treasures. Once the treasure chest is full (all treasures have
  * been collected), Chap can pass through the lock.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class ExitLockTile extends Tile {
 	/**

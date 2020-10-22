@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
  * From handout: Chap can only move onto those tiles if they have the
  * key with the matching colour -- this unlocks the door. After unlocking
  * the door, the locked door turns into a free tile.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class DoorTile extends Tile {
 	/**

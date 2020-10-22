@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
  * responsible for representing and maintaining the state of the game, such as what
  * type of objects are on the maze, where these objects are, and which actions are
  * allowed to change the state of those objects.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class Maze {
 	/**
