@@ -12,7 +12,10 @@ import java.util.HashSet;
 
 /**
  * Class the controls the display and information sent to
- * the Canvas and Inventory classes.
+ * the Canvas and Inventory classes. To be used by outside
+ * packages as a proxy to Canvas and Inventory.
+ *
+ * @author Devon Gregory 300414962
  */
 public class Renderer {
   /**

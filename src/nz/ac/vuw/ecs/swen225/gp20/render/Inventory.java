@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Creates and displays chaps inventory
+ *
+ * @author Devon Gregory 300414962
  */
 public class Inventory extends JPanel {
   /**
