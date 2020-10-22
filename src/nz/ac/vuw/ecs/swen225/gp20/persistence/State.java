@@ -88,7 +88,6 @@ class State {
      * @param game the current Game class
      */
     public void setGame(GameGUI game){
-        game.setGameLevel(levelNumber);
         game.setTime(timeVal);
     }
 
