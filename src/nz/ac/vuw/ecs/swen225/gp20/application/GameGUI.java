@@ -667,7 +667,7 @@ public class GameGUI {
             controls.remove(c);
         }
         controls.repaint();
-        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), new HashSet<>());
+//        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), new HashSet<>());
         render.update();
     }
 
