@@ -41,6 +41,11 @@ public abstract class Actor {
     protected int frameCounter = 0;
     
     /**
+     * integer to allow animation speed to be adjusted.
+     */
+    protected int frameTime = 0;
+    
+    /**
      * the max amount of frames, so program doesn't try display an image that isn't there.
      */
     protected int maxFrame = 3;
@@ -105,11 +110,14 @@ public abstract class Actor {
      * updates the frame to be displayed
      */
     public void updateFrame(){
-        frameCounter = (frameCounter == maxFrame) ? 0 : frameCounter + 1;
-        if(isMoving && movingTimer == movingCooldown) {
-            isMoving = false;
-            movingTimer = 0;
-        }else movingTimer++;
+        if(frameTime % 2 == 0) {
+            frameCounter = (frameCounter == maxFrame) ? 0 : frameCounter + 1;
+            if (isMoving && movingTimer == movingCooldown) {
+                isMoving = false;
+                movingTimer = 0;
+            } else movingTimer++;
+        }
+        frameTime++;
         
     }
     
