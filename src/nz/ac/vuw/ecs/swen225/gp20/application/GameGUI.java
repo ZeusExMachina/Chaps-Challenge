@@ -685,19 +685,16 @@ public class GameGUI {
      * reset the maze display
      */
     public void resetMaze(){
-        try {
-            Set<Actor> secondaries = new HashSet<>();
-            if (loader.getActorLoader().isRequiredForThisLevel(level)) {
-                secondaries = loader.getActorLoader().getSetOfSecondaryActors(level, loader);
-            }
-            maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
-            setChipsRemaining();
-            render.update();
-            stopTime();
-            startTime();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        Set<Actor> secondaries = new HashSet<>();
+        if (loader.getActorLoader().isRequiredForThisLevel(level)) {
+            secondaries = loader.getActorLoader().getSetOfSecondaryActors(level, loader);
         }
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), secondaries);
+        setChipsRemaining();
+        render.update();
+        stopTime();
+        startTime();
 
     }
 
@@ -836,11 +833,9 @@ public class GameGUI {
      * stop the current timer, prevent time out from occurring
      */
     public void stopTime(){
-        try{
-            timer.cancel();
-            timer.purge();
-        }catch (Exception ignored){
-        }
+        timer.cancel();
+        timer.purge();
+
     }
 
     /**
@@ -862,6 +857,7 @@ public class GameGUI {
                 maze.getChap().updateFrame();
                 render.update();
                 render.display();
+
                 if(actorMoveCount == MONSTER_MOVE_CONDITION){
                     maze.moveSecondaryActors();
                     for (Actor secondaryActor : maze.getSecondaryActors()) {
