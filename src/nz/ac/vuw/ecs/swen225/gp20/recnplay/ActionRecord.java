@@ -4,7 +4,7 @@ import nz.ac.vuw.ecs.swen225.gp20.maze.Direction;
 
 /**
  * Represents an action done by an actor in the game.
- * @author Elijah Guarina
+ * @author Elijah Guarina 300447332
  */
 public class ActionRecord {
 	

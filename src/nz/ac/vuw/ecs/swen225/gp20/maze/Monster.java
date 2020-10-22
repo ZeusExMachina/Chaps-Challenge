@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The secondary actor used in level 2. When Chap shares a tile with Monster,
+ * Chap dies and the level has to be restarted.
  *
+ * @author Johniel Bocacao 300490028
  */
 public class Monster extends Actor {
 

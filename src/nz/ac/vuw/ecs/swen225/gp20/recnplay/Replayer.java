@@ -20,7 +20,7 @@ import nz.ac.vuw.ecs.swen225.gp20.application.GameGUI;
 
 /**
  * Loads and plays through game replays for Chap's Challenge.
- * @author Elijah Guarina
+ * @author Elijah Guarina 300447332
  */
 public class Replayer {
 

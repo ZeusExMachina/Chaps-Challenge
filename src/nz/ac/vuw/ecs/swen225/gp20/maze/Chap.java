@@ -5,6 +5,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
  *  his movement is restricted by the nature of the tiles (for instance, he
  *  cannot move into walls). Note that the icon may depend on the current
  *  direction of movement.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class Chap extends Actor {
 

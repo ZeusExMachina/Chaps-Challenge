@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * From handout: Like a free tile, but when Chap steps on this field, a help text will be displayed.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class HelpTile extends Tile {
 	/**

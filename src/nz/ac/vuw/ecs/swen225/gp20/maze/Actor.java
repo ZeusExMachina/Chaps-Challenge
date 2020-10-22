@@ -13,6 +13,8 @@ import java.io.IOException;
  * that interacts with Chap (for instance, by exploding and eating Chap or
  * robbing him). Unlike Chap, actors will move around on their own (randomly,
  * or following some pattern), and are not directed by user input.
+ *
+ * @author Johniel Bocacao 300490028
  */
 
 public abstract class Actor {

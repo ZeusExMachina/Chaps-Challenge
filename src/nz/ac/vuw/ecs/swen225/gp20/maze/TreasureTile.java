@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 /**
  * From handout: If Chap steps onto the tile, the treasure (chip) is picked up
  * and added to the treasure chest. Then the tile turns into a free tile.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class TreasureTile extends Tile {
 	/**
