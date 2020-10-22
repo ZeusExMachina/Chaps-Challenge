@@ -99,7 +99,7 @@ public class Canvas extends JPanel {
 
 	/**
 	 * Displays the board to the screen.
-	 * @param m TODO
+	 * @param maze - the maze instance to get the information from
 	 */
 	void display(Maze m) {
 		isGameStarted = true;
@@ -110,6 +110,13 @@ public class Canvas extends JPanel {
 		this.repaint();
 	}
 	
+	/**
+	 * returns true if the x and y position
+	 * are currently being displayed on screen.
+	 * @param x - the x coordinate of the tile.
+	 * @param y - the y coordinate of the tile.
+	 * @return true if position is on screen.
+	 */
 	boolean isPositionOnScreen(int x, int y) {
 		return (x > origin.getX() - centerOffset && x < origin.getX() + centerOffset && y < origin.getY() + centerOffset && y > origin.getY() - centerOffset);
 	}
