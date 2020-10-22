@@ -10,6 +10,10 @@ import java.awt.image.BufferedImage;
 
 /**
  * Class to display and handle the drawing of the board and actors.
+ *
+ * Written by:
+ * Username: Gregordevo
+ * Student ID: 300414962
  */
 public class Canvas extends JPanel {
 	/**
