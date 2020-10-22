@@ -136,140 +136,147 @@ public class GameGUI {
 
 
         render.setMaze(maze);
-            render.display();
+        render.display();
 
-            //CONSTRUCT FRAME
-            mainFrame.setSize(900, 600);
-            mainFrame.setVisible(true);
-            mainFrame.setLayout(new GridBagLayout());
-            mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            mainFrame.setResizable(false);
-            mainFrame.setLayout(new BorderLayout());
+        //CONSTRUCT FRAME
+        mainFrame.setSize(900, 600);
+        mainFrame.setVisible(true);
+        mainFrame.setLayout(new GridBagLayout());
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setResizable(false);
+        mainFrame.setLayout(new BorderLayout());
 
 
-            //MENU BAR
-            JMenuBar mb = new JMenuBar();
-            JMenu load = new JMenu("Modes");
-            mb.add(load);
-            mb.add(inGameMenu);
+        //MENU BAR
+        JMenuBar mb = new JMenuBar();
+        JMenu load = new JMenu("Modes");
+        mb.add(load);
+        mb.add(inGameMenu);
 
-            JMenuItem restartLevel = new JMenuItem("Restart Level");
-            JMenuItem saveGame = new JMenuItem("Save and Exit");
-            JMenuItem saveRecording = new JMenuItem("Save Recording");
+        JMenuItem restartLevel = new JMenuItem("Restart Level");
+        JMenuItem saveGame = new JMenuItem("Save and Exit");
+        JMenuItem saveRecording = new JMenuItem("Save Recording");
 
-            JMenuItem loadReplay = new JMenuItem("Load Replay");
-            JMenuItem gameMenu = new JMenuItem("Main Menu");
+        JMenuItem loadReplay = new JMenuItem("Load Replay");
+        JMenuItem gameMenu = new JMenuItem("Main Menu");
 
-            loadReplay.addActionListener(e -> {
-                clearControlFrame();
-                replayControls();
-            });
+        loadReplay.addActionListener(e -> {
+            clearControlFrame();
+            replayControls();
+        });
 
-            restartLevel.addActionListener(e -> {
-                //restart the game - from current level
-                resetMaze();
-                setTime();
-                clearControlFrame();
-                controlsGamePlay();
-            });
+        restartLevel.addActionListener(e -> {
+            //restart the game - from current level
+            resetMaze();
+            setTime();
+            clearControlFrame();
+            controlsGamePlay();
+        });
 
-            saveGame.addActionListener(e -> saveGameState());
+        saveGame.addActionListener(e -> saveGameState());
 
-            saveRecording.addActionListener(e -> {
-                if (!currentReplay && recorder != null) {
-                    recorder.saveGame();
+        saveRecording.addActionListener(e -> {
+            if (!currentReplay && recorder != null) {
+                recorder.saveGame();
+            }
+        });
+
+        gameMenu.addActionListener(e -> {
+            render.stopBackgroundMusic();
+            clearControlFrame();
+            controlsStart();
+            stopTime();
+        });
+        load.add(loadReplay);
+        load.add(gameMenu);
+        inGameMenu.add(restartLevel);
+        inGameMenu.add(saveGame);
+        inGameMenu.add(saveRecording);
+
+        mainFrame.setJMenuBar(mb);
+
+        //ADD MAP
+        board.setSize((2 * (mainFrame.getWidth() / 3)), mainFrame.getHeight());
+        mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
+
+        //SIDE PANEL
+        mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                exitGame(false);
+            }
+        });
+
+        controls.setPreferredSize(new Dimension(mainFrame.getWidth() / 3, mainFrame.getHeight()));
+
+
+        pauseMenu.setSize(350, 200);
+        pauseMenu.setLayout(new GridLayout(2, 1, 0, 0));
+        JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
+        pauseTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
+        pauseMenu.add(pauseTitle);
+        pauseMenu.add(new JLabel("ESC to resume", SwingConstants.CENTER));
+        pauseMenu.setLocationRelativeTo(null);
+        pauseMenu.setVisible(false);
+        pauseMenu.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        pauseMenu.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    pauseState = false;
+                    hidePauseDialog();
+                    timer = new Timer();
+                    render.startBackgroundMusic();
+                    startTime();
                 }
-            });
+            }
 
-            gameMenu.addActionListener(e -> {
-                render.stopBackgroundMusic();
-                clearControlFrame();
-                controlsStart();
-            });
-            load.add(loadReplay);
-            load.add(gameMenu);
-            inGameMenu.add(restartLevel);
-            inGameMenu.add(saveGame);
-            inGameMenu.add(saveRecording);
+            @Override
+            public void keyReleased(KeyEvent e) {
 
-            mainFrame.setJMenuBar(mb);
+            }
+        });
 
-            //ADD MAP
-            board.setSize((2 * (mainFrame.getWidth() / 3)), mainFrame.getHeight());
-            mainFrame.getContentPane().add(board, BorderLayout.LINE_START);
+        board.addKeyListener(new KeyAdapter() {
+            /**
+             * true if control key is currently held down
+             */
+            boolean control = false;
 
-            //SIDE PANEL
-            mainFrame.getContentPane().add(controls, BorderLayout.LINE_END);
-            mainFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-            controls.setPreferredSize(new Dimension(mainFrame.getWidth() / 3, mainFrame.getHeight()));
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
 
-
-            pauseMenu.setSize(350, 200);
-            pauseMenu.setLayout(new GridLayout(2, 1, 0, 0));
-            JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
-            pauseTitle.setFont(new java.awt.Font("Arial", Font.BOLD, 20));
-            pauseMenu.add(pauseTitle);
-            pauseMenu.add(new JLabel("ESC to resume", SwingConstants.CENTER));
-            pauseMenu.setLocationRelativeTo(null);
-            pauseMenu.setVisible(false);
-            pauseMenu.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-            pauseMenu.addKeyListener(new KeyListener() {
-                @Override
-                public void keyTyped(KeyEvent e) {
-
-                }
-
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                        pauseState = false;
-                        hidePauseDialog();
-                        timer = new Timer();
-                        render.startBackgroundMusic();
-                        startTime();
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (!pauseState) {
+                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
+                        control = true;
+                    } else if (control) {
+                        controlKeyUse(e);
+                    } else {
+                        singleKeyUse(e);
                     }
                 }
+            }
 
-                @Override
-                public void keyReleased(KeyEvent e) {
-
-                }
-            });
-
-            board.addKeyListener(new KeyAdapter() {
-                /**
-                 * true if control key is currently held down
-                 */
-                boolean control = false;
-
-                @Override
-                public void keyTyped(KeyEvent e) {
-                }
-
-                @Override
-                public void keyPressed(KeyEvent e) {
-                    if (!pauseState) {
-                        if (e.getKeyCode() == KeyEvent.VK_CONTROL) {
-                            control = true;
-                        } else if (control) {
-                            controlKeyUse(e);
-                        } else {
-                            singleKeyUse(e);
-                        }
-                    }
-                }
-
-                @Override
-                public void keyReleased(KeyEvent e) {
-                    if (e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
-                }
-            });
+            @Override
+            public void keyReleased(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_CONTROL) control = false;
+            }
+        });
 
         controlsStart();
-            if (gameState.previousStateFound()) {
-                clearControlFrame();
-                controlsGamePlay();
-            }
+        if (gameState.previousStateFound()) {
+            clearControlFrame();
+            controlsGamePlay();
+        }
 
     }
 
@@ -396,25 +403,25 @@ public class GameGUI {
 
         ActionListener stepAL = e -> {
             if (replayer != null) {
-            	if (!replayer.hasMovesToReplay()) { replayCompleteDialog(); }
-            	else {
-            		// Replay the next move and change the time
-	            	long timeBeforeNextMove = replayer.getTimeBeforeNextMoveMillis();
-	                double nextMoveTimestamp = replayer.replayNextAction();
-	                if (nextMoveTimestamp > 0) {
-	                	// Adjust the displayed clock
-	                    timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
-	                    timeLabel.setText(String.format("%03d",((int)timeVal)));
-	                    // Move any monsters/secondary actors the appropriate amount of movements
-	                    for (double i = 0.0; i < (double)timeBeforeNextMove/(double)TIMER_INTERVAL_MILLIS; i+=1.0) {
-	                    	if (actorMoveCount == MONSTER_MOVE_CONDITION) {
-	                    		maze.moveSecondaryActors();
-	                    		actorMoveCount = 0;
-	                    	}
-	                    	actorMoveCount += 1;
-	                    }
-	                }
-            	}
+                if (!replayer.hasMovesToReplay()) { replayCompleteDialog(); }
+                else {
+                    // Replay the next move and change the time
+                    long timeBeforeNextMove = replayer.getTimeBeforeNextMoveMillis();
+                    double nextMoveTimestamp = replayer.replayNextAction();
+                    if (nextMoveTimestamp > 0) {
+                        // Adjust the displayed clock
+                        timeVal = loader.getLevelClock(level) - nextMoveTimestamp;
+                        timeLabel.setText(String.format("%03d",((int)timeVal)));
+                        // Move any monsters/secondary actors the appropriate amount of movements
+                        for (double i = 0.0; i < (double)timeBeforeNextMove/(double)TIMER_INTERVAL_MILLIS; i+=1.0) {
+                            if (actorMoveCount == MONSTER_MOVE_CONDITION) {
+                                maze.moveSecondaryActors();
+                                actorMoveCount = 0;
+                            }
+                            actorMoveCount += 1;
+                        }
+                    }
+                }
             }
         };
         stepForward.addActionListener(stepAL);
@@ -633,12 +640,20 @@ public class GameGUI {
      * save the current game state and exit the program
      */
     public void saveGameState(){
-        System.out.println("Saving Game state...");
         try{
             gameState.saveState();
         } catch (IOException e){
             return;
         }
+        exitGame(true);
+    }
+
+    /**
+     * close the game and end the program
+     * @param save true is saving file
+     */
+    public void exitGame(boolean save){
+        if(!save)gameState.deletePreviousState();
         System.exit(0);
     }
 
@@ -652,6 +667,8 @@ public class GameGUI {
             controls.remove(c);
         }
         controls.repaint();
+        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), new HashSet<>());
+        render.update();
     }
 
     /**
@@ -708,8 +725,7 @@ public class GameGUI {
 
             case KeyEvent.VK_X:
                 //exit the program
-                gameState.deletePreviousState();
-                System.exit(0);
+                exitGame(false);
                 break;
             case KeyEvent.VK_S:
                 if(inGame && !currentReplay)saveGameState();
@@ -753,18 +769,18 @@ public class GameGUI {
         if(inGame && !currentReplay) {
             switch (keyPressed) {
 
-	            case KeyEvent.VK_UP:
-	                moveCalled(Direction.NORTH);
-	                break;
-	            case KeyEvent.VK_RIGHT:
-	                moveCalled(Direction.EAST);
-	                break;
-	            case KeyEvent.VK_DOWN:
-	                moveCalled(Direction.SOUTH);
-	                break;
-	            case KeyEvent.VK_LEFT:
-	                moveCalled(Direction.WEST);
-	                break;
+                case KeyEvent.VK_UP:
+                    moveCalled(Direction.NORTH);
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    moveCalled(Direction.EAST);
+                    break;
+                case KeyEvent.VK_DOWN:
+                    moveCalled(Direction.SOUTH);
+                    break;
+                case KeyEvent.VK_LEFT:
+                    moveCalled(Direction.WEST);
+                    break;
                 case KeyEvent.VK_SPACE:
                     if (!pauseState) {
                         pauseState = true;
@@ -837,11 +853,11 @@ public class GameGUI {
             @Override
             public void run() {
                 if (maze.getChap() == null || render == null) return;
-            	if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) {
-            		timer.cancel();
-            		replayCompleteDialog();
-            		return;
-            	}
+                if (currentReplay && replayer!=null && !replayer.hasMovesToReplay()) {
+                    timer.cancel();
+                    replayCompleteDialog();
+                    return;
+                }
                 timeLabel.setText(String.format("%03d",((int)timeVal)));
                 maze.getChap().updateFrame();
                 render.update();
@@ -984,7 +1000,7 @@ public class GameGUI {
      * Display a dialog when a replay has finished.
      */
     public void replayCompleteDialog() {
-    	render.stopBackgroundMusic();
+        render.stopBackgroundMusic();
         inGame = false;
         JDialog replayComplete = new JDialog(mainFrame, "Replay Finished");
         replayComplete.setSize(350,200);
