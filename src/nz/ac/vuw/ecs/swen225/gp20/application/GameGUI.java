@@ -733,6 +733,7 @@ public class GameGUI {
             case KeyEvent.VK_P:
                 //restart the game - from current level
                 resetMaze();
+                render.stopBackgroundMusic();
                 clearControlFrame();
                 stopTime();
                 controlsStart();
@@ -740,6 +741,7 @@ public class GameGUI {
             case KeyEvent.VK_1:
                 //restart the game - from first level
                 setGameLevel(1);
+                render.stopBackgroundMusic();
                 resetMaze();
                 clearControlFrame();
                 stopTime();
