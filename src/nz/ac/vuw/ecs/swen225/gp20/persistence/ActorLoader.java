@@ -128,14 +128,16 @@ public class ActorLoader {
      */
     public Set<Actor> getSetOfSecondaryActors(int levelNumber, LevelLoader levelLoader){
         Set<Actor> actors = new HashSet<>();
-        Map<String, String> actorNames = levelLoader.getLevelActorNames(levelNumber);
-        Map<String, List<Position>> actorPositions = levelLoader.getLevelActorPositions(levelNumber);
-        Map<String, List<List<Direction>>> actorPaths = levelLoader.getLevelActorPaths(levelNumber);
-        for(String code : actorNames.keySet()){
-            for(int i = 0; i < actorPositions.get(code).size(); i++){
-                Actor secondaryActor = createSecondaryActor(levelNumber, code,
-                        actorNames.get(code), actorPositions.get(code).get(i), actorPaths.get(code).get(i));
-                actors.add(secondaryActor);
+        if(isRequiredForThisLevel(levelNumber)) {
+            Map<String, String> actorNames = levelLoader.getLevelActorNames(levelNumber);
+            Map<String, List<Position>> actorPositions = levelLoader.getLevelActorPositions(levelNumber);
+            Map<String, List<List<Direction>>> actorPaths = levelLoader.getLevelActorPaths(levelNumber);
+            for (String code : actorNames.keySet()) {
+                for (int i = 0; i < actorPositions.get(code).size(); i++) {
+                    Actor secondaryActor = createSecondaryActor(levelNumber, code,
+                            actorNames.get(code), actorPositions.get(code).get(i), actorPaths.get(code).get(i));
+                    actors.add(secondaryActor);
+                }
             }
         }
         return actors;
