@@ -322,7 +322,7 @@ public class GameGUI {
 
 
         JPanel controlDisplay = new JPanel();
-        controlDisplay.setLayout(new GridLayout(7,2,10,0));
+        controlDisplay.setLayout(new GridLayout(8,2,10,0));
         controlDisplay.add(new JLabel("Arrow Keys :", SwingConstants.RIGHT));
         controlDisplay.add(new JLabel(" Move"));
         controlDisplay.add(new JLabel("Space :", SwingConstants.RIGHT));
@@ -337,6 +337,8 @@ public class GameGUI {
         controlDisplay.add(new JLabel(" Reset Level"));
         controlDisplay.add(new JLabel("Ctrl + S :", SwingConstants.RIGHT));
         controlDisplay.add(new JLabel(" Save & Exit"));
+        controlDisplay.add(new JLabel("Ctrl + R :", SwingConstants.RIGHT));
+        controlDisplay.add(new JLabel(" Resume Saved Game"));
 
 
         startGame.setFocusable(false);
@@ -744,7 +746,7 @@ public class GameGUI {
                 controlsStart();
                 break;
             case KeyEvent.VK_R:
-                //restart the game - from current level
+                //resume save if it exists
                 if(gameState.previousStateFound()) {
                     resetMaze();
                     resumeLevel();
