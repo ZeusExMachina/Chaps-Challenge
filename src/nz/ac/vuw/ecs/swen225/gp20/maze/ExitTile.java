@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * From handout: Once Chap reaches this tile, the game level is finished.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class ExitTile extends Tile {
 	/**

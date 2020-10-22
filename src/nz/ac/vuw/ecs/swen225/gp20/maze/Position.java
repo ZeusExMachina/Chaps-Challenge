@@ -6,6 +6,8 @@ import java.util.Objects;
 
 /**
  * Stores position of Tile on board
+ *
+ * @author Johniel Bocacao 300490028
  */
 public final class Position {
 	/**

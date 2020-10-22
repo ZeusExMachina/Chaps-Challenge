@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavadocGenerationManager">
-    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/out/javadoc" />
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/docs" />
     <option name="OPTION_SCOPE" value="private" />
     <option name="OTHER_OPTIONS" value="-umlautogen -docletpath &quot;/Users/johniel/Documents/2020 Trimester 2/SWEN225/Chap's Challenge/lib/ydoc/lib/ydoc.jar&quot;  -doclet ydoc.doclets.YStandard  -resourcepath &quot;/Users/johniel/Documents/2020 Trimester 2/SWEN225/Chap's Challenge/lib/ydoc/resources&quot; " />
   </component>

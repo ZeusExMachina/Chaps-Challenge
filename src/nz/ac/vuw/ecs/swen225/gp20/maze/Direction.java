@@ -2,6 +2,8 @@ package nz.ac.vuw.ecs.swen225.gp20.maze;
 
 /**
  * Enumerates which directions we can travel from current position
+ *
+ * @author Johniel Bocacao 300490028
  */
 public enum Direction {
 	/**

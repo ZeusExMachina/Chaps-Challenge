@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
  * From handout: Actors can move onto those tiles. If Chap moves onto
  * such a tile, he picks up the key with this colour, once this is done,
  * the tile turns into a free tile.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class KeyTile extends Tile {
 

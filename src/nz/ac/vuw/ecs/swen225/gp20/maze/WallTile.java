@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 
 /**
  * From handout: Part of a wall, actors cannot move onto those tiles.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class WallTile extends Tile {
 	/**

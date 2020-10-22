@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Test suite ensuring game logic is sound.
+ *
+ * @author Johniel Bocacao 300490028
  */
 public class MazeTest {
 
