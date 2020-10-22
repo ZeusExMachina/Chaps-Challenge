@@ -21,7 +21,9 @@ import java.util.Timer;
 
 /**
  * The main display gui
- * controls level display and controls
+ *  provides a Graphical User Interface through which the player can see the maze and interact with
+ *
+ * @author Madeleine Mills 300472691
  */
 public class GameGUI {
     /**
@@ -210,7 +212,7 @@ public class GameGUI {
 
         controls.setPreferredSize(new Dimension(mainFrame.getWidth() / 3, mainFrame.getHeight()));
 
-
+        //pause dialog creation
         pauseMenu.setSize(350, 200);
         pauseMenu.setLayout(new GridLayout(2, 1, 0, 0));
         JLabel pauseTitle = new JLabel("PAUSED", SwingConstants.CENTER);
@@ -308,8 +310,7 @@ public class GameGUI {
 
         currentReplay = false;
         inGame = false;
-        
-        // Disabling menu items
+
         inGameMenu.setEnabled(false);
 
         controls.setLayout(new GridLayout(3,1,0,0));
@@ -364,15 +365,14 @@ public class GameGUI {
         inGame = true;
         render.startBackgroundMusic();
         setChipsRemaining();
-        
-        // Enabling menu items
+
         inGameMenu.setEnabled(true);
 
         constructControlGrid("LEVEL: " + String.format("%02d",this.level));
 
         controls.add(createGameStatsPanel(24));
         controls.add(createInventoryPanel());
-        // Start a new recorder
+
         recorder = new Recorder(level, timeVal);
 
         repaintDisplayPanels();
@@ -609,7 +609,6 @@ public class GameGUI {
      */
     public void setGameLevel(int levelNum){
         this.level = loader.getAllLevelNumbers().get(levelNum-1);
-        //levelLabel.setText("LEVEL: " + String.format("%02d",this.level));
         Set<Actor> secondaries = new HashSet<>();
         if (loader.getActorLoader().isRequiredForThisLevel(level)) {
             secondaries = loader.getActorLoader().getSetOfSecondaryActors(level, loader);
@@ -667,7 +666,6 @@ public class GameGUI {
             controls.remove(c);
         }
         controls.repaint();
-//        maze.loadLevel(loader.getLevelLayout(level), loader.getLevelHelpText(level), new HashSet<>());
         render.update();
     }
 
@@ -782,13 +780,12 @@ public class GameGUI {
                     moveCalled(Direction.WEST);
                     break;
                 case KeyEvent.VK_SPACE:
+                    //pause the game
                     if (!pauseState) {
                         pauseState = true;
                         displayPauseDialog();
                         render.stopBackgroundMusic();
                         timer.cancel();
-                    } else {
-                        System.out.println("game already paused");
                     }
                     break;
                 default:
@@ -839,7 +836,6 @@ public class GameGUI {
             timer.cancel();
             timer.purge();
         }catch (Exception ignored){
-
         }
     }
 
@@ -895,8 +891,6 @@ public class GameGUI {
      */
     public void setChipsRemaining(){
         chipsLabel.setText(String.format("%03d",(maze.getTreasuresLeft())));
-
-
     }
 
     /**
@@ -925,9 +919,8 @@ public class GameGUI {
         timeOutDisplay.add(buttonFrame);
         timeOutDisplay.setVisible(true);
         timeOutDisplay.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-
-
     }
+
     /**
      * display a dialog when the players completes a level
      */

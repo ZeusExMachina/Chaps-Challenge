@@ -3,6 +3,8 @@ import javax.swing.*;
 
 /**
  * Main class for chip's challenge. Starts the game and call for gui construction
+ *
+ * @author Madeleine Mills 300472691
  */
 public class Main {
     /**
